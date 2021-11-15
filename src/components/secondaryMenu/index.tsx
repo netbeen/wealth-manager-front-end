@@ -9,7 +9,7 @@ import { history } from 'umi';
 const SecondaryMenu: React.FC<{data: Array<{value: string; label: string; url: string;}>, calcValue:()=>string}> = ({calcValue, data}) => {
   return (
     <Menu
-      style={{ width: 220, height: '100%' }}
+      style={{ width: 220, height: '100%', flexShrink: 0, flexGrow: 0 }}
       mode="inline"
       selectedKeys={[calcValue()]}
     >

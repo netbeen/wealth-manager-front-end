@@ -10,7 +10,9 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "@ant-design/charts": "^1.2.14",
     "@ant-design/icons": "^4.7.0",
+    "@antv/g2plot": "^2.3.40",
     "antd": "^4.16.13",
     "react": "^16.14.0",
     "react-dom": "^16.8.6",
