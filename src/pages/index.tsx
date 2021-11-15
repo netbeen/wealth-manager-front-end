@@ -1,11 +1,11 @@
 import React from 'react';
-import styles from './index.css';
-
+// @ts-ignore
+import styles from './index.less';
 
 export default function() {
   return (
     <div className={styles.normal}>
-      <div className={styles.welcome} />
+      123
       <ul className={styles.list}>
         <li>To get started, edit <code>src/pages/index.js</code> and save to reload.</li>
         <li>

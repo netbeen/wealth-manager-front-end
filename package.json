@@ -10,14 +10,18 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "@ant-design/icons": "^4.7.0",
+    "antd": "^4.16.13",
+    "react": "^16.14.0",
+    "react-dom": "^16.8.6",
+    "typescript": "^4.4.4"
   },
   "devDependencies": {
     "@types/jest": "^23.3.12",
     "@types/react": "^16.7.18",
     "@types/react-dom": "^16.0.11",
     "@types/react-test-renderer": "^16.0.3",
+    "@umijs/preset-react": "^1.8.27",
     "babel-eslint": "^9.0.0",
     "eslint": "^5.4.0",
     "eslint-config-umi": "^1.4.0",
@@ -31,15 +35,10 @@
     "tslint": "^5.12.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-react": "^3.6.0",
-    "umi": "^2.7.0",
-    "umi-plugin-react": "^1.8.0",
+    "umi": "^3.5.20",
     "umi-types": "^0.2.0"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "tslint --fix",
-      "git add"
-    ],
     "*.{js,jsx}": [
       "eslint --fix",
       "git add"
