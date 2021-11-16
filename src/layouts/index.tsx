@@ -1,12 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 // @ts-ignore
 import styles from './index.less';
 // @ts-ignore
 import logoSrc from '@/assets/logo.svg'
 import { UserOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu, Tabs } from 'antd';
+import useLoginStatusChecker from '@/hooks/useLoginStatusChecker';
 
-const BasicLayout: React.FC = props => {
+export default function(props: any) {
+  useLoginStatusChecker();
+
   const topbar = useMemo(()=>(
     <div className={styles.topbar}>
       <div className={styles.logo}>
@@ -46,5 +49,3 @@ const BasicLayout: React.FC = props => {
     </div>
   );
 };
-
-export default BasicLayout;
