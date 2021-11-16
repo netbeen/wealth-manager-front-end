@@ -3,7 +3,7 @@ import React, { Fragment, useState } from 'react';
 import styles from './position.less';
 import SecondaryMenu from '@/components/secondaryMenu';
 import { fundSecondaryMenuData } from '@/pages/fund/const';
-import { Table, Drawer, Tag, Space } from 'antd';
+import { Table, Drawer, Tag, Space, Button } from 'antd';
 import TransactionSetDetail from '@/components/transactionSetDetail';
 
 export default function() {
@@ -88,7 +88,10 @@ export default function() {
         data={fundSecondaryMenuData}
         calcValue={()=>(fundSecondaryMenuData.find(item => window.location.pathname.includes(item.url))?.value ?? '')}
       />
-      <div style={{flexGrow: 1, height: '100%', paddingLeft: 32}}>
+      <div style={{flexGrow: 1, height: '100%'}}>
+        <div style={{marginBottom: 12}}>
+          <Button type="primary">开仓新基金</Button>
+        </div>
         <Table columns={columns} dataSource={data} />
       </div>
       <Drawer

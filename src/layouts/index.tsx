@@ -20,10 +20,11 @@ const BasicLayout: React.FC = props => {
       </Tabs>
       <Dropdown
         overlay={(
-          <Menu>
+          <Menu style={{ width: 200 }}>
             <Menu.Item>
               切换账本
             </Menu.Item>
+            <Menu.Divider />
             <Menu.Item danger>
               切换用户
             </Menu.Item>
