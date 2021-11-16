@@ -14,7 +14,7 @@ export default function() {
       title: '基金名称',
       dataIndex: 'name',
       key: 'name',
-      render: text => <a onClick={()=>{setOpenTransactionSetId('123')}}>{text}</a>,
+      render: (text: any) => <a onClick={()=>{setOpenTransactionSetId('123')}}>{text}</a>,
     },
     {
       title: 'Age',
@@ -30,9 +30,9 @@ export default function() {
       title: 'Tags',
       key: 'tags',
       dataIndex: 'tags',
-      render: tags => (
+      render: (tags: any) => (
         <>
-          {tags.map(tag => {
+          {tags.map((tag: any) => {
             let color = tag.length > 5 ? 'geekblue' : 'green';
             if (tag === 'loser') {
               color = 'volcano';
@@ -49,7 +49,7 @@ export default function() {
     {
       title: 'Action',
       key: 'action',
-      render: (text, record) => (
+      render: (text: string, record: any) => (
         <Space size="middle">
           <a>Invite {record.name}</a>
           <a>Delete</a>

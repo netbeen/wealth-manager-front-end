@@ -37,6 +37,9 @@ export default function() {
           <Button type="primary" htmlType="submit">
             登录
           </Button>
+          <Button htmlType="submit">
+            游客试用
+          </Button>
         </Form.Item>
       </Form>
     </div>
