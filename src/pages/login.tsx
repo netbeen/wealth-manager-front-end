@@ -38,7 +38,10 @@ export default function() {
             登录
           </Button>
           <Button htmlType="submit">
-            游客试用
+            注册
+          </Button>
+          <Button htmlType="submit">
+            访客身份登录
           </Button>
         </Form.Item>
       </Form>
