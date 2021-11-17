@@ -1,7 +1,7 @@
 import { IConfig } from 'umi-types';
 
 // ref: https://umijs.org/config/
-const config: IConfig = {
-};
+// @ts-ignore
+const config: IConfig = { antd: { mobile: false } };
 
 export default config;
