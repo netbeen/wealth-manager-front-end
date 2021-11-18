@@ -1,108 +1,74 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import styles from './position.less';
-import SecondaryMenu from '@/components/secondaryMenu';
+// @ts-ignore
+import layoutStyles from '@/layouts/index.less';
+import { Tabs, Button } from 'antd-mobile'
 import { fundSecondaryMenuData } from '@/pages/fund/const';
-import { Table, Drawer, Tag, Space, Button } from 'antd';
-import TransactionSetDetail from '@/components/transactionSetDetail';
+import { history } from '@@/core/history';
+import { AntdBaseTable } from '@/components/antDesignTable';
+
+const dataSource = [
+  { prov: '湖北省', confirmed: 54406, cured: 4793, dead: 1457, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '广东省', confirmed: 1294, cured: 409, dead: 2, t: '2020-02-15 19:52:02' },
+  { prov: '河南省', confirmed: 1212, cured: 390, dead: 13, t: '2020-02-15 19:52:02' },
+  { prov: '浙江省', confirmed: 1162, cured: 428, dead: 0, t: '2020-02-15 19:52:02' },
+  { prov: '湖南省', confirmed: 1001, cured: 417, dead: 2, t: '2020-02-15 19:52:02' },
+]
+
+const columns = [
+  { code: 'prov', name: '基金名称', width: 150 },
+  { code: 'confirmed', name: '市值', width: 100, align: 'right' },
+  { code: 'cured', name: '持仓收益率', width: 130, align: 'right' },
+  { code: 'dead', name: '年化收益率', width: 130, align: 'right' },
+]
 
 export default function() {
-  const [openTransactionSetId, setOpenTransactionSetId] = useState<string|null>(null)
-
-  const columns = [
-    {
-      title: '基金名称',
-      dataIndex: 'name',
-      key: 'name',
-      render: (text: any) => <a onClick={()=>{setOpenTransactionSetId('123')}}>{text}</a>,
-    },
-    {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-    },
-    {
-      title: 'Tags',
-      key: 'tags',
-      dataIndex: 'tags',
-      render: (tags: any) => (
-        <>
-          {tags.map((tag: any) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
-            return (
-              <Tag color={color} key={tag}>
-                {tag.toUpperCase()}
-              </Tag>
-            );
-          })}
-        </>
-      ),
-    },
-    {
-      title: 'Action',
-      key: 'action',
-      render: (text: string, record: any) => (
-        <Space size="middle">
-          <a>Invite {record.name}</a>
-          <a>Delete</a>
-        </Space>
-      ),
-    },
-  ];
-
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
+  const mainContent = useMemo(()=>(
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+      <Button color='primary' style={{marginBottom: 12}} onClick={()=>{history.push('/fund/transaction')}}>开仓新基金</Button>
+      <AntdBaseTable
+        dataSource={dataSource}
+        columns={columns}
+        // stickyTop={0}
+        isStickyHeader={false}
+      />
+    </div>
+  ),[]);
 
   return (
     <Fragment>
-      <SecondaryMenu
-        data={fundSecondaryMenuData}
-        calcValue={()=>(fundSecondaryMenuData.find(item => window.location.pathname.includes(item.url))?.value ?? '')}
-      />
-      <div style={{flexGrow: 1, height: '100%'}}>
-        <div style={{marginBottom: 12}}>
-          <Button type="primary">开仓新基金</Button>
-        </div>
-        <Table columns={columns} dataSource={data} />
-      </div>
-      <Drawer
-        title="Basic Drawer"
-        placement="right"
-        onClose={()=>{setOpenTransactionSetId(null)}}
-        visible={openTransactionSetId !== null}
-        width={1000}
+      <Tabs
+        className={layoutStyles.mainContentTab}
+        onChange={(key)=>{history.push(fundSecondaryMenuData.find(item => item.value === key)?.url ?? '')}}
+        activeKey={'position'}
       >
-        <TransactionSetDetail />
-      </Drawer>
+        {fundSecondaryMenuData.map(item => (
+          <Tabs.TabPane title={item.label} key={item.value}>
+            {item.value === 'position' && mainContent}
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
     </Fragment>
   );
 }

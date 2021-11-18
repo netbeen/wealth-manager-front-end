@@ -4,7 +4,7 @@ import styles from './login.less';
 import axios from 'axios';
 import {Input, Form, Button, Toast } from 'antd-mobile';
 import sha1 from 'sha1';
-import { API_PREFIX, SESSION_COOKIE_NAME, VISITOR_USER_IDENTIFIER } from '@/globalConst';
+import { API_PREFIX, ORGANIZATION_COOKIE_NAME, SESSION_COOKIE_NAME, VISITOR_USER_IDENTIFIER } from '@/globalConst';
 import cookies from 'js-cookie';
 import { history } from 'umi';
 
@@ -19,8 +19,14 @@ export default function() {
               passwordHash: sha1(values.password),
             }});
           if(loginResult?.data?.code === 200){
-            cookies.set(SESSION_COOKIE_NAME, loginResult.data.data._id)
-            history.push('/');
+            const availableOrganizationsResult = await axios.get(`${API_PREFIX}/organization/getAvailableOrganizations`, {
+              params:{
+                session: loginResult.data.data._id,
+              }});
+
+            cookies.set(SESSION_COOKIE_NAME, loginResult.data.data._id, { expires: 365 })
+            cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult.data.data[0]._id, { expires: 365 })
+            history.push('/fund/position'); // 首页一期不会建设，先跳转到基金持仓
           }else{
             Toast.show({
               icon: 'fail',
