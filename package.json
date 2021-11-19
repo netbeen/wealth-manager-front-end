@@ -9,6 +9,7 @@
     "precommit": "lint-staged"
   },
   "dependencies": {
+    "ahooks": "^3.0.0-alpha.8",
     "@ant-design/charts": "^1.2.14",
     "@ant-design/icons": "^4.7.0",
     "@antv/g2plot": "^2.3.40",

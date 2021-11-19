@@ -10,6 +10,15 @@
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
 
+"@ahooksjs/use-request@^3.0.0-alpha.0":
+  version "3.0.0-alpha.0"
+  resolved "https://registry.npmjs.org/@ahooksjs/use-request/-/use-request-3.0.0-alpha.0.tgz#16c2426503239e431cc51dfe309f5aabbd1aab7d"
+  integrity sha512-S3GXHfOwCeIdRwGcJtmJdx6Y/B5JCnp/l6oDzlK9O3RP7BTWldgNNbNky2t2YdCiYQFY29v6yCveEy0QvsOrWg==
+  dependencies:
+    core-js "^2.6.12"
+    lodash.debounce "^4.0.8"
+    lodash.throttle "^4.1.1"
+
 "@ant-design/charts@^1.2.14":
   version "1.2.14"
   resolved "https://registry.npmjs.org/@ant-design/charts/-/charts-1.2.14.tgz#f2f6dd5048799d588a41a1bd29921b40ef12104b"
@@ -2027,6 +2036,19 @@ ahooks@^2.10.12:
     resize-observer-polyfill "^1.5.1"
     screenfull "^5.0.0"
 
+ahooks@^3.0.0-alpha.8:
+  version "3.0.0-alpha.8"
+  resolved "https://registry.npmjs.org/ahooks/-/ahooks-3.0.0-alpha.8.tgz#fe6858d63d7dea3ce8167276c4144cbc5f38a493"
+  integrity sha512-2iHPVdTIWMlQ94ZhQC2wsYzYvzsPwXL+oAGlMVXzOlJx7tF+s/owXcMg6ss/BWjhr/R4bu9XybEfv+/OmYHbRw==
+  dependencies:
+    "@ahooksjs/use-request" "^3.0.0-alpha.0"
+    dayjs "^1.9.1"
+    intersection-observer "^0.7.0"
+    js-cookie "^3.0.0"
+    lodash "^4.17.21"
+    resize-observer-polyfill "^1.5.1"
+    screenfull "^5.0.0"
+
 ajv-errors@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/ajv-errors/-/ajv-errors-1.0.1.tgz#f35986aceb91afadec4102fbd85014950cefa64d"
@@ -3173,7 +3195,7 @@ core-js@^1.0.0:
   resolved "https://registry.npmjs.org/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
   integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
 
-core-js@^2.4.0:
+core-js@^2.4.0, core-js@^2.6.12:
   version "2.6.12"
   resolved "https://registry.npmjs.org/core-js/-/core-js-2.6.12.tgz#d9333dfa7b065e347cc5682219d6f690859cc2ec"
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
@@ -5961,7 +5983,7 @@ js-cookie@^2.2.1:
   resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
   integrity sha512-HvdH2LzI/EAZcUwA8+0nKNtWHqS+ZmijLA30RwZA0bo7ToCckjK5MkGhjED9KoRcXO6BaGI3I9UIzSA1FKFPOQ==
 
-js-cookie@^3.0.1:
+js-cookie@^3.0.0, js-cookie@^3.0.1:
   version "3.0.1"
   resolved "https://registry.npmjs.org/js-cookie/-/js-cookie-3.0.1.tgz#9e39b4c6c2f56563708d7d31f6f5f21873a92414"
   integrity sha512-+0rgsUXZu4ncpPxRL+lNEptWMOWl9etvPHc/koSRp6MPwpRYAhmk0dUG00J4bxVV3r9uUzfo24wW0knS07SKSw==
