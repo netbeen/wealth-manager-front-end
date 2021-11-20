@@ -10,6 +10,7 @@ import {
   UnorderedListOutline,
   UserOutline,
 } from 'antd-mobile-icons'
+import {history} from 'umi';
 
 axios.interceptors.response.use((response) => response, (error) => {
   if (typeof error.response === 'undefined') {
@@ -28,6 +29,7 @@ const tabs = [
   {
     key: 'fund',
     title: '基金',
+    url: '/fund/position',
     icon: <UnorderedListOutline />,
   },
   // {
@@ -37,8 +39,9 @@ const tabs = [
   //     active ? <MessageFill /> : <MessageOutline />,
   // },
   {
-    key: 'personalCenter',
+    key: 'me',
     title: '个人中心',
+    url: '/me',
     icon: <UserOutline />,
   },
 ]
@@ -58,7 +61,13 @@ export default function(props: any) {
             <div className={styles.mainContent}>
               {props.children}
             </div>
-            <TabBar activeKey={tabs.find(item => window.location.pathname.includes(item.key))?.key ?? ''} onChange={()=>{}}>
+            <TabBar
+              activeKey={tabs.find(item => window.location.pathname.includes(item.key))?.key ?? ''}
+              onChange={(selectedKey)=>{
+                console.log(selectedKey);
+                history.push(tabs.find(item => item.key === selectedKey)?.url ?? '')
+              }}
+            >
               {tabs.map(item => (
                 <TabBar.Item key={item.key} icon={item.icon} title={item.title} />
               ))}

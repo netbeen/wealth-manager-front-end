@@ -1,7 +1,7 @@
-import { ORGANIZATION_COOKIE_NAME, SESSION_COOKIE_NAME } from '@/globalConst';
+import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
 import cookies from 'js-cookie';
 
-export const getAuthorizationData = () => ({
-  session: cookies.get(SESSION_COOKIE_NAME) ?? '',
-  organization: cookies.get(ORGANIZATION_COOKIE_NAME) ?? '',
+export const getAuthorizationHeaders = () => ({
+  'x-wm-token': cookies.get(TOKEN_COOKIE_NAME) ?? '',
+  'x-wm-organization': cookies.get(ORGANIZATION_COOKIE_NAME) ?? '',
 });
