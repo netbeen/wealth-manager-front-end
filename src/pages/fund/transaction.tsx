@@ -134,6 +134,7 @@ export default function() {
             visible={datePickerVisible}
             onClose={() => {setDatePickerVisible(false)}}
             onConfirm={(input)=>{setDate(dayjs(input))}}
+            max={dayjs().toDate()}
           >
             {() => date.format('YYYY-MM-DD')}
           </DatePicker>
