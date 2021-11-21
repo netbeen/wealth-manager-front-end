@@ -4,7 +4,7 @@ import styles from './index.less';
 // @ts-ignore
 import logoSrc from '@/assets/logo.svg'
 import useLoginStatusChecker from '@/hooks/useLoginStatusChecker';
-import { TabBar } from 'antd-mobile'
+import { TabBar, Toast } from 'antd-mobile'
 import axios from 'axios'
 import {
   UnorderedListOutline,
@@ -12,12 +12,24 @@ import {
 } from 'antd-mobile-icons'
 import {history} from 'umi';
 
-axios.interceptors.response.use((response) => response, (error) => {
-  if (typeof error.response === 'undefined') {
-    alert('A network error occurred. This could be a CORS issue or a dropped internet connection. It is not possible for us to know.')
+axios.interceptors.response.use(
+  (response) => {
+    if(response?.data?.code === 401){
+      Toast.show({
+        icon: 'fail',
+        content: '登录超时，你需要重新登录',
+      })
+      history.push('/login')
+    }
+    return response
+  },
+  (error) => {
+    if (typeof error.response === 'undefined') {
+      alert('A network error occurred. This could be a CORS issue or a dropped internet connection. It is not possible for us to know.')
+    }
+    return Promise.reject(error)
   }
-  return Promise.reject(error)
-})
+)
 
 const tabs = [
   // {
