@@ -42,7 +42,7 @@ export default function() {
             <Button block type='submit' color='primary' size="large">
               登录
             </Button>
-            <Button block type='submit' size="large" >
+            <Button block size="large" >
               注册
             </Button>
             <Button block size="large" onClick={()=>{ doLogin('访客', 'visitorHash') }}>
