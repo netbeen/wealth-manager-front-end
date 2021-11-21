@@ -55,7 +55,7 @@ export default function() {
           label='密码'
           rules={[{ required: true }]}
         >
-          <Input placeholder='请输入邮箱' clearable type='password'/>
+          <Input placeholder='请输入密码' clearable type='password'/>
         </Form.Item>
         <Form.Item
           name='inviteCode'
