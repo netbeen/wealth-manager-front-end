@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { Fragment, useCallback } from 'react';
 // @ts-ignore
 import styles from './login.less';
 import axios from 'axios';
@@ -10,31 +10,33 @@ import { history } from 'umi';
 import { getAuthorizationHeaders } from '@/utils';
 
 export default function() {
+  const doLogin = useCallback(async (username, passwordHash) => {
+    const loginResult = await axios.post(`${API_PREFIX}/user/login`, {
+      username: username,
+      passwordHash: passwordHash,
+    }, {
+      headers: getAuthorizationHeaders(),
+    });
+    if(!loginResult?.data?.code || loginResult?.data?.code !== 200){
+      Toast.show({
+        icon: 'fail',
+        content: '用户名或密码错误',
+      })
+      return;
+    }
+    cookies.set(TOKEN_COOKIE_NAME, loginResult.data.data.token, { expires: 6 })
+
+    const availableOrganizationsResult = await axios.get(`${API_PREFIX}/organization/getAvailableOrganizations`, {
+      headers: getAuthorizationHeaders(),
+    });
+    cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult.data.data[0]._id, { expires: 6 })
+    history.push('/fund/position'); // 首页一期不会建设，先跳转到基金持仓
+  }, [])
+
   return (
     <div className={styles.loginPage}>
       <Form
-        onFinish={async (values)=>{
-          const loginResult = await axios.post(`${API_PREFIX}/user/login`, {
-            username: values.username,
-            passwordHash: sha1(values.password),
-          }, {
-            headers: getAuthorizationHeaders(),
-          });
-          if(!loginResult?.data?.code || loginResult?.data?.code !== 200){
-            Toast.show({
-              icon: 'fail',
-              content: '用户名或密码错误',
-            })
-            return;
-          }
-          cookies.set(TOKEN_COOKIE_NAME, loginResult.data.data.token, { expires: 6 })
-
-          const availableOrganizationsResult = await axios.get(`${API_PREFIX}/organization/getAvailableOrganizations`, {
-            headers: getAuthorizationHeaders(),
-          });
-          cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult.data.data[0]._id, { expires: 6 })
-          history.push('/fund/position'); // 首页一期不会建设，先跳转到基金持仓
-        }}
+        onFinish={(values)=>{ doLogin(values.username, sha1(values.password)) }}
         className={styles.loginForm}
         footer={(
           <Fragment>
@@ -44,9 +46,7 @@ export default function() {
             <Button block type='submit' size="large" >
               注册
             </Button>
-            <Button block size="large" onClick={()=>{
-              history.push('/');
-            }}>
+            <Button block size="large" onClick={()=>{ doLogin('访客', 'visitorHash') }}>
               访客身份登录
             </Button>
           </Fragment>
