@@ -60,6 +60,10 @@ export default function() {
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>基金交易记录</NavBar>
       <Form
+        initialValues={{
+          direction: [TRANSACTION_DIRECTION_BUY],
+          date: date.toDate(),
+        }}
         onFinish={async (values)=>{
           if(
             typeof Number(values.commission) !== 'number' ||
@@ -82,7 +86,12 @@ export default function() {
             date,
             values.direction[0]
           );
-          console.log('result', result);
+          if(result._id){
+            Toast.show({
+              icon: 'success',
+              content: '添加成功',
+            })
+          }
         }}
         footer={
           <Button block type='submit' color='primary'>
@@ -104,8 +113,9 @@ export default function() {
         >
           <div>{fundBasicInfo?.name ?? (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}</div>
         </Form.Item>
-        <Form.Item name='direction' label='交易方向' rules={[{ required: true }]}>
+        <Form.Item name='direction' label='交易方向'>
           <Selector
+            defaultValue={[TRANSACTION_DIRECTION_BUY]}
             columns={2}
             options={[
               { label: '买入', value: TRANSACTION_DIRECTION_BUY },
@@ -118,7 +128,6 @@ export default function() {
           label='交易日期'
           onClick={() => { setDatePickerVisible(true) }}
           trigger='onConfirm'
-          rules={[{ required: true }]}
         >
           <DatePicker
             value={date.toDate()}
