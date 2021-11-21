@@ -3,10 +3,11 @@ import React, { Fragment, useMemo, useState } from 'react';
 import styles from './position.less';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
-import { Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
+import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier, FundBasicInfoType } from '@/services/fund';
+import { insertTransaction, TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SELL } from '@/services/transaction';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -41,6 +42,7 @@ export default function() {
       };
     }
     const targetUnitPriceObject = fundUnitPriceList.find(item => item.date.isSame(date))
+    // console.log('fundUnitPriceList', fundUnitPriceList[fundUnitPriceList.length - 1].date.format(), date.format());
     if(!targetUnitPriceObject){
       return {
         unitPrice: null,
@@ -57,7 +59,30 @@ export default function() {
     <Fragment>
       <NavBar onBack={()=>{}}>基金交易记录</NavBar>
       <Form
-        onFinish={(values)=>{ console.log(values) }}
+        onFinish={async (values)=>{
+          if(
+            typeof Number(values.commission) !== 'number' ||
+            typeof Number(values.volume) !== 'number' ||
+            typeof date?.format() !== 'string' ||
+            ![TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SELL].includes(values.direction[0]) ||
+            !/^\d{6}$/.test(values.fundIdentifier) ||
+            typeof unitPrice !== 'number'
+          ){
+            Toast.show({
+              icon: 'fail',
+              content: '表单字段格式错误，请检查各输入项',
+            })
+            return;
+          }
+          const result = await insertTransaction(
+            values.fundIdentifier,
+            Number(values.volume),
+            Number(values.commission),
+            date,
+            values.direction[0]
+          );
+          console.log('result', result);
+        }}
         footer={
           <Button block type='submit' color='primary'>
             提交
@@ -82,8 +107,8 @@ export default function() {
           <Selector
             columns={2}
             options={[
-              { label: '买入', value: 'BUY' },
-              { label: '卖出', value: 'SELL' },
+              { label: '买入', value: TRANSACTION_DIRECTION_BUY },
+              { label: '卖出', value: TRANSACTION_DIRECTION_SELL },
             ]}
           />
         </Form.Item>
@@ -97,7 +122,7 @@ export default function() {
           <DatePicker
             visible={datePickerVisible}
             onClose={() => {setDatePickerVisible(false)}}
-            onConfirm={(input)=>{setDate(dayjs(input).hour(8));}}
+            onConfirm={(input)=>{setDate(dayjs(input))}}
           >
             {value => value ? dayjs(value).format('YYYY-MM-DD') : '请选择日期'}
           </DatePicker>
