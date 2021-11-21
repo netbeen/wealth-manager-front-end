@@ -76,7 +76,6 @@ export default function(props: any) {
             <TabBar
               activeKey={tabs.find(item => window.location.pathname.includes(item.key))?.key ?? ''}
               onChange={(selectedKey)=>{
-                console.log(selectedKey);
                 history.push(tabs.find(item => item.key === selectedKey)?.url ?? '')
               }}
             >
