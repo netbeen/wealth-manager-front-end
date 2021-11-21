@@ -6,6 +6,7 @@ import layoutStyles from '@/layouts/index.less';
 import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
+import { history } from 'umi'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier, FundBasicInfoType } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SELL } from '@/services/transaction';
 
@@ -57,7 +58,7 @@ export default function() {
 
   return (
     <Fragment>
-      <NavBar onBack={()=>{}}>基金交易记录</NavBar>
+      <NavBar onBack={()=>{history.goBack()}}>基金交易记录</NavBar>
       <Form
         onFinish={async (values)=>{
           if(
