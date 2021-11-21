@@ -6,7 +6,9 @@ import layoutStyles from '@/layouts/index.less';
 import { Tabs, Button } from 'antd-mobile'
 import { fundSecondaryMenuData } from '@/pages/fund/const';
 import { history } from '@@/core/history';
+import { useRequest } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
+import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 
 const dataSource = [
   { prov: '湖北省', confirmed: 54406, cured: 4793, dead: 1457, t: '2020-02-15 19:52:02' },
@@ -44,9 +46,24 @@ const columns = [
 ]
 
 export default function() {
+  const { data: currentOrganizationWithPermissionResult, loading: currentOrganizationWithPermissionLoading } = useRequest(async () => {
+    return await fetchCurrentOrganizationWithPermission()
+  }, {
+    refreshDeps: [],
+  });
+
   const mainContent = useMemo(()=>(
     <div style={{display: 'flex', flexDirection: 'column'}}>
-      <Button color='primary' style={{marginBottom: 12}} onClick={()=>{history.push('/fund/transaction')}}>开仓新基金</Button>
+      <Button
+        color='primary'
+        style={{marginBottom: 12}}
+        onClick={()=>{history.push('/fund/transaction')}}
+        disabled={
+          Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
+          !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
+          !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
+        }
+      >添加交易</Button>
       <AntdBaseTable
         dataSource={dataSource}
         columns={columns}
@@ -54,7 +71,7 @@ export default function() {
         isStickyHeader={false}
       />
     </div>
-  ),[]);
+  ),[currentOrganizationWithPermissionResult]);
 
   return (
     <Fragment>

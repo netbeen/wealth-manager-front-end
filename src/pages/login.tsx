@@ -8,6 +8,7 @@ import { API_PREFIX, ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME, VISITOR_USER_I
 import cookies from 'js-cookie';
 import { history } from 'umi';
 import { getAuthorizationHeaders } from '@/utils';
+import { fetchAvailableOrganizations } from '@/services/organization';
 
 export default function() {
   const doLogin = useCallback(async (username, passwordHash) => {
@@ -26,10 +27,8 @@ export default function() {
     }
     cookies.set(TOKEN_COOKIE_NAME, loginResult.data.data.token, { expires: 6 })
 
-    const availableOrganizationsResult = await axios.get(`${API_PREFIX}/organization/getAvailableOrganizations`, {
-      headers: getAuthorizationHeaders(),
-    });
-    cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult.data.data[0]._id, { expires: 6 })
+    const availableOrganizationsResult = await fetchAvailableOrganizations();
+    cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult[0]._id, { expires: 6 })
     history.push('/fund/position'); // 首页一期不会建设，先跳转到基金持仓
   }, [])
 

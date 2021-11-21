@@ -22,3 +22,13 @@ export const fetchCurrentOrganizationWithPermission: ()=>Promise<OrganizationPer
   }
   throw new Error('Organization Not Found')
 };
+
+export const fetchAvailableOrganizations: ()=>Promise<Array<OrganizationPermissionType['organization']>> = async () => {
+  const availableOrganizationsResult = await axios.get(`${API_PREFIX}/organization/getAvailableOrganizations`, {
+    headers: getAuthorizationHeaders(),
+  });
+  if(Array.isArray(availableOrganizationsResult.data.data)){
+    return availableOrganizationsResult.data.data;
+  }
+  return [];
+};
