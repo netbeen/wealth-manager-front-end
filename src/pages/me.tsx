@@ -1,7 +1,7 @@
 import React from 'react';
 // @ts-ignore
 import styles from './login.less';
-import {List, Image, Button, Toast } from 'antd-mobile';
+import {List, Image, Button, NavBar } from 'antd-mobile';
 import cookies from 'js-cookie';
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
 import { history } from 'umi';
@@ -18,6 +18,7 @@ export default function() {
 
   return (
     <div>
+      <NavBar backArrow={false}>个人中心</NavBar>
       <List>
         <List.Item
           key={me?.username ?? ''}
