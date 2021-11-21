@@ -61,7 +61,7 @@ const tabs = [
 export default function(props: any) {
   useLoginStatusChecker();
 
-  const noLayout = window.location.pathname === '/login'
+  const noLayout = ['/login', '/register'].includes(window.location.pathname)
 
   return (
     <div className={styles.globalLayout}>
