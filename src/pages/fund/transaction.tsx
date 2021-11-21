@@ -12,7 +12,7 @@ import { insertTransaction, TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SEL
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [fundIdentifier, setFundIdentifier] = useState<string>('')
-  const [date, setDate] = useState<Dayjs|null>(null)
+  const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
 
   const debouncedIdentifier = useDebounce(fundIdentifier, { wait: 500 })
 
@@ -120,11 +120,12 @@ export default function() {
           rules={[{ required: true }]}
         >
           <DatePicker
+            value={date.toDate()}
             visible={datePickerVisible}
             onClose={() => {setDatePickerVisible(false)}}
             onConfirm={(input)=>{setDate(dayjs(input))}}
           >
-            {value => value ? dayjs(value).format('YYYY-MM-DD') : '请选择日期'}
+            {() => date.format('YYYY-MM-DD')}
           </DatePicker>
         </Form.Item>
         <Form.Item name='unitPrice' label='成交价格' disabled>
