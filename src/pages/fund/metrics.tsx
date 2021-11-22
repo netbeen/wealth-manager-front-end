@@ -1,16 +1,28 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import styles from './metrics.less';
 import SecondaryMenu from '@/components/secondaryMenu';
-import { fundSecondaryMenuData } from '@/pages/fund/const';
+import { fundSecondaryTabData } from '@/pages/fund/const';
+import layoutStyles from '@/layouts/index.less';
+import { history } from '@@/core/history';
+import { Tabs } from 'antd-mobile';
 
 export default function() {
+  const mainContent = useMemo(()=>('123'), [])
+
   return (
     <Fragment>
-      <SecondaryMenu
-        data={fundSecondaryMenuData}
-        calcValue={()=>(fundSecondaryMenuData.find(item => window.location.pathname.includes(item.url))?.value ?? '')}
-      />
+      <Tabs
+        className={layoutStyles.mainContentTab}
+        onChange={(key)=>{history.push(fundSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
+        activeKey={'metrics'}
+      >
+        {fundSecondaryTabData.map(item => (
+          <Tabs.TabPane title={item.label} key={item.value}>
+            {item.value === 'metrics' && mainContent}
+          </Tabs.TabPane>
+        ))}
+      </Tabs>
     </Fragment>
   );
 }

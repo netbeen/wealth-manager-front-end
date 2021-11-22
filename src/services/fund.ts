@@ -5,6 +5,10 @@ import dayjs, { Dayjs } from 'dayjs';
 export interface FundBasicInfoType {identifier: string, name: string, type: string}
 export interface FundPriceType {date: Dayjs, price: number}
 
+/**
+ * 获取基金基本信息
+ * @param identifier
+ */
 export const fetchBasicInfo: (identifier: string)=>Promise<FundBasicInfoType> = async (identifier) => {
   const result = await axios.get(`${API_PREFIX}/fund/basicInfo`, {
     params:{

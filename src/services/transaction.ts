@@ -26,3 +26,15 @@ export const insertTransaction: (
   })).data;
   return result
 };
+
+export const fetchTransaction: (
+  transactionSet: string,
+)=>Promise<Array<TransactionType>> = async (transactionSet) => {
+  const result = (await axios.get(`${API_PREFIX}/fund/transaction`, {
+    headers: getAuthorizationHeaders(),
+    params:{
+      transactionSet,
+    },
+  })).data;
+  return result
+};
