@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
+import { TransactionSetType } from '@/services/transactionSet';
 
-export interface TransactionType {_id: string, username: string}
+export interface TransactionType {_id: string, date: Dayjs}
 
 export const TRANSACTION_DIRECTION_BUY = 'BUY';
 export const TRANSACTION_DIRECTION_SELL = 'SELL';
@@ -37,4 +38,16 @@ export const fetchTransaction: (
     },
   })).data;
   return result
+};
+
+export const batchFetchTransaction: (
+  transactionSets: Array<TransactionSetType>,
+)=>Promise<Array<Array<TransactionType>>> = async (transactionSets) => {
+  const result: Array<Array<TransactionType>> = (await axios.get(`${API_PREFIX}/fund/transaction/batchQuery`, {
+    headers: getAuthorizationHeaders(),
+    params:{
+      transactionSetsString: transactionSets.map(item => item._id).join(','),
+    },
+  })).data.data;
+  return result.map(item => (item.map(item2 => ({...item2, date: dayjs(item2.date)}))))
 };
