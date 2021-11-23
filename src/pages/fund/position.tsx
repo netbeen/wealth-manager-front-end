@@ -80,8 +80,12 @@ export default function() {
       ){
         return rowData;
       }
-      // @ts-ignore
-      const { positionValue, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(unitPricesList[index], dividendsList[index], splitsList[index], transactionsList[index])
+      const { positionValue, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
+        unitPricesList[index],
+        dividendsList[index],
+        splitsList[index],
+        transactionsList[index]
+      );
       rowData.positionValue = (Math.round(positionValue*100)/100).toFixed(2);
       rowData.positionRateOfReturn = `${(Math.round(positionRateOfReturn*10000)/100).toFixed(2)}%`;
       rowData.totalAnnualizedRateOfReturn = `${(Math.round(totalAnnualizedRateOfReturn*10000)/100).toFixed(2)}%`;
