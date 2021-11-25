@@ -12,10 +12,10 @@ export interface FundSpitType {date: Dayjs, splitRatio: number}
  * @param identifier
  */
 export const fetchBasicInfo: (identifier: string)=>Promise<FundBasicInfoType> = async (identifier) => {
-  const result = await axios.get(`${API_PREFIX}/fund/basicInfo`, {
+  const result = (await axios.get(`${API_PREFIX}/fund/basicInfo`, {
     params:{
       identifier,
-    }});
+    }})).data;
   if(result?.data?.identifier){
     return {
       identifier: result.data.identifier,
@@ -28,10 +28,10 @@ export const fetchBasicInfo: (identifier: string)=>Promise<FundBasicInfoType> = 
 
 
 export const fetchUnitPriceByIdentifier: (identifier: string)=>Promise<Array<FundPriceType>> = async (identifier) => {
-  const result = await axios.get(`${API_PREFIX}/fund/unitPrice`, {
+  const result = (await axios.get(`${API_PREFIX}/fund/unitPrice`, {
     params:{
       identifier,
-    }});
+    }})).data;
   if(result.data.length > 0){
     return result.data.map((item: any)=>({
       date: dayjs(item.date),

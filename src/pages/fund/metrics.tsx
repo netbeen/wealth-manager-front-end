@@ -1,11 +1,14 @@
 import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import styles from './metrics.less';
-import SecondaryMenu from '@/components/secondaryMenu';
 import { fundSecondaryTabData } from '@/pages/fund/const';
+// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { history } from '@@/core/history';
 import { Tabs } from 'antd-mobile';
+
+// @ts-ignore
+const TabPane = Tabs.TabPane;
 
 export default function() {
   const mainContent = useMemo(()=>('123'), [])
@@ -18,9 +21,9 @@ export default function() {
         activeKey={'metrics'}
       >
         {fundSecondaryTabData.map(item => (
-          <Tabs.TabPane title={item.label} key={item.value}>
+          <TabPane title={item.label} key={item.value}>
             {item.value === 'metrics' && mainContent}
-          </Tabs.TabPane>
+          </TabPane>
         ))}
       </Tabs>
     </Fragment>

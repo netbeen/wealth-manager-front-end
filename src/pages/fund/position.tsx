@@ -19,6 +19,9 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn } from 'fund-tools';
 
+// @ts-ignore
+const TabPane = Tabs.TabPane
+
 const columns = [
   { code: 'name', name: '基金名称', width: 150 },
   { code: 'positionValue', name: '市值', width: 100, align: 'right' },
@@ -122,9 +125,9 @@ export default function() {
         activeKey={'position'}
       >
         {fundSecondaryTabData.map(item => (
-          <Tabs.TabPane title={item.label} key={item.value}>
+          <TabPane title={item.label} key={item.value}>
             {item.value === 'position' && mainContent}
-          </Tabs.TabPane>
+          </TabPane>
         ))}
       </Tabs>
     </Fragment>
