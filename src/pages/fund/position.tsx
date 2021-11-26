@@ -41,7 +41,7 @@ export default function() {
   }, { refreshDeps: [] });
 
   const { data: transactionSets } = useRequest(async () => {
-    return await fetchActiveTransactionSets()
+    return await fetchActiveTransactionSets('active')
   }, { refreshDeps: [] });
 
   useAsyncEffect(async () => {
