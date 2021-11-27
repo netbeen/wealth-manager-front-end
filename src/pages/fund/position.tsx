@@ -23,7 +23,12 @@ import { calcReturn } from 'fund-tools';
 const TabPane = Tabs.TabPane
 
 const columns = [
-  { code: 'name', name: '基金名称', width: 150 },
+  { code: 'name', name: '基金名称', width: 150, render: (value: any, record: any) => (
+    <div style={{cursor: 'pointer'}} onClick={()=>{
+      history.push(`/fund/transactionSet/${record.transactionSet}`)
+    }}>
+      {value}
+    </div>) },
   { code: 'positionValue', name: '市值', width: 100, align: 'right' },
   { code: 'positionRateOfReturn', name: '收益率%', width: 80, align: 'right' },
   { code: 'totalAnnualizedRateOfReturn', name: '年化收益率%', width: 80, align: 'right' },
@@ -34,6 +39,7 @@ export default function() {
   const [unitPricesList, setUnitPricesList] = useState<Array<Array<FundPriceType>>>([])
   const [dividendsList, setDividendsList] = useState<Array<Array<FundDividendType>>>([])
   const [splitsList, setSplitsList] = useState<Array<Array<FundSpitType>>>([])
+  const [tableLoading, setTableLoading] = useState<boolean>(true)
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([])
 
   const { data: currentOrganizationWithPermissionResult } = useRequest(async () => {
@@ -62,6 +68,7 @@ export default function() {
     setSplitsList(basicInfoUnitPriceSplitDividendResult.splits);
     const transactionResult = await batchFetchTransaction(transactionSets)
     setTransactionsList(transactionResult);
+    setTableLoading(false);
   }, [transactionSets]);
 
   const tableData = useMemo(()=>{
@@ -74,6 +81,7 @@ export default function() {
         positionValue: 'Loading...',
         positionRateOfReturn: 'Loading...',
         totalAnnualizedRateOfReturn: 'Loading...',
+        transactionSet: transactionSet._id,
       };
       if(
         !Array.isArray(unitPricesList[index]) ||
@@ -112,9 +120,10 @@ export default function() {
         dataSource={tableData}
         columns={columns}
         isStickyHeader={false}
+        isLoading={tableLoading}
       />
     </div>
-  ),[currentOrganizationWithPermissionResult, tableData]);
+  ),[currentOrganizationWithPermissionResult, tableData, tableLoading]);
 
   return (
     <Fragment>
