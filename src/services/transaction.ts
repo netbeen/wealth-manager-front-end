@@ -6,8 +6,10 @@ import { TransactionSetType } from '@/services/transactionSet';
 
 export interface TransactionType {_id: string, date: Dayjs}
 
-export const TRANSACTION_DIRECTION_BUY = 'BUY';
-export const TRANSACTION_DIRECTION_SELL = 'SELL';
+export enum TRANSACTION_DIRECTION {
+  BUY = 'BUY',
+  SELL = 'SELL',
+}
 
 export const insertTransaction: (
   target: string,

@@ -7,8 +7,8 @@ import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-m
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
 import { history } from 'umi'
-import { fetchBasicInfo, fetchUnitPriceByIdentifier, FundBasicInfoType } from '@/services/fund';
-import { insertTransaction, TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SELL } from '@/services/transaction';
+import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
+import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -61,7 +61,7 @@ export default function() {
       <NavBar onBack={()=>{history.goBack()}}>基金交易记录</NavBar>
       <Form
         initialValues={{
-          direction: [TRANSACTION_DIRECTION_BUY],
+          direction: [TRANSACTION_DIRECTION.BUY],
           date: date.toDate(),
         }}
         onFinish={async (values)=>{
@@ -69,7 +69,7 @@ export default function() {
             typeof Number(values.commission) !== 'number' ||
             typeof Number(values.volume) !== 'number' ||
             typeof date?.format() !== 'string' ||
-            ![TRANSACTION_DIRECTION_BUY, TRANSACTION_DIRECTION_SELL].includes(values.direction[0]) ||
+            ![TRANSACTION_DIRECTION.BUY, TRANSACTION_DIRECTION.SELL].includes(values.direction[0]) ||
             !/^\d{6}$/.test(values.fundIdentifier) ||
             typeof unitPrice !== 'number'
           ){
@@ -115,11 +115,11 @@ export default function() {
         </Form.Item>
         <Form.Item name='direction' label='交易方向'>
           <Selector
-            defaultValue={[TRANSACTION_DIRECTION_BUY]}
+            defaultValue={[TRANSACTION_DIRECTION.BUY]}
             columns={2}
             options={[
-              { label: '买入', value: TRANSACTION_DIRECTION_BUY },
-              { label: '卖出', value: TRANSACTION_DIRECTION_SELL },
+              { label: '买入', value: TRANSACTION_DIRECTION.BUY },
+              { label: '卖出', value: TRANSACTION_DIRECTION.SELL },
             ]}
           />
         </Form.Item>
