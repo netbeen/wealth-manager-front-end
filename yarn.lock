@@ -4673,10 +4673,10 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-fund-tools@^0.0.28:
-  version "0.0.28"
-  resolved "https://registry.npmjs.org/fund-tools/-/fund-tools-0.0.28.tgz#5491888408b31b87ad1050ce04134603952d5178"
-  integrity sha512-cMdbH1PUu7BqSc9X52q9/zuwYXKoqhoOqw8XqR9A/muE67u94yolPWikgv1Pd/GzfPAD73vDv4XZIT8Ugp2Iqg==
+fund-tools@^0.0.32:
+  version "0.0.32"
+  resolved "https://registry.npmjs.org/fund-tools/-/fund-tools-0.0.32.tgz#df8e1760afea85737a8f2ba8723ec2e4d1cae1b3"
+  integrity sha512-XNfPFJ3oRhyFTVOsFf1WO4uMJUA/N5dEzBwXeSldur64e8ibk3mnNxeS19fymEkpSC4RAaDKgUKy6JyI8OCPow==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@babel/runtime" "^7.16.3"

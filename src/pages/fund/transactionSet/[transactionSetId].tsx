@@ -5,40 +5,101 @@ import styles from '../position.less';
 import layoutStyles from '@/layouts/index.less';
 import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
-import { useRequest, useDebounce } from 'ahooks'
+import { useRequest } from 'ahooks'
 import { history } from 'umi'
-import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
-import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
-import { Chart, Geom, Axis, Tooltip, Legend, Coord } from 'bizcharts';
+import {
+  fetchBasicInfoUnitPriceSplitDividendByIdentifier,
+} from '@/services/fund';
+import { Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
+import { fetchTransactionSetById, TransactionSetStatus } from '@/services/transactionSet';
+import { batchFetchTransaction } from '@/services/transaction';
+import { sliceBetween, lastOfArray } from 'fund-tools';
 
-// 数据源
-const data = [
-  { genre: 'Sports', sold: 275, income: 2300 },
-  { genre: 'Strategy', sold: 115, income: 667 },
-  { genre: 'Action', sold: 120, income: 982 },
-  { genre: 'Shooter', sold: 350, income: 5271 },
-  { genre: 'Other', sold: 150, income: 3710 }
-];
-
-// 定义度量
-const cols = {
-  sold: { alias: '销售量' },
-  genre: { alias: '游戏种类' }
-};
+// const colors = getTheme().colors10;
 
 export default function({match: {params: {transactionSetId}}}: {match: {params: {transactionSetId: string}}}) {
-  console.log('transactionSetId', transactionSetId);
+  const { data: transactionSet } = useRequest(async () => {
+    return await fetchTransactionSetById(transactionSetId)
+  }, { refreshDeps: [] });
+
+  // 获取爬虫的四大基本数据
+  const { data: fourBasicData } = useRequest(async () => {
+    if(!transactionSet?.target){
+      return;
+    }
+    const {basicInfos, dividends, unitPrices, splits} = await fetchBasicInfoUnitPriceSplitDividendByIdentifier([transactionSet.target])
+    return {
+      basicInfo: basicInfos[0],
+      dividend: dividends[0],
+      unitPrice: unitPrices[0],
+      split: splits[0],
+    }
+  }, { refreshDeps: [transactionSet?.target] });
+
+  // 获取交易记录
+  const { data: transactions } = useRequest(async () => {
+    if(!transactionSet?.target){
+      return;
+    }
+    const transactionSets = await batchFetchTransaction([transactionSet])
+    return transactionSets[0] ?? []
+  }, { refreshDeps: [transactionSet?.target] });
+
+  console.log('basicInfo, dividend, unitPrice, split', fourBasicData?.basicInfo, fourBasicData?.dividend, fourBasicData?.unitPrice, fourBasicData?.split);
+
+  const priceChartData = useMemo(()=>{
+    if(
+      !transactionSet ||
+      !fourBasicData ||
+      !Array.isArray(fourBasicData.unitPrice) ||
+      !Array.isArray(fourBasicData.dividend) ||
+      !Array.isArray(fourBasicData.split) ||
+      !Array.isArray(transactions) ||
+      transactions.length === 0
+    )  {
+      return [];
+    }
+    const isArchivedSet = transactionSet.status === TransactionSetStatus.Archived;
+    const formattedUnitPrices = sliceBetween(fourBasicData.unitPrice, transactions[0].date, isArchivedSet ? lastOfArray(transactions).date : dayjs())
+    return formattedUnitPrices.map((unitPriceItem) => ({
+      date: unitPriceItem.date.format('YYYY-MM-DD'),
+      city: "London",
+      unitPrice: unitPriceItem.price
+    }))
+  }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
+
   return (
     <Fragment>
-      <NavBar onBack={()=>{history.goBack()}}>{transactionSetId}</NavBar>
+      <NavBar onBack={()=>{history.goBack()}}>{`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}</NavBar>
       <div>
-        <div>123</div>
-        <Chart forceFit width={400} height={400} data={data} scale={cols}>
-          <Axis name="genre" title/>
-          <Axis name="sold" title/>
-          <Legend position="top" dy={-20} />
-          <Tooltip />
-          <Geom type="interval" position="genre*sold" color="genre" />
+        <Chart autoFit height={400} data={priceChartData} scale={{}}>
+          <Legend
+            // itemName={{
+            //   style: (item) => {
+            //     return { fill: item.name == 'Tokyo' ? colors[0] : colors[1] }
+            //   }
+            // }}
+          />
+          <Axis name="date" />
+          <Axis name="unitPrice" />
+          <Geom
+            type="point"
+            position="date*unitPrice"
+            size={4}
+            shape={"circle"}
+            color={"city"}
+            style={{
+              stroke: "#fff",
+              lineWidth: 1
+            }}
+          />
+          <Geom
+            type="line"
+            position="date*unitPrice"
+            size={2}
+            color={"city"}
+            shape={"smooth"}
+          />
         </Chart>
       </div>
     </Fragment>

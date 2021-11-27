@@ -3,18 +3,19 @@ import React, { Fragment, useMemo, useState } from 'react';
 import styles from './position.less';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
-import { Tabs, Button } from 'antd-mobile'
+import { Button, Tabs } from 'antd-mobile';
 import { fundSecondaryTabData } from '@/pages/fund/const';
 import { history } from '@@/core/history';
-import { useRequest, useAsyncEffect } from 'ahooks';
+import { useAsyncEffect, useRequest } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
-import { fetchActiveTransactionSets } from '@/services/transactionSet';
+import { fetchActiveTransactionSets, TransactionSetStatus } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
   FundDividendType,
-  FundPriceType, FundSpitType,
+  FundPriceType,
+  FundSpitType,
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn } from 'fund-tools';
@@ -47,7 +48,7 @@ export default function() {
   }, { refreshDeps: [] });
 
   const { data: transactionSets } = useRequest(async () => {
-    return await fetchActiveTransactionSets('active')
+    return await fetchActiveTransactionSets(TransactionSetStatus.Active)
   }, { refreshDeps: [] });
 
   useAsyncEffect(async () => {
