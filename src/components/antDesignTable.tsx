@@ -8,7 +8,7 @@ const StyledBaseTable = (styled(BaseTable)`
   --font-size: 14px;
   --row-height: 32px;
   --header-row-height: 36px;
-  --cell-padding: 16px;
+  --cell-padding: 2px;
 
   --lock-shadow: rgba(0, 0, 0, 0.2) 0 0 10px 0px;
   --border-color: #f0f0f0;

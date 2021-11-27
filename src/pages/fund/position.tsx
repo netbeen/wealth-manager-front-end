@@ -111,7 +111,6 @@ export default function() {
       <AntdBaseTable
         dataSource={tableData}
         columns={columns}
-        // stickyTop={0}
         isStickyHeader={false}
       />
     </div>
