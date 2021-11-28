@@ -10,7 +10,7 @@ import { history } from 'umi'
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
 } from '@/services/fund';
-import { Line, Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
+import { View, Point, Line, Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
 import { fetchTransactionSetById, TransactionSetStatus } from '@/services/transactionSet';
 import { batchFetchTransaction } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
@@ -45,6 +45,20 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     return transactionSets[0] ?? []
   }, { refreshDeps: [transactionSet?.target] });
 
+  const [calcProgress, setCalcProgress] = useState<number>(0);
+
+  const transactionChartData = useMemo(()=>{
+    if(!transactions){
+      return [];
+    }
+    return transactions.map(transaction => ({
+      date: transaction.date.format('YYYY-MM-DD'),
+      direction: transaction.direction,
+      price: 1,
+    }))
+  }, [transactions])
+  console.log('transactionChartData', transactionChartData);
+
   const { priceChartData, rateOfReturnChartData } = useMemo(()=>{
     if(
       !transactionSet ||
@@ -70,6 +84,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     const rateOfReturnChartDataResult: any[] = [];
     formattedUnitPrices.forEach((formattedUnitPriceObject, index)=>{
       console.log(`calcReturn... ${index}/${formattedUnitPrices.length}`)
+      // setCalcProgress(index/formattedUnitPrices.length);
       const { unitCost, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
         sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
         sliceBetween(fourBasicData.dividend, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
@@ -101,6 +116,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         <Chart
           autoFit
           height={300}
+          padding={[10, 10, 60, 50]}
           data={priceChartData}
           scale={{
             date: {
@@ -124,10 +140,25 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           <Axis name="date" />
           <Axis name="price" />
           <Line shape="smooth" position="date*price" color="type"/>
+          {/*<View*/}
+          {/*  data={transactionChartData}*/}
+          {/*  padding={0}*/}
+          {/*>*/}
+          {/*  <Point*/}
+          {/*    position="date*price"*/}
+          {/*    // shape={['type', (type)=>{*/}
+          {/*    //   if(type === 'unitCost'){*/}
+          {/*    //     return 'circle';*/}
+          {/*    //   }*/}
+          {/*    //   return 'rect';*/}
+          {/*    // }]}*/}
+          {/*  />*/}
+          {/*</View>*/}
         </Chart>
         <Chart
           autoFit
           height={300}
+          padding={[10, 10, 60, 50]}
           data={rateOfReturnChartData}
           scale={{
             date: {
