@@ -79,22 +79,20 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       priceChartDataResult.push({
         date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
         type: "unitCost",
-        price: unitCost
+        price: Math.round(unitCost * 10000)/10000
       })
       rateOfReturnChartDataResult.push({
         date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
         type: "positionRateOfReturn",
-        price: positionRateOfReturn
+        price: Math.round(positionRateOfReturn * 100 * 100) / 100
       }, {
         date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
         type: "totalAnnualizedRateOfReturn",
-        price: totalAnnualizedRateOfReturn
+        price: Math.round(totalAnnualizedRateOfReturn * 100 * 100)/100
       })
     })
     return {priceChartData: priceChartDataResult, rateOfReturnChartData: rateOfReturnChartDataResult};
   }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
-
-  console.log('priceChartData', priceChartData);
 
   return (
     <Fragment>
@@ -119,6 +117,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             }
           }}
           interactions={['tooltip', 'element-active']}
+          animate={false}
         >
           <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
           <Legend />
@@ -138,13 +137,14 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             type: {
               formatter: (v: string) => {
                 return {
-                  positionRateOfReturn: '收益率',
-                  totalAnnualizedRateOfReturn: '年化收益率'
+                  positionRateOfReturn: '收益率%',
+                  totalAnnualizedRateOfReturn: '年化收益率%'
                 }[v]
               }
             }
           }}
           interactions={['tooltip', 'element-active']}
+          animate={false}
         >
           <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
           <Legend />
