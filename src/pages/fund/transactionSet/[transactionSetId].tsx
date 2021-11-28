@@ -10,10 +10,10 @@ import { history } from 'umi'
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
 } from '@/services/fund';
-import { Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
+import { Line, Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
 import { fetchTransactionSetById, TransactionSetStatus } from '@/services/transactionSet';
 import { batchFetchTransaction } from '@/services/transaction';
-import { sliceBetween, lastOfArray } from 'fund-tools';
+import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 
 // const colors = getTheme().colors10;
 
@@ -45,8 +45,6 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     return transactionSets[0] ?? []
   }, { refreshDeps: [transactionSet?.target] });
 
-  console.log('basicInfo, dividend, unitPrice, split', fourBasicData?.basicInfo, fourBasicData?.dividend, fourBasicData?.unitPrice, fourBasicData?.split);
-
   const priceChartData = useMemo(()=>{
     if(
       !transactionSet ||
@@ -61,18 +59,52 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     }
     const isArchivedSet = transactionSet.status === TransactionSetStatus.Archived;
     const formattedUnitPrices = sliceBetween(fourBasicData.unitPrice, transactions[0].date, isArchivedSet ? lastOfArray(transactions).date : dayjs())
-    return formattedUnitPrices.map((unitPriceItem) => ({
+    const priceChartDataResult = formattedUnitPrices.map((unitPriceItem) => ({
       date: unitPriceItem.date.format('YYYY-MM-DD'),
-      city: "London",
-      unitPrice: unitPriceItem.price
+      type: "unitPrice",
+      price: unitPriceItem.price
     }))
+    formattedUnitPrices.forEach((formattedUnitPriceObject)=>{
+      const { unitCost } = calcReturn(
+        sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
+        sliceBetween(fourBasicData.dividend, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
+        sliceBetween(fourBasicData.split, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
+        sliceBetween(transactions, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
+      );
+      priceChartDataResult.push({
+        date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
+        type: "unitCost",
+        price: unitCost
+      })
+    })
+    return priceChartDataResult;
   }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
 
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>{`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}</NavBar>
       <div>
-        <Chart autoFit height={400} data={priceChartData} scale={{}}>
+        <Chart
+          autoFit
+          height={300}
+          data={priceChartData}
+          scale={{
+            date: {
+              type: 'timeCat',
+              alias: '日期',
+            },
+            type: {
+              formatter: (v: string) => {
+                return {
+                  unitPrice: '单位净值',
+                  unitCost: '持仓成本'
+                }[v]
+              }
+            }
+          }}
+          interactions={['tooltip', 'element-active']}
+        >
+          <Tooltip shared showCrosshairs showMarkers/>
           <Legend
             // itemName={{
             //   style: (item) => {
@@ -81,25 +113,26 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             // }}
           />
           <Axis name="date" />
-          <Axis name="unitPrice" />
-          <Geom
-            type="point"
-            position="date*unitPrice"
-            size={4}
-            shape={"circle"}
-            color={"city"}
-            style={{
-              stroke: "#fff",
-              lineWidth: 1
-            }}
-          />
-          <Geom
-            type="line"
-            position="date*unitPrice"
-            size={2}
-            color={"city"}
-            shape={"smooth"}
-          />
+          <Axis name="price" />
+          {/*<Geom*/}
+          {/*  type="point"*/}
+          {/*  position="date*unitPrice"*/}
+          {/*  size={4}*/}
+          {/*  shape={"circle"}*/}
+          {/*  color={"city"}*/}
+          {/*  style={{*/}
+          {/*    stroke: "#fff",*/}
+          {/*    lineWidth: 1*/}
+          {/*  }}*/}
+          {/*/>*/}
+          <Line shape="smooth" position="date*price" color="type"/>
+          {/*<Geom*/}
+          {/*  type="line"*/}
+          {/*  position="date*unitPrice"*/}
+          {/*  size={2}*/}
+          {/*  color={"city"}*/}
+          {/*  shape={"smooth"}*/}
+          {/*/>*/}
         </Chart>
       </div>
     </Fragment>
