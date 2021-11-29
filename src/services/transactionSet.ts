@@ -9,7 +9,7 @@ export enum TransactionSetStatus {
   Archived = 'archived'
 }
 
-export const fetchActiveTransactionSets: (
+export const fetchTransactionSetsByStatus: (
   status: TransactionSetStatus
 )=>Promise<TransactionSetType> = async (status) => {
   const result = (await axios.get(`${API_PREFIX}/fund/transactionSet`, {

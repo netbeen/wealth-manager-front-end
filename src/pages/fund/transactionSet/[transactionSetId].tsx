@@ -16,6 +16,12 @@ import { batchFetchTransaction } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 
 // const colors = getTheme().colors10;
+const restChartProps = {
+  interactions: ['tooltip', 'element-active'],
+  animate: false,
+  padding: [10, 10, 60, 50],
+  autoFit: true,
+}
 
 export default function({match: {params: {transactionSetId}}}: {match: {params: {transactionSetId: string}}}) {
   const { data: transactionSet } = useRequest(async () => {
@@ -59,7 +65,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
   }, [transactions])
   console.log('transactionChartData', transactionChartData);
 
-  const { priceChartData, rateOfReturnChartData } = useMemo(()=>{
+  const { priceChartData, rateOfReturnChartData, annualizedRateOfReturnChartData } = useMemo(()=>{
     if(
       !transactionSet ||
       !fourBasicData ||
@@ -72,6 +78,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       return {
         priceChartData: [],
         rateOfReturnChartData: [],
+        annualizedRateOfReturnChartData: [],
       };
     }
     const isArchivedSet = transactionSet.status === TransactionSetStatus.Archived;
@@ -82,9 +89,9 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       price: unitPriceItem.price
     }))
     const rateOfReturnChartDataResult: any[] = [];
+    const annualizedRateOfReturnChartDataResult: any[] = [];
     formattedUnitPrices.forEach((formattedUnitPriceObject, index)=>{
       console.log(`calcReturn... ${index}/${formattedUnitPrices.length}`)
-      // setCalcProgress(index/formattedUnitPrices.length);
       const { unitCost, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
         sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
         sliceBetween(fourBasicData.dividend, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
@@ -96,17 +103,22 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         type: "unitCost",
         price: Math.round(unitCost * 10000)/10000
       })
-      rateOfReturnChartDataResult.push({
-        date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
-        type: "positionRateOfReturn",
-        price: Math.round(positionRateOfReturn * 100 * 100) / 100
-      }, {
-        date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
-        type: "totalAnnualizedRateOfReturn",
-        price: Math.round(totalAnnualizedRateOfReturn * 100 * 100)/100
-      })
+      rateOfReturnChartDataResult.push(
+        {
+          date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
+          type: "positionRateOfReturn",
+          rate: Math.round(positionRateOfReturn * 100 * 100) / 100,
+        }
+      );
+      annualizedRateOfReturnChartDataResult.push(
+        {
+          date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
+          type: "totalAnnualizedRateOfReturn",
+          rate: Math.round(totalAnnualizedRateOfReturn * 100 * 100)/100
+        }
+      )
     })
-    return {priceChartData: priceChartDataResult, rateOfReturnChartData: rateOfReturnChartDataResult};
+    return {priceChartData: priceChartDataResult, rateOfReturnChartData: rateOfReturnChartDataResult, annualizedRateOfReturnChartData: annualizedRateOfReturnChartDataResult};
   }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
 
   return (
@@ -114,15 +126,9 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       <NavBar onBack={()=>{history.goBack()}}>{`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}</NavBar>
       <div>
         <Chart
-          autoFit
-          height={300}
-          padding={[10, 10, 60, 50]}
+          height={250}
           data={priceChartData}
           scale={{
-            date: {
-              type: 'timeCat',
-              alias: '日期',
-            },
             type: {
               formatter: (v: string) => {
                 return {
@@ -132,11 +138,9 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
               }
             }
           }}
-          interactions={['tooltip', 'element-active']}
-          animate={false}
+          {...restChartProps}
         >
           <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
-          <Legend />
           <Axis name="date" />
           <Axis name="price" />
           <Line shape="smooth" position="date*price" color="type"/>
@@ -156,32 +160,42 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           {/*</View>*/}
         </Chart>
         <Chart
-          autoFit
-          height={300}
-          padding={[10, 10, 60, 50]}
+          height={200}
           data={rateOfReturnChartData}
           scale={{
-            date: {
-              type: 'timeCat',
-              alias: '日期',
-            },
             type: {
               formatter: (v: string) => {
                 return {
                   positionRateOfReturn: '收益率%',
-                  totalAnnualizedRateOfReturn: '年化收益率%'
                 }[v]
               }
             }
           }}
-          interactions={['tooltip', 'element-active']}
-          animate={false}
+          {...restChartProps}
         >
           <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
-          <Legend />
           <Axis name="date" />
-          <Axis name="price" />
-          <Line shape="smooth" position="date*price" color="type"/>
+          <Axis name="rate" />
+          <Line shape="smooth" position="date*rate" color={["type", ['#F6903D']]}/>
+        </Chart>
+        <Chart
+          height={200}
+          data={annualizedRateOfReturnChartData}
+          scale={{
+            type: {
+              formatter: (v: string) => {
+                return {
+                  totalAnnualizedRateOfReturn: '年化收益率%'
+                }[v]
+              }
+            },
+          }}
+          {...restChartProps}
+        >
+          <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+          <Axis name="date" />
+          <Axis name="rate" />
+          <Line shape="smooth" position="date*rate" color={["type", ['#F08BB4']]}/>
         </Chart>
       </div>
     </Fragment>

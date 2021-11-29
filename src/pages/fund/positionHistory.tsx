@@ -3,12 +3,11 @@ import React, { Fragment, useMemo, useState } from 'react';
 import styles from './position.less';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
-import { Button, Tabs } from 'antd-mobile';
+import { Tabs } from 'antd-mobile';
 import { fundSecondaryTabData } from '@/pages/fund/const';
 import { history } from '@@/core/history';
 import { useAsyncEffect, useRequest } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
-import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
@@ -43,12 +42,8 @@ export default function() {
   const [tableLoading, setTableLoading] = useState<boolean>(true)
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([])
 
-  const { data: currentOrganizationWithPermissionResult } = useRequest(async () => {
-    return await fetchCurrentOrganizationWithPermission()
-  }, { refreshDeps: [] });
-
   const { data: transactionSets } = useRequest(async () => {
-    return await fetchTransactionSetsByStatus(TransactionSetStatus.Active)
+    return await fetchTransactionSetsByStatus(TransactionSetStatus.Archived)
   }, { refreshDeps: [] });
 
   useAsyncEffect(async () => {
@@ -100,16 +95,6 @@ export default function() {
 
   const mainContent = useMemo(()=>(
     <div style={{display: 'flex', flexDirection: 'column'}}>
-      <Button
-        color='primary'
-        style={{marginBottom: 12}}
-        onClick={()=>{history.push('/fund/transaction')}}
-        disabled={
-          Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
-          !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
-          !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
-        }
-      >添加交易</Button>
       <AntdBaseTable
         dataSource={tableData}
         columns={columns}
@@ -117,18 +102,18 @@ export default function() {
         isLoading={tableLoading}
       />
     </div>
-  ),[currentOrganizationWithPermissionResult, tableData, tableLoading]);
+  ),[tableData, tableLoading]);
 
   return (
     <Fragment>
       <Tabs
         className={layoutStyles.mainContentTab}
         onChange={(key)=>{history.push(fundSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
-        activeKey={'position'}
+        activeKey={'positionHistory'}
       >
         {fundSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'position' && mainContent}
+            {item.value === 'positionHistory' && mainContent}
           </TabPane>
         ))}
       </Tabs>
