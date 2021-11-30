@@ -1,21 +1,20 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 // @ts-ignore
 import styles from '../position.less';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
-import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
+import { ProgressCircle, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest } from 'ahooks'
 import { history } from 'umi'
 import {
-  fetchBasicInfoUnitPriceSplitDividendByIdentifier,
+  fetchBasicInfoUnitPriceSplitDividendByIdentifier, FundDividendType, FundPriceType, FundSpitType,
 } from '@/services/fund';
-import { View, Point, Line, Chart, Geom, Axis, Tooltip, Legend, getTheme } from 'bizcharts';
-import { fetchTransactionSetById, TransactionSetStatus } from '@/services/transactionSet';
-import { batchFetchTransaction } from '@/services/transaction';
+import { Line, Chart, Axis, Tooltip } from 'bizcharts';
+import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } from '@/services/transactionSet';
+import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 
-// const colors = getTheme().colors10;
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
   animate: false,
@@ -33,7 +32,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     if(!transactionSet?.target){
       return;
     }
-    const {basicInfos, dividends, unitPrices, splits} = await fetchBasicInfoUnitPriceSplitDividendByIdentifier([transactionSet.target])
+    const { basicInfos, dividends, unitPrices, splits } = await fetchBasicInfoUnitPriceSplitDividendByIdentifier([transactionSet.target])
     return {
       basicInfo: basicInfos[0],
       dividend: dividends[0],
@@ -51,8 +50,6 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     return transactionSets[0] ?? []
   }, { refreshDeps: [transactionSet?.target] });
 
-  const [calcProgress, setCalcProgress] = useState<number>(0);
-
   const transactionChartData = useMemo(()=>{
     if(!transactions){
       return [];
@@ -63,9 +60,76 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       price: 1,
     }))
   }, [transactions])
+  // 用于标记交易点位，还未实现，暂时log
   console.log('transactionChartData', transactionChartData);
 
-  const { priceChartData, rateOfReturnChartData, annualizedRateOfReturnChartData } = useMemo(()=>{
+  const [calcProgress, setCalcProgress] = useState<number>(0)
+  const [priceChartData, setPriceChartData] = useState<{date: string; type: string; price: number}[]>([])
+  const [rateOfReturnChartData, setRateOfReturnChartData] = useState<{date: string; type: string; rate: number}[]>([])
+  const [annualizedRateOfReturnChartData, setAnnualizedRateOfReturnChartData] = useState<{date: string; type: string; rate: number}[]>([])
+
+  // 计算Chart数据的异步函数，因为计算量太大，容易导致浏览器卡死，所以转换为异步函数，不block主线程渲染
+  const calcChartData = useCallback(async (
+    inputTransactionSet: TransactionSetType,
+    inputUnitPrices: FundPriceType[],
+    inputDividends: FundDividendType[],
+    inputSplits: FundSpitType[],
+    inputTransactions: TransactionType[],
+  )=>{
+    const isArchivedSet = inputTransactionSet.status === TransactionSetStatus.Archived;
+    const formattedUnitPrices = sliceBetween(inputUnitPrices, inputTransactions[0].date, isArchivedSet ? lastOfArray(inputTransactions).date : dayjs())
+    const priceChartDataResult = formattedUnitPrices.map((unitPriceItem) => ({
+      date: unitPriceItem.date.format('YYYY-MM-DD'),
+      type: "unitPrice",
+      price: unitPriceItem.price
+    }))
+    const rateOfReturnChartDataResult: any[] = [];
+    const annualizedRateOfReturnChartDataResult: any[] = [];
+    for(let index = 0; index < formattedUnitPrices.length; index += 1){
+      setCalcProgress(index/formattedUnitPrices.length);
+      const { unitCost, positionRateOfReturn, totalAnnualizedRateOfReturn } = await new Promise((resolve)=>{
+        const result = calcReturn(
+          sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
+          sliceBetween(inputDividends, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
+          sliceBetween(inputSplits, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
+          sliceBetween(inputTransactions, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
+        )
+        if(index % 10 === 0){
+          setTimeout(()=>{
+            resolve(result)
+          }, 50)
+        } else {
+          resolve(result)
+        }
+
+      })
+      priceChartDataResult.push({
+        date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
+        type: "unitCost",
+        price: Math.round(unitCost * 10000)/10000
+      })
+      rateOfReturnChartDataResult.push(
+        {
+          date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
+          type: "positionRateOfReturn",
+          rate: Math.round(positionRateOfReturn * 100 * 100) / 100,
+        }
+      );
+      annualizedRateOfReturnChartDataResult.push(
+        {
+          date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
+          type: "totalAnnualizedRateOfReturn",
+          rate: Math.round(totalAnnualizedRateOfReturn * 100 * 100)/100
+        }
+      )
+    }
+    setPriceChartData(priceChartDataResult);
+    setRateOfReturnChartData(rateOfReturnChartDataResult);
+    setAnnualizedRateOfReturnChartData(annualizedRateOfReturnChartDataResult);
+    setCalcProgress(1);
+  }, [])
+
+  useEffect(()=>{
     if(
       !transactionSet ||
       !fourBasicData ||
@@ -75,128 +139,116 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       !Array.isArray(transactions) ||
       transactions.length === 0
     )  {
-      return {
-        priceChartData: [],
-        rateOfReturnChartData: [],
-        annualizedRateOfReturnChartData: [],
-      };
+      return;
     }
-    const isArchivedSet = transactionSet.status === TransactionSetStatus.Archived;
-    const formattedUnitPrices = sliceBetween(fourBasicData.unitPrice, transactions[0].date, isArchivedSet ? lastOfArray(transactions).date : dayjs())
-    const priceChartDataResult = formattedUnitPrices.map((unitPriceItem) => ({
-      date: unitPriceItem.date.format('YYYY-MM-DD'),
-      type: "unitPrice",
-      price: unitPriceItem.price
-    }))
-    const rateOfReturnChartDataResult: any[] = [];
-    const annualizedRateOfReturnChartDataResult: any[] = [];
-    formattedUnitPrices.forEach((formattedUnitPriceObject, index)=>{
-      console.log(`calcReturn... ${index}/${formattedUnitPrices.length}`)
-      const { unitCost, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
-        sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
-        sliceBetween(fourBasicData.dividend, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
-        sliceBetween(fourBasicData.split, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
-        sliceBetween(transactions, formattedUnitPrices[0].date, formattedUnitPriceObject.date),
-      );
-      priceChartDataResult.push({
-        date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
-        type: "unitCost",
-        price: Math.round(unitCost * 10000)/10000
-      })
-      rateOfReturnChartDataResult.push(
-        {
-          date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
-          type: "positionRateOfReturn",
-          rate: Math.round(positionRateOfReturn * 100 * 100) / 100,
-        }
-      );
-      annualizedRateOfReturnChartDataResult.push(
-        {
-          date: formattedUnitPriceObject.date.format('YYYY-MM-DD'),
-          type: "totalAnnualizedRateOfReturn",
-          rate: Math.round(totalAnnualizedRateOfReturn * 100 * 100)/100
-        }
-      )
-    })
-    return {priceChartData: priceChartDataResult, rateOfReturnChartData: rateOfReturnChartDataResult, annualizedRateOfReturnChartData: annualizedRateOfReturnChartDataResult};
+    calcChartData(
+      transactionSet,
+      fourBasicData.unitPrice,
+      fourBasicData.dividend,
+      fourBasicData.split,
+      transactions
+    );
   }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
+
+  const loadingTip = useMemo(()=>(
+    <div style={{ width: '100%', textAlign: 'center', marginTop: '0.25rem' }}>
+      <ProgressCircle
+        percent={calcProgress * 100}
+        style={{ '--track-width': '0.1rem', '--size': '3rem' }}
+      >
+        {`${Math.round(calcProgress * 100)}%`}
+      </ProgressCircle>
+    </div>
+  ), [calcProgress])
+
+  const chartContent = useMemo(()=>(
+    <Fragment>
+      <Chart
+        height={250}
+        data={priceChartData}
+        scale={{
+          type: {
+            formatter: (v: string) => {
+              return {
+                unitPrice: '单位净值',
+                unitCost: '持仓成本'
+              }[v]
+            }
+          }
+        }}
+        {...restChartProps}
+      >
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+        <Axis name="date" />
+        <Axis name="price" />
+        <Line shape="smooth" position="date*price" color="type"/>
+        {/*<View*/}
+        {/*  data={transactionChartData}*/}
+        {/*  padding={0}*/}
+        {/*>*/}
+        {/*  <Point*/}
+        {/*    position="date*price"*/}
+        {/*    // shape={['type', (type)=>{*/}
+        {/*    //   if(type === 'unitCost'){*/}
+        {/*    //     return 'circle';*/}
+        {/*    //   }*/}
+        {/*    //   return 'rect';*/}
+        {/*    // }]}*/}
+        {/*  />*/}
+        {/*</View>*/}
+      </Chart>
+      <Chart
+        height={200}
+        data={rateOfReturnChartData}
+        scale={{
+          type: {
+            formatter: (v: string) => {
+              return {
+                positionRateOfReturn: '收益率%',
+              }[v]
+            }
+          }
+        }}
+        {...restChartProps}
+      >
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+        <Axis name="date" />
+        <Axis name="rate" />
+        <Line shape="smooth" position="date*rate" color={["type", ['#F6903D']]}/>
+      </Chart>
+      <Chart
+        height={200}
+        data={annualizedRateOfReturnChartData}
+        scale={{
+          type: {
+            formatter: (v: string) => {
+              return {
+                totalAnnualizedRateOfReturn: '年化收益率%'
+              }[v]
+            }
+          },
+        }}
+        {...restChartProps}
+      >
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+        <Axis name="date" />
+        <Axis name="rate" />
+        <Line shape="smooth" position="date*rate" color={["type", ['#F08BB4']]}/>
+      </Chart>
+    </Fragment>
+  ), [priceChartData, rateOfReturnChartData, annualizedRateOfReturnChartData]);
 
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>{`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}</NavBar>
       <div>
-        <Chart
-          height={250}
-          data={priceChartData}
-          scale={{
-            type: {
-              formatter: (v: string) => {
-                return {
-                  unitPrice: '单位净值',
-                  unitCost: '持仓成本'
-                }[v]
-              }
-            }
-          }}
-          {...restChartProps}
-        >
-          <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
-          <Axis name="date" />
-          <Axis name="price" />
-          <Line shape="smooth" position="date*price" color="type"/>
-          {/*<View*/}
-          {/*  data={transactionChartData}*/}
-          {/*  padding={0}*/}
-          {/*>*/}
-          {/*  <Point*/}
-          {/*    position="date*price"*/}
-          {/*    // shape={['type', (type)=>{*/}
-          {/*    //   if(type === 'unitCost'){*/}
-          {/*    //     return 'circle';*/}
-          {/*    //   }*/}
-          {/*    //   return 'rect';*/}
-          {/*    // }]}*/}
-          {/*  />*/}
-          {/*</View>*/}
-        </Chart>
-        <Chart
-          height={200}
-          data={rateOfReturnChartData}
-          scale={{
-            type: {
-              formatter: (v: string) => {
-                return {
-                  positionRateOfReturn: '收益率%',
-                }[v]
-              }
-            }
-          }}
-          {...restChartProps}
-        >
-          <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
-          <Axis name="date" />
-          <Axis name="rate" />
-          <Line shape="smooth" position="date*rate" color={["type", ['#F6903D']]}/>
-        </Chart>
-        <Chart
-          height={200}
-          data={annualizedRateOfReturnChartData}
-          scale={{
-            type: {
-              formatter: (v: string) => {
-                return {
-                  totalAnnualizedRateOfReturn: '年化收益率%'
-                }[v]
-              }
-            },
-          }}
-          {...restChartProps}
-        >
-          <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
-          <Axis name="date" />
-          <Axis name="rate" />
-          <Line shape="smooth" position="date*rate" color={["type", ['#F08BB4']]}/>
-        </Chart>
+        {
+          calcProgress !== 1 ? (
+            loadingTip
+          ) : (
+            chartContent
+          )
+        }
       </div>
     </Fragment>
   );
