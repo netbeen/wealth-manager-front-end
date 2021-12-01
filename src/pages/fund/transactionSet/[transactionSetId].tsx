@@ -14,6 +14,7 @@ import { Line, Chart, Axis, Tooltip } from 'bizcharts';
 import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } from '@/services/transactionSet';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
+import { roundWithPrecision } from '@/utils';
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
@@ -150,6 +151,28 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     );
   }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
 
+  const overviewData = useMemo(()=>{
+    if(
+      !transactionSet ||
+      !fourBasicData ||
+      !Array.isArray(fourBasicData.unitPrice) ||
+      !Array.isArray(fourBasicData.dividend) ||
+      !Array.isArray(fourBasicData.split) ||
+      !Array.isArray(transactions) ||
+      transactions.length === 0
+    )  {
+      return null;
+    }
+    const isArchivedSet = transactionSet.status === TransactionSetStatus.Archived;
+    const formattedUnitPrices = sliceBetween(fourBasicData.unitPrice, transactions[0].date, isArchivedSet ? lastOfArray(transactions).date : dayjs())
+    return calcReturn(
+      sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, lastOfArray(formattedUnitPrices).date),
+      sliceBetween(fourBasicData.dividend, formattedUnitPrices[0].date, lastOfArray(formattedUnitPrices).date),
+      sliceBetween(fourBasicData.split, formattedUnitPrices[0].date, lastOfArray(formattedUnitPrices).date),
+      sliceBetween(transactions, formattedUnitPrices[0].date, lastOfArray(formattedUnitPrices).date),
+    )
+  }, [fourBasicData?.unitPrice, fourBasicData?.dividend, fourBasicData?.split, transactions])
+
   const loadingTip = useMemo(()=>(
     <div style={{ width: '100%', textAlign: 'center', marginTop: '0.25rem' }}>
       <ProgressCircle
@@ -161,8 +184,31 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     </div>
   ), [calcProgress])
 
-  const chartContent = useMemo(()=>(
+  const chartContent = useMemo(()=>{
+    if(!overviewData || !fourBasicData || !Array.isArray(fourBasicData?.unitPrice)){
+      return null;
+    }
+    return (
     <Fragment>
+      <div
+        style={{
+
+        }}
+      >
+        <div style={{
+          display: 'flex'
+        }}>
+          <div style={{flexGrow: 1}}>总市值 {roundWithPrecision(overviewData.positionValue, 2)}</div>
+          <div>更新日期 {lastOfArray(fourBasicData.unitPrice).date.format('YYYY-MM-DD')}</div>
+        </div>
+        <div style={{
+          display: 'flex'
+        }}>
+          <div>持仓收益 {roundWithPrecision(overviewData.positionReturn, 2)}</div>
+          <div>持仓收益率 {roundWithPrecision(overviewData.positionRateOfReturn*100, 2)}%</div>
+          <div>年化收益率 {roundWithPrecision(overviewData.totalAnnualizedRateOfReturn*100, 2)}%</div>
+        </div>
+      </div>
       <Chart
         height={250}
         data={priceChartData}
@@ -236,7 +282,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         <Line shape="smooth" position="date*rate" color={["type", ['#F08BB4']]}/>
       </Chart>
     </Fragment>
-  ), [priceChartData, rateOfReturnChartData, annualizedRateOfReturnChartData]);
+  )}, [priceChartData, rateOfReturnChartData, annualizedRateOfReturnChartData]);
 
   return (
     <Fragment>

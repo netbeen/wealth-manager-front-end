@@ -24,15 +24,32 @@ import { calcReturn } from 'fund-tools';
 const TabPane = Tabs.TabPane
 
 const columns = [
-  { code: 'name', name: '基金名称', width: 150, render: (value: any, record: any) => (
-    <div style={{cursor: 'pointer'}} onClick={()=>{
-      history.push(`/fund/transactionSet/${record.transactionSet}`)
-    }}>
-      {value}
-    </div>) },
+  {
+    code: 'name',
+    name: '基金名称',
+    width: 150,
+    render: (value: any, record: any) => (
+      <div style={{cursor: 'pointer'}} onClick={()=>{
+        history.push(`/fund/transactionSet/${record.transactionSet}`)
+      }}>
+        {value}
+      </div>
+    )
+  },
   { code: 'positionValue', name: '市值', width: 100, align: 'right' },
-  { code: 'positionRateOfReturn', name: '收益率%', width: 80, align: 'right' },
-  { code: 'totalAnnualizedRateOfReturn', name: '年化收益率%', width: 80, align: 'right' },
+  {
+    code: 'positionRateOfReturn',
+    name: <div><div>收益率%</div><div>年化收益率%</div></div>,
+    width: 100,
+    align: 'right',
+    render: (_value: any, record: any) => (
+      <div>
+        <div>{record.positionRateOfReturn}</div>
+        <div>{record.totalAnnualizedRateOfReturn}</div>
+      </div>
+    )
+  },
+  // { code: 'totalAnnualizedRateOfReturn', name: '年化收益率%', width: 80, align: 'right' },
 ]
 
 export default function() {
