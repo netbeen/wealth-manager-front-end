@@ -4,3 +4,8 @@ export const TOKEN_COOKIE_NAME = 'wealthManagerToken'
 export const ORGANIZATION_COOKIE_NAME = 'wealthManagerOrganization'
 
 export const VISITOR_USER_IDENTIFIER = '6193c6666865251545a99dff'
+
+export enum COLOR {
+  Profitable = '#d20',
+  LossMaking = '#093'
+}

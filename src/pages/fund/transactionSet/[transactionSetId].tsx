@@ -15,6 +15,7 @@ import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } fro
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 import { roundWithPrecision } from '@/utils';
+import { COLOR } from '@/globalConst';
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
@@ -184,31 +185,63 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     </div>
   ), [calcProgress])
 
+  const overviewContent = useMemo(()=>{
+    if(!overviewData || !fourBasicData){
+      return null;
+    }
+    return (
+      <Fragment>
+        <div
+          style={{
+            background: overviewData.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking,
+            borderRadius: 4,
+            margin: '0 6px',
+            padding: '6px 6px',
+            color: 'white'
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}>
+            <div>
+              <div>总市值</div>
+              <div>{roundWithPrecision(overviewData.positionValue, 2)}</div>
+            </div>
+            <div style={{textAlign: 'right'}}>
+              <div>更新日期</div>
+              <div>{lastOfArray(fourBasicData.unitPrice).date.format('YYYY-MM-DD')}</div>
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '0.5rem'
+          }}>
+            <div>
+              <div>持仓收益</div>
+              <div>{roundWithPrecision(overviewData.positionReturn, 2)}</div>
+            </div>
+            <div style={{textAlign: 'center'}}>
+              <div>持仓收益率</div>
+              <div>{roundWithPrecision(overviewData.positionRateOfReturn*100, 2)}%</div>
+            </div>
+            <div style={{textAlign: 'right'}}>
+              <div>年化收益率</div>
+              <div>{roundWithPrecision(overviewData.totalAnnualizedRateOfReturn*100, 2)}%</div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }, [overviewData])
+
   const chartContent = useMemo(()=>{
-    if(!overviewData || !fourBasicData || !Array.isArray(fourBasicData?.unitPrice)){
+    if(!fourBasicData || !Array.isArray(fourBasicData?.unitPrice)){
       return null;
     }
     return (
     <Fragment>
-      <div
-        style={{
-
-        }}
-      >
-        <div style={{
-          display: 'flex'
-        }}>
-          <div style={{flexGrow: 1}}>总市值 {roundWithPrecision(overviewData.positionValue, 2)}</div>
-          <div>更新日期 {lastOfArray(fourBasicData.unitPrice).date.format('YYYY-MM-DD')}</div>
-        </div>
-        <div style={{
-          display: 'flex'
-        }}>
-          <div>持仓收益 {roundWithPrecision(overviewData.positionReturn, 2)}</div>
-          <div>持仓收益率 {roundWithPrecision(overviewData.positionRateOfReturn*100, 2)}%</div>
-          <div>年化收益率 {roundWithPrecision(overviewData.totalAnnualizedRateOfReturn*100, 2)}%</div>
-        </div>
-      </div>
       <Chart
         height={250}
         data={priceChartData}
@@ -244,7 +277,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         {/*</View>*/}
       </Chart>
       <Chart
-        height={200}
+        height={180}
         data={rateOfReturnChartData}
         scale={{
           type: {
@@ -263,7 +296,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         <Line shape="smooth" position="date*rate" color={["type", ['#F6903D']]}/>
       </Chart>
       <Chart
-        height={200}
+        height={180}
         data={annualizedRateOfReturnChartData}
         scale={{
           type: {
@@ -291,9 +324,10 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         {
           calcProgress !== 1 ? (
             loadingTip
-          ) : (
+          ) : [
+            overviewContent,
             chartContent
-          )
+          ]
         }
       </div>
     </Fragment>
