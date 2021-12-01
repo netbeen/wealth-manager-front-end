@@ -20,7 +20,7 @@ import { COLOR } from '@/globalConst';
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
   animate: false,
-  padding: [10, 10, 60, 50],
+  padding: [10, 10, 60, 40],
   autoFit: true,
 }
 
