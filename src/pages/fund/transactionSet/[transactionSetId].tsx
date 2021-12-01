@@ -195,7 +195,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           style={{
             background: overviewData.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking,
             borderRadius: 4,
-            margin: '0 6px',
+            margin: '0 6px 6px 6px',
             padding: '6px 6px',
             color: 'white'
           }}
