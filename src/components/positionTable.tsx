@@ -1,12 +1,8 @@
-import React, { Fragment, useMemo, useState } from 'react';
-// @ts-ignore
-import layoutStyles from '@/layouts/index.less';
-import { Tabs } from 'antd-mobile';
-import { fundSecondaryTabData } from '@/pages/fund/const';
+import React, { useMemo, useState } from 'react';
 import { history } from '@@/core/history';
-import { useAsyncEffect, useRequest } from 'ahooks';
+import { useAsyncEffect } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
+import { TransactionSetType } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
@@ -17,32 +13,41 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn } from 'fund-tools';
 
-// @ts-ignore
-const TabPane = Tabs.TabPane
-
 const columns = [
-  { code: 'name', name: '基金名称', width: 150, render: (value: any, record: any) => (
-    <div style={{cursor: 'pointer'}} onClick={()=>{
-      history.push(`/fund/transactionSet/${record.transactionSet}`)
-    }}>
-      {value}
-    </div>) },
+  {
+    code: 'name',
+    name: '基金名称',
+    width: 150,
+    render: (value: any, record: any) => (
+      <div style={{cursor: 'pointer'}} onClick={()=>{
+        history.push(`/fund/transactionSet/${record.transactionSet}`)
+      }}>
+        {value}
+      </div>
+    )
+  },
   { code: 'positionValue', name: '市值', width: 100, align: 'right' },
-  { code: 'positionRateOfReturn', name: '收益率%', width: 80, align: 'right' },
-  { code: 'totalAnnualizedRateOfReturn', name: '年化收益率%', width: 80, align: 'right' },
+  {
+    code: 'positionRateOfReturn',
+    name: <div><div>收益率%</div><div>年化收益率%</div></div>,
+    width: 100,
+    align: 'right',
+    render: (_value: any, record: any) => (
+      <div>
+        <div>{record.positionRateOfReturn}</div>
+        <div>{record.totalAnnualizedRateOfReturn}</div>
+      </div>
+    )
+  },
 ]
 
-export default function() {
+export default function({transactionSets}: {transactionSets: TransactionSetType[]}) {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([])
   const [unitPricesList, setUnitPricesList] = useState<Array<Array<FundPriceType>>>([])
   const [dividendsList, setDividendsList] = useState<Array<Array<FundDividendType>>>([])
   const [splitsList, setSplitsList] = useState<Array<Array<FundSpitType>>>([])
   const [tableLoading, setTableLoading] = useState<boolean>(true)
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([])
-
-  const { data: transactionSets } = useRequest(async () => {
-    return await fetchTransactionSetsByStatus(TransactionSetStatus.Archived)
-  }, { refreshDeps: [] });
 
   useAsyncEffect(async () => {
     if(!Array.isArray(transactionSets)){
@@ -91,30 +96,12 @@ export default function() {
     })
   }, [transactionSets, fundBasicInfoList, unitPricesList, dividendsList, splitsList, transactionsList])
 
-  const mainContent = useMemo(()=>(
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <AntdBaseTable
-        dataSource={tableData}
-        columns={columns}
-        isStickyHeader={false}
-        isLoading={tableLoading}
-      />
-    </div>
-  ),[tableData, tableLoading]);
-
   return (
-    <Fragment>
-      <Tabs
-        className={layoutStyles.mainContentTab}
-        onChange={(key)=>{history.push(fundSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
-        activeKey={'positionHistory'}
-      >
-        {fundSecondaryTabData.map(item => (
-          <TabPane title={item.label} key={item.value}>
-            {item.value === 'positionHistory' && mainContent}
-          </TabPane>
-        ))}
-      </Tabs>
-    </Fragment>
+    <AntdBaseTable
+      dataSource={tableData}
+      columns={columns}
+      isStickyHeader={false}
+      isLoading={tableLoading}
+    />
   );
 }

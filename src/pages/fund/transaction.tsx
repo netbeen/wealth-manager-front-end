@@ -1,8 +1,4 @@
 import React, { Fragment, useMemo, useState } from 'react';
-// @ts-ignore
-import styles from './position.less';
-// @ts-ignore
-import layoutStyles from '@/layouts/index.less';
 import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
