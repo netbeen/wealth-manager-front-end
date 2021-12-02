@@ -9,6 +9,8 @@ const config: IConfig = {
     name: 'google-site-verification',
     content: 'nfOPr4G-D6vPaud2_lZtu7JpzA6FZ71Zy3XV-ekCL8w',
   }],
+  webpack5: {},
+  mfsu: {},
 };
 
 export default config;
