@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Button, Tabs } from 'antd-mobile';
@@ -46,7 +46,7 @@ export default function() {
       >
         {fundSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'position' && mainContent}
+            {item.value === 'position' ? mainContent : <div/>}
           </TabPane>
         ))}
       </Tabs>

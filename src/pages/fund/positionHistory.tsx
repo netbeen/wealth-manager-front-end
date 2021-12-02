@@ -29,7 +29,7 @@ export default function() {
       >
         {fundSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'positionHistory' && mainContent}
+            {item.value === 'positionHistory' ? mainContent : <div/>}
           </TabPane>
         ))}
       </Tabs>

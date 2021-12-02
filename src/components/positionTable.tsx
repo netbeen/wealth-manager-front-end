@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
-import { TransactionSetType } from '@/services/transactionSet';
+import { TransactionSetStatus, TransactionSetType } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
@@ -14,50 +14,6 @@ import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn } from 'fund-tools';
 import { roundWithPrecision } from '@/utils';
 import { COLOR } from '@/globalConst';
-
-const columns = [
-  {
-    code: 'name',
-    name: '基金名称',
-    width: 150,
-    render: (value: any, record: any) => (
-      <div style={{cursor: 'pointer'}} onClick={()=>{
-        history.push(`/fund/transactionSet/${record.transactionSet}`)
-      }}>
-        <div>{`${record.name ?? 'Loading...'} [${record.identifier}]`}</div>
-      </div>
-    )
-  },
-  {
-    code: 'positionValue',
-    name: '市值',
-    width: 100,
-    align: 'right',
-    render: (value: any, record: any) => (
-      <div>{record.positionValue ? roundWithPrecision(record.positionValue, 2) : ''}</div>
-    )
-  },
-  {
-    code: 'positionRateOfReturn',
-    name: <div><div>收益率%</div><div>年化收益率%</div></div>,
-    width: 100,
-    align: 'right',
-    render: (_value: any, record: any) => (
-      <div>
-        <div style={{
-          color: record.positionRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
-        }}>
-          {record.positionRateOfReturn ? roundWithPrecision(record.positionRateOfReturn * 100, 2) : ''}%
-        </div>
-        <div style={{
-          color: record.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
-        }}>
-          {record.totalAnnualizedRateOfReturn ? roundWithPrecision(record.totalAnnualizedRateOfReturn * 100, 2) : ''}%
-        </div>
-      </div>
-    )
-  },
-]
 
 export default function({transactionSets}: {transactionSets: TransactionSetType[]}) {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([])
@@ -81,6 +37,64 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
     setTableLoading(false);
   }, [transactionSets]);
 
+  const columns = useMemo(()=>{
+    if(!transactionSets[0]){
+      return [];
+    }
+    const transactionSetActive = transactionSets[0].status === TransactionSetStatus.Active;
+    return ([
+      {
+        code: 'name',
+        name: '基金名称',
+        width: 150,
+        render: (value: any, record: any) => (
+          <div style={{cursor: 'pointer'}} onClick={()=>{
+            history.push(`/fund/transactionSet/${record.transactionSet}`)
+          }}>
+            <div>{`${record.name ?? 'Loading...'} [${record.identifier}]`}</div>
+          </div>
+        )
+      },
+      transactionSetActive ? {
+        code: 'positionValue',
+        name: '市值',
+        width: 100,
+        align: 'right',
+        render: (value: any, record: any) => (
+          <div>{record.positionValue ? roundWithPrecision(record.positionValue, 2) : ''}</div>
+        )
+      } : {
+        code: 'positionValue',
+        name: '收益额',
+        width: 100,
+        align: 'right',
+        render: (value: any, record: any) => (
+          <div>{record.totalReturn ? roundWithPrecision(record.totalReturn, 2) : ''}</div>
+        )
+      },
+      {
+        code: 'positionRateOfReturn',
+        name: <div><div>收益率%</div><div>年化收益率%</div></div>,
+        width: 100,
+        align: 'right',
+        render: (_value: any, record: any) => (
+          <div>
+            <div style={{
+              color: record.totalRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
+            }}>
+              {record.totalRateOfReturn ? roundWithPrecision(record.totalRateOfReturn * 100, 2) : ''}%
+            </div>
+            <div style={{
+              color: record.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
+            }}>
+              {record.totalAnnualizedRateOfReturn ? roundWithPrecision(record.totalAnnualizedRateOfReturn * 100, 2) : ''}%
+            </div>
+          </div>
+        )
+      },
+    ])
+  }, [transactionSets]);
+
   const tableData = useMemo(()=>{
     if(!Array.isArray(transactionSets)){
       return [];
@@ -90,16 +104,18 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         identifier: string;
         name?: string;
         positionValue: null | number;
-        positionRateOfReturn: null | number;
+        totalRateOfReturn: null | number;
         totalAnnualizedRateOfReturn: null | number;
         transactionSet: string;
+        totalReturn: number | null;
       } = {
         identifier: transactionSet.target,
         name: fundBasicInfoList[index]?.name,
         positionValue: null,
-        positionRateOfReturn: null,
+        totalRateOfReturn: null,
         totalAnnualizedRateOfReturn: null,
         transactionSet: transactionSet._id,
+        totalReturn: null,
       };
       if(
         !Array.isArray(unitPricesList[index]) ||
@@ -109,15 +125,16 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
       ){
         return rowData;
       }
-      const { positionValue, positionRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
+      const { positionValue, totalReturn, totalRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
         unitPricesList[index],
         dividendsList[index],
         splitsList[index],
         transactionsList[index]
       );
       rowData.positionValue = positionValue;
-      rowData.positionRateOfReturn = positionRateOfReturn;
+      rowData.totalRateOfReturn = totalRateOfReturn;
       rowData.totalAnnualizedRateOfReturn = totalAnnualizedRateOfReturn;
+      rowData.totalReturn = totalReturn;
       return rowData;
     })
   }, [transactionSets, fundBasicInfoList, unitPricesList, dividendsList, splitsList, transactionsList])

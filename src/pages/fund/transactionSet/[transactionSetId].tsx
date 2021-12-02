@@ -29,6 +29,8 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     return await fetchTransactionSetById(transactionSetId)
   }, { refreshDeps: [] });
 
+  const transactionSetActive = useMemo(()=>(transactionSet && transactionSet.status === TransactionSetStatus.Active), [transactionSet]);
+
   // 获取爬虫的四大基本数据
   const { data: fourBasicData } = useRequest(async () => {
     if(!transactionSet?.target){
@@ -63,7 +65,9 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     }))
   }, [transactions])
   // 用于标记交易点位，还未实现，暂时log
-  console.log('transactionChartData', transactionChartData);
+  useEffect(()=>{
+    console.log('todo: transactionChartData', transactionChartData);
+  }, [transactionChartData])
 
   const [calcProgress, setCalcProgress] = useState<number>(0)
   const [priceChartData, setPriceChartData] = useState<{date: string; type: string; price: number}[]>([])
@@ -89,7 +93,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     const annualizedRateOfReturnChartDataResult: any[] = [];
     for(let index = 0; index < formattedUnitPrices.length; index += 1){
       setCalcProgress(index/formattedUnitPrices.length);
-      const { unitCost, positionRateOfReturn, totalAnnualizedRateOfReturn } = await new Promise((resolve)=>{
+      const { unitCost, totalRateOfReturn, totalAnnualizedRateOfReturn } = await new Promise((resolve)=>{
         const result = calcReturn(
           sliceBetween(formattedUnitPrices, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
           sliceBetween(inputDividends, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
@@ -113,8 +117,8 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       rateOfReturnChartDataResult.push(
         {
           date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
-          type: "positionRateOfReturn",
-          rate: Math.round(positionRateOfReturn * 100 * 100) / 100,
+          type: "totalRateOfReturn",
+          rate: Math.round(totalRateOfReturn * 100 * 100) / 100,
         }
       );
       annualizedRateOfReturnChartDataResult.push(
@@ -186,7 +190,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
   ), [calcProgress])
 
   const overviewContent = useMemo(()=>{
-    if(!overviewData || !fourBasicData){
+    if(!overviewData || !fourBasicData || !transactions){
       return null;
     }
     return (
@@ -210,7 +214,9 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             </div>
             <div style={{textAlign: 'right'}}>
               <div>更新日期</div>
-              <div>{lastOfArray(fourBasicData.unitPrice).date.format('YYYY-MM-DD')}</div>
+              <div>{
+                (transactionSetActive ? lastOfArray(fourBasicData.unitPrice) : lastOfArray(transactions)) .date.format('YYYY-MM-DD')
+              }</div>
             </div>
           </div>
           <div style={{
@@ -219,12 +225,12 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             marginTop: '0.5rem'
           }}>
             <div>
-              <div>持仓收益</div>
-              <div>{roundWithPrecision(overviewData.positionReturn, 2)}</div>
+              <div>收益额</div>
+              <div>{roundWithPrecision(overviewData.totalReturn, 2)}</div>
             </div>
             <div style={{textAlign: 'center'}}>
-              <div>持仓收益率</div>
-              <div>{roundWithPrecision(overviewData.positionRateOfReturn*100, 2)}%</div>
+              <div>收益率</div>
+              <div>{roundWithPrecision(overviewData.totalRateOfReturn*100, 2)}%</div>
             </div>
             <div style={{textAlign: 'right'}}>
               <div>年化收益率</div>
@@ -283,7 +289,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           type: {
             formatter: (v: string) => {
               return {
-                positionRateOfReturn: '收益率%',
+                totalRateOfReturn: '收益率%',
               }[v]
             }
           }
@@ -324,10 +330,12 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
         {
           calcProgress !== 1 ? (
             loadingTip
-          ) : [
-            overviewContent,
-            chartContent
-          ]
+          ) : (
+            <Fragment>
+              {overviewContent}
+              {chartContent}
+            </Fragment>
+          )
         }
       </div>
     </Fragment>

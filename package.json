@@ -24,7 +24,7 @@
     "axios": "^0.24.0",
     "bizcharts": "^4.1.14",
     "dayjs": "^1.10.7",
-    "fund-tools": "^0.0.38",
+    "fund-tools": "^0.0.41",
     "js-cookie": "^3.0.1",
     "react": "^16.14.0",
     "react-dom": "^16.8.6",
