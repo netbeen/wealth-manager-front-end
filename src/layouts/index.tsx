@@ -1,8 +1,6 @@
 import React, { Fragment } from 'react';
 // @ts-ignore
 import styles from './index.less';
-// @ts-ignore
-import logoSrc from '@/assets/logo.svg'
 import useLoginStatusChecker from '@/hooks/useLoginStatusChecker';
 import { TabBar, Toast } from 'antd-mobile'
 import axios from 'axios'
