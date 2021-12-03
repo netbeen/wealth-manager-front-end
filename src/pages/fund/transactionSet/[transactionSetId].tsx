@@ -210,7 +210,12 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           }}>
             <div>
               <div>总市值</div>
-              <div>{roundWithPrecision(overviewData.positionValue, 2)}</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(overviewData.positionValue)
+              }</div>
             </div>
             <div style={{textAlign: 'right'}}>
               <div>更新日期</div>
@@ -226,11 +231,18 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           }}>
             <div>
               <div>收益额</div>
-              <div>{roundWithPrecision(overviewData.totalReturn, 2)}</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(overviewData.totalReturn)
+              }</div>
             </div>
             <div style={{textAlign: 'center'}}>
               <div>收益率</div>
-              <div>{roundWithPrecision(overviewData.totalRateOfReturn*100, 2)}%</div>
+              <div>{
+                roundWithPrecision(overviewData.totalRateOfReturn*100, 2)
+              }%</div>
             </div>
             <div style={{textAlign: 'right'}}>
               <div>年化收益率</div>

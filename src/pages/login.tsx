@@ -4,7 +4,7 @@ import styles from './login.less';
 import axios from 'axios';
 import {Input, Form, Button, Toast } from 'antd-mobile';
 import sha1 from 'sha1';
-import { API_PREFIX, ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME, VISITOR_USER_IDENTIFIER } from '@/globalConst';
+import { API_PREFIX, ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
 import cookies from 'js-cookie';
 import { history } from 'umi';
 import { getAuthorizationHeaders } from '@/utils';

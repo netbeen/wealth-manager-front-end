@@ -3,6 +3,7 @@ import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-m
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
 import { history } from 'umi'
+import MobileDetect from 'mobile-detect'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
 
@@ -10,6 +11,8 @@ export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [fundIdentifier, setFundIdentifier] = useState<string>('')
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
+
+  const mobilePhoneModel = useMemo(()=>((new MobileDetect(window.navigator.userAgent)).mobile()), [])
 
   const debouncedIdentifier = useDebounce(fundIdentifier, { wait: 500 })
 
@@ -22,7 +25,7 @@ export default function() {
     refreshDeps: [debouncedIdentifier],
   });
 
-  const { data: fundUnitPriceList, error: fundUnitPriceError } = useRequest(async () => {
+  const { data: fundUnitPriceList } = useRequest(async () => {
     if(debouncedIdentifier.length === 0){
       return;
     }
@@ -39,7 +42,6 @@ export default function() {
       };
     }
     const targetUnitPriceObject = fundUnitPriceList.find(item => item.date.isSame(date))
-    // console.log('fundUnitPriceList', fundUnitPriceList[fundUnitPriceList.length - 1].date.format(), date.format());
     if(!targetUnitPriceObject){
       return {
         unitPrice: null,
@@ -90,9 +92,20 @@ export default function() {
           }
         }}
         footer={
-          <Button block type='submit' color='primary'>
-            提交
-          </Button>
+          <Fragment>
+            <Button block type='submit' color='primary'>
+              提交
+            </Button>
+            {
+              !mobilePhoneModel &&
+              <Button
+                block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
+                onClick={()=>{}}
+              >
+                切换到桌面端页面
+              </Button>
+            }
+          </Fragment>
         }
       >
         <Form.Item

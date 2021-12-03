@@ -1279,6 +1279,11 @@
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
+"@types/accounting@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.npmjs.org/@types/accounting/-/accounting-0.4.2.tgz#81239fc56bc62511a3d3ff535dde2e0bbf3c53c1"
+  integrity sha512-M8W6tsLZguGdRaSQMmg58PUM/5HgoDuBGVyMiYNGi0FZkLzJDjUBGGYRYj1J9OWELCTqfux+ogVyKObCzfWJgg==
+
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.16"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.16.tgz#bc12c74b7d65e82d29876b5d0baf5c625ac58702"
@@ -1466,6 +1471,13 @@
   version "1.3.2"
   resolved "https://registry.npmjs.org/@types/mime/-/mime-1.3.2.tgz#93e25bf9ee75fe0fd80b594bc4feb0e862111b5a"
   integrity sha512-YATxVxgRqNH6nHEIsvg6k2Boc1JHI9ZbH5iWFFv/MTkchz3b1ieGDa5T0a9RznNdI0KhVbdbWSN+KWWrQZRxTw==
+
+"@types/mobile-detect@^1.3.4":
+  version "1.3.4"
+  resolved "https://registry.npmjs.org/@types/mobile-detect/-/mobile-detect-1.3.4.tgz#1c6a7d1115c42e4e8d7388265126bc3609ea6747"
+  integrity sha512-MGBTvT5c7aH8eX6szFYP3dWPryNLt5iGlo31XNaJtt8o6jsg6tjn99eEMq9l8T6cPZymsr+J4Jth8+/G/04ZDw==
+  dependencies:
+    mobile-detect "*"
 
 "@types/node@*":
   version "16.11.9"
@@ -2044,6 +2056,11 @@ abab@^2.0.0, abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
   resolved "https://registry.npmjs.org/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
   integrity sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==
+
+accounting@^0.4.1:
+  version "0.4.1"
+  resolved "https://registry.npmjs.org/accounting/-/accounting-0.4.1.tgz#87dd4103eff7f4460f1e186f5c677ed6cf566883"
+  integrity sha1-h91BA+/39EYPHhhvXGd+1s9WaIM=
 
 acorn-globals@^4.3.0:
   version "4.3.4"
@@ -6759,6 +6776,11 @@ ml-matrix@^6.5.0:
   integrity sha512-5o2gVLFyieDSgsStEU5mqty4MZqfeytYA/gJqBSw5/Xuob0X2UrFX/k7FDh+YAwjzG/1l8nYa0oDaJ0sGs/RlA==
   dependencies:
     ml-array-rescale "^1.3.6"
+
+mobile-detect@*, mobile-detect@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.npmjs.org/mobile-detect/-/mobile-detect-1.4.5.tgz#da393c3c413ca1a9bcdd9ced653c38281c0fb6ad"
+  integrity sha512-yc0LhH6tItlvfLBugVUEtgawwFU2sIe+cSdmRJJCTMZ5GEJyLxNyC/NIOAOGk67Fa8GNpOttO3Xz/1bHpXFD/g==
 
 moment@^2.24.0, moment@^2.25.3, moment@^2.29.1:
   version "2.29.1"

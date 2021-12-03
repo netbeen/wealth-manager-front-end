@@ -14,6 +14,7 @@ import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn } from 'fund-tools';
 import { roundWithPrecision } from '@/utils';
 import { COLOR } from '@/globalConst';
+import { Dayjs } from 'dayjs';
 
 export default function({transactionSets}: {transactionSets: TransactionSetType[]}) {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([])
@@ -22,6 +23,8 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
   const [splitsList, setSplitsList] = useState<Array<Array<FundSpitType>>>([])
   const [tableLoading, setTableLoading] = useState<boolean>(true)
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([])
+
+  const transactionSetActive = !window.location.pathname.includes('History');
 
   useAsyncEffect(async () => {
     if(!Array.isArray(transactionSets)){
@@ -41,7 +44,6 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
     if(!transactionSets[0]){
       return [];
     }
-    const transactionSetActive = transactionSets[0].status === TransactionSetStatus.Active;
     return ([
       {
         code: 'name',
@@ -61,15 +63,27 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         width: 100,
         align: 'right',
         render: (value: any, record: any) => (
-          <div>{record.positionValue ? roundWithPrecision(record.positionValue, 2) : ''}</div>
+          <div>{record.positionValue ? Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(record.positionValue) : ''}</div>
         )
       } : {
         code: 'positionValue',
-        name: '收益额',
+        name: <div><div>起投日期</div><div>收益额</div></div>,
         width: 100,
         align: 'right',
         render: (value: any, record: any) => (
-          <div>{record.totalReturn ? roundWithPrecision(record.totalReturn, 2) : ''}</div>
+          <div>
+            <div>{record.startDate ? record.startDate.format('YYYY-MM-DD') : ''}</div>
+            <div>{record.totalReturn ?
+              Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+              }).format(record.totalReturn):
+              ''
+            }</div>
+          </div>
         )
       },
       {
@@ -108,6 +122,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         totalAnnualizedRateOfReturn: null | number;
         transactionSet: string;
         totalReturn: number | null;
+        startDate: Dayjs | null;
       } = {
         identifier: transactionSet.target,
         name: fundBasicInfoList[index]?.name,
@@ -116,6 +131,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         totalAnnualizedRateOfReturn: null,
         transactionSet: transactionSet._id,
         totalReturn: null,
+        startDate: null,
       };
       if(
         !Array.isArray(unitPricesList[index]) ||
@@ -135,8 +151,18 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
       rowData.totalRateOfReturn = totalRateOfReturn;
       rowData.totalAnnualizedRateOfReturn = totalAnnualizedRateOfReturn;
       rowData.totalReturn = totalReturn;
+      rowData.startDate = transactionsList[index][0].date
       return rowData;
-    })
+    }).sort((a,b)=>{
+      if(transactionSetActive && a.positionValue && b.positionValue){
+        // 按照市值从高到低排序
+        return b.positionValue - a.positionValue
+      }else if(!transactionSetActive && a.startDate && b.startDate){
+        return b.startDate.isBefore(a.startDate) ? 1 : -1
+      }else{
+        return 1;
+      }
+    });
   }, [transactionSets, fundBasicInfoList, unitPricesList, dividendsList, splitsList, transactionsList])
 
   return (
