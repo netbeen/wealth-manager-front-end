@@ -100,7 +100,7 @@ export default function() {
               !mobilePhoneModel &&
               <Button
                 block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
-                onClick={()=>{}}
+                onClick={()=>{history.push('/fund/transactionDesktop')}}
               >
                 切换到桌面端页面
               </Button>

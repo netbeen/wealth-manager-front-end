@@ -19,7 +19,7 @@ const config: IConfig = {
     content: '一站式基金投资管理平台',
   }],
   webpack5: {},
-  mfsu: {},
+  // mfsu: {},
 };
 
 export default config;

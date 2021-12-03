@@ -1279,11 +1279,6 @@
   resolved "https://registry.npmjs.org/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@types/accounting@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/@types/accounting/-/accounting-0.4.2.tgz#81239fc56bc62511a3d3ff535dde2e0bbf3c53c1"
-  integrity sha512-M8W6tsLZguGdRaSQMmg58PUM/5HgoDuBGVyMiYNGi0FZkLzJDjUBGGYRYj1J9OWELCTqfux+ogVyKObCzfWJgg==
-
 "@types/babel__core@^7.0.0", "@types/babel__core@^7.1.7":
   version "7.1.16"
   resolved "https://registry.npmjs.org/@types/babel__core/-/babel__core-7.1.16.tgz#bc12c74b7d65e82d29876b5d0baf5c625ac58702"
@@ -2056,11 +2051,6 @@ abab@^2.0.0, abab@^2.0.3, abab@^2.0.5:
   version "2.0.5"
   resolved "https://registry.npmjs.org/abab/-/abab-2.0.5.tgz#c0b678fb32d60fc1219c784d6a826fe385aeb79a"
   integrity sha512-9IK9EadsbHo6jLWIpxpR6pL0sazTXV6+SQv25ZB+F7Bj9mJNaOc4nCRabwd5M/JwmUa8idz6Eci6eKfJryPs6Q==
-
-accounting@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.npmjs.org/accounting/-/accounting-0.4.1.tgz#87dd4103eff7f4460f1e186f5c677ed6cf566883"
-  integrity sha1-h91BA+/39EYPHhhvXGd+1s9WaIM=
 
 acorn-globals@^4.3.0:
   version "4.3.4"
@@ -3017,9 +3007,9 @@ camelize@^1.0.0:
   integrity sha1-FkpUg+Yw+kMh5a8HAg5TGDGyYJs=
 
 caniuse-lite@^1.0.30000981, caniuse-lite@^1.0.30001109, caniuse-lite@^1.0.30001280:
-  version "1.0.30001282"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001282.tgz#38c781ee0a90ccfe1fe7fefd00e43f5ffdcb96fd"
-  integrity sha512-YhF/hG6nqBEllymSIjLtR2iWDDnChvhnVJqp+vloyt2tEHFG1yBR+ac2B/rOw0qOK0m0lEXU2dv4E/sMk5P9Kg==
+  version "1.0.30001284"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001284.tgz"
+  integrity sha512-t28SKa7g6kiIQi6NHeOcKrOrGMzCRrXvlasPwWC26TH2QNdglgzQIRUuJ0cR3NeQPH+5jpuveeeSFDLm2zbkEw==
 
 capture-exit@^2.0.0:
   version "2.0.0"

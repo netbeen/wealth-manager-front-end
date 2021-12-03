@@ -59,7 +59,7 @@ const tabs = [
 export default function(props: any) {
   useLoginStatusChecker();
 
-  const noLayout = ['/login', '/register'].includes(window.location.pathname)
+  const noLayout = ['/login', '/register', '/fund/transactionDesktop'].includes(window.location.pathname)
 
   return (
     <div className={styles.globalLayout}>
