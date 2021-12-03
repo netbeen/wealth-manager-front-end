@@ -96,12 +96,20 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
             <div style={{
               color: record.totalRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
             }}>
-              {record.totalRateOfReturn ? roundWithPrecision(record.totalRateOfReturn * 100, 2) : ''}%
+              {record.totalRateOfReturn ?
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(record.totalRateOfReturn * 100) : ''}%
             </div>
             <div style={{
               color: record.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
             }}>
-              {record.totalAnnualizedRateOfReturn ? roundWithPrecision(record.totalAnnualizedRateOfReturn * 100, 2) : ''}%
+              {record.totalAnnualizedRateOfReturn ?
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(record.totalAnnualizedRateOfReturn * 100) : ''}%
             </div>
           </div>
         )
@@ -158,7 +166,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         // 按照市值从高到低排序
         return b.positionValue - a.positionValue
       }else if(!transactionSetActive && a.startDate && b.startDate){
-        return b.startDate.isBefore(a.startDate) ? 1 : -1
+        return b.startDate.isBefore(a.startDate) ? -1 : 1
       }else{
         return 1;
       }
