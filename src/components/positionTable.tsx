@@ -11,10 +11,10 @@ import {
   FundSpitType,
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { calcReturn } from 'fund-tools';
+import { calcReturn, sliceBetween } from 'fund-tools';
 import { roundWithPrecision } from '@/utils';
 import { COLOR } from '@/globalConst';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 export default function({transactionSets}: {transactionSets: TransactionSetType[]}) {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([])
@@ -150,7 +150,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         return rowData;
       }
       const { positionValue, totalReturn, totalRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
-        unitPricesList[index],
+        sliceBetween(unitPricesList[index], transactionsList[index][0].date, dayjs()),
         dividendsList[index],
         splitsList[index],
         transactionsList[index]

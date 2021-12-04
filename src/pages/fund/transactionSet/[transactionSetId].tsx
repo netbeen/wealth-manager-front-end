@@ -66,7 +66,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
   }, [transactions])
   // 用于标记交易点位，还未实现，暂时log
   useEffect(()=>{
-    console.log('todo: transactionChartData', transactionChartData);
+    console.debug('todo: transactionChartData', transactionChartData);
   }, [transactionChartData])
 
   const [calcProgress, setCalcProgress] = useState<number>(0)
