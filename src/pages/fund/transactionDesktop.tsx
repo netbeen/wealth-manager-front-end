@@ -81,73 +81,78 @@ export default function() {
 
   return (
     <Fragment>
-      <Form
-        name="basic"
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 20 }}
-        initialValues={{ direction: TRANSACTION_DIRECTION.BUY }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="基金代码"
-          name="fundIdentifier"
-          rules={[{ required: true }]}
+      <div style={{width: 600, margin: 20}}>
+        <Form
+          name="basic"
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 20 }}
+          initialValues={{ direction: TRANSACTION_DIRECTION.BUY }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
         >
-          <Input onChange={(e)=>{ setFundIdentifier(e.target.value ?? '')}}/>
-        </Form.Item>
-        <Form.Item
-          label="基金名称"
-          name="fundName"
-        >
-          <div>{fundBasicInfo?.name ?? (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}</div>
-        </Form.Item>
-        <Form.Item
-          label="交易方向"
-          name="direction"
-        >
-          <Radio.Group>
-            <Radio.Button value={TRANSACTION_DIRECTION.BUY}>买入</Radio.Button>
-            <Radio.Button value={TRANSACTION_DIRECTION.SELL}>卖出</Radio.Button>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          name="date"
-          label="交易日期"
-          rules={[{ type: 'object' as const, required: true, message: 'Please select time!' }]}
-        >
-          <DatePicker onChange={(e)=>{
-            if(e) {
-              setDate(dayjs(e.valueOf()).hour(0).minute(0).second(0).millisecond(0));
-            }
-          }} />
-        </Form.Item>
-        <Form.Item
-          label="成交价格"
-          name="unitPrice"
-        >
-          <div>{unitPrice ?? unitPriceErrorMessage}</div>
-        </Form.Item>
-        <Form.Item
-          label="成交量"
-          name="volume"
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="手续费"
-          name="commission"
-        >
-          <Input />
-        </Form.Item>
+          <Form.Item
+            label="基金代码"
+            name="fundIdentifier"
+            rules={[{ required: true }]}
+          >
+            <Input onChange={(e)=>{ setFundIdentifier(e.target.value ?? '')}}/>
+          </Form.Item>
+          <Form.Item
+            label="基金名称"
+            name="fundName"
+          >
+            <div>{fundBasicInfo?.name ?? (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}</div>
+          </Form.Item>
+          <Form.Item
+            label="交易方向"
+            name="direction"
+          >
+            <Radio.Group>
+              <Radio.Button value={TRANSACTION_DIRECTION.BUY}>买入</Radio.Button>
+              <Radio.Button value={TRANSACTION_DIRECTION.SELL}>卖出</Radio.Button>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            name="date"
+            label="交易日期"
+            rules={[{ type: 'object' as const, required: true, message: 'Please select time!' }]}
+          >
+            <DatePicker
+              style={{width: '100%'}}
+              onChange={(e)=>{
+                if(e) {
+                  setDate(dayjs(e.valueOf()).hour(0).minute(0).second(0).millisecond(0));
+                }
+              }}
+            />
+          </Form.Item>
+          <Form.Item
+            label="成交价格"
+            name="unitPrice"
+          >
+            <div>{unitPrice ?? unitPriceErrorMessage}</div>
+          </Form.Item>
+          <Form.Item
+            label="成交量"
+            name="volume"
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="手续费"
+            name="commission"
+          >
+            <Input />
+          </Form.Item>
 
-        <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-          <Button type="primary" htmlType="submit">
-            提交
-          </Button>
-        </Form.Item>
-      </Form>
+          <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
+          </Form.Item>
+        </Form>
+      </div>
     </Fragment>
   );
 }
