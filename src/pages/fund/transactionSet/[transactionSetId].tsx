@@ -1,10 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-// @ts-ignore
-import styles from '../position.less';
-// @ts-ignore
-import layoutStyles from '@/layouts/index.less';
 import { ProgressCircle, NavBar } from 'antd-mobile'
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { useRequest } from 'ahooks'
 import { history } from 'umi'
 import {
@@ -14,7 +10,6 @@ import { Line, Chart, Axis, Tooltip } from 'bizcharts';
 import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } from '@/services/transactionSet';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
-import { roundWithPrecision } from '@/utils';
 import { COLOR } from '@/globalConst';
 
 const restChartProps = {
@@ -242,12 +237,20 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
             <div style={{textAlign: 'center'}}>
               <div>收益率</div>
               <div>{
-                roundWithPrecision(overviewData.totalRateOfReturn*100, 2)
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(overviewData.totalRateOfReturn*100)
               }%</div>
             </div>
             <div style={{textAlign: 'right'}}>
               <div>年化收益率</div>
-              <div>{roundWithPrecision(overviewData.totalAnnualizedRateOfReturn*100, 2)}%</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(overviewData.totalAnnualizedRateOfReturn*100)
+              }%</div>
             </div>
           </div>
         </div>

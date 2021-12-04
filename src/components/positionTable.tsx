@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
 import { AntdBaseTable } from '@/components/antDesignTable';
-import { TransactionSetStatus, TransactionSetType } from '@/services/transactionSet';
+import { TransactionSetType } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
@@ -12,7 +12,6 @@ import {
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, sliceBetween } from 'fund-tools';
-import { roundWithPrecision } from '@/utils';
 import { COLOR } from '@/globalConst';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -63,7 +62,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         width: 100,
         align: 'right',
         render: (value: any, record: any) => (
-          <div>{record.positionValue ? Intl.NumberFormat('en-US', {
+          <div>{record.positionValue !== null  ? Intl.NumberFormat('en-US', {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           }).format(record.positionValue) : ''}</div>
@@ -75,8 +74,8 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         align: 'right',
         render: (value: any, record: any) => (
           <div>
-            <div>{record.startDate ? record.startDate.format('YYYY-MM-DD') : ''}</div>
-            <div>{record.totalReturn ?
+            <div>{record.startDate !== null  ? record.startDate.format('YYYY-MM-DD') : ''}</div>
+            <div>{record.totalReturn !== null  ?
               Intl.NumberFormat('en-US', {
                 maximumFractionDigits: 2,
                 minimumFractionDigits: 2
@@ -96,7 +95,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
             <div style={{
               color: record.totalRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
             }}>
-              {record.totalRateOfReturn ?
+              {record.totalRateOfReturn !== null ?
                 Intl.NumberFormat('en-US', {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2
@@ -105,7 +104,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
             <div style={{
               color: record.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
             }}>
-              {record.totalAnnualizedRateOfReturn ?
+              {record.totalAnnualizedRateOfReturn !== null ?
                 Intl.NumberFormat('en-US', {
                   maximumFractionDigits: 2,
                   minimumFractionDigits: 2
