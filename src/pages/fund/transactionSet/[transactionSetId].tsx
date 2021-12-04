@@ -193,6 +193,7 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
     if(!overviewData || !fourBasicData || !transactions){
       return null;
     }
+    console.debug('overviewData', overviewData);
     return (
       <Fragment>
         <div

@@ -2,11 +2,11 @@ import React, { Fragment, useMemo, useState } from 'react';
 import { message, Form, Input, Button, Radio, DatePicker } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
-import { history } from 'umi'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
 
 export default function() {
+  const [submitButtonLoading, setSubmitButtonLoading] = useState<boolean>(false)
   const [fundIdentifier, setFundIdentifier] = useState<string>('')
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
 
@@ -63,6 +63,7 @@ export default function() {
       message.error('表单字段格式错误，请检查各输入项');
       return;
     }
+    setSubmitButtonLoading(true);
     const result = await insertTransaction(
       values.fundIdentifier,
       Number(values.volume),
@@ -70,6 +71,7 @@ export default function() {
       date,
       values.direction
     );
+    setSubmitButtonLoading(false);
     if(result._id){
       message.success('添加成功');
     }
@@ -147,7 +149,7 @@ export default function() {
           </Form.Item>
 
           <Form.Item wrapperCol={{ offset: 4, span: 16 }}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" loading={submitButtonLoading}>
               提交
             </Button>
           </Form.Item>
