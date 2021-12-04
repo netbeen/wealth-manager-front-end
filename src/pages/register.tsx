@@ -1,7 +1,5 @@
 import React, { Fragment } from 'react';
 // @ts-ignore
-import styles from './position.less';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Toast, Form, Button, Input, NavBar } from 'antd-mobile'
 import { history } from 'umi';
