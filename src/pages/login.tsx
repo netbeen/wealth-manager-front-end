@@ -34,6 +34,7 @@ export default function() {
 
   return (
     <div className={styles.loginPage}>
+      <img style={{marginBottom: '2rem'}} width={100} src="/img/logo.svg" />
       <Form
         onFinish={(values)=>{ doLogin(values.username, sha1(values.password)) }}
         className={styles.loginForm}
