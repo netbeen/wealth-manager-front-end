@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useState } from 'react';
-import { fundSecondaryTabData } from '@/pages/fund/const';
+import { fundSecondaryTabData } from '@/globalConst';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { history } from '@@/core/history';

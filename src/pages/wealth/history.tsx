@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Button, Tabs } from 'antd-mobile';
-import { fundSecondaryTabData } from '@/globalConst';
+import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import PositionTable from '@/components/positionTable';
@@ -26,13 +26,13 @@ export default function() {
       <Button
         color='primary'
         style={{marginBottom: 12}}
-        onClick={()=>{history.push('/fund/transaction')}}
+        onClick={()=>{history.push('/wealth/record')}}
         disabled={
           Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
           !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
           !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
         }
-      >添加交易</Button>
+      >添加记录</Button>
       {Array.isArray(transactionSets) && <PositionTable transactionSets={transactionSets}/>}
     </div>
   ),[currentOrganizationWithPermissionResult, transactionSets]);
@@ -41,12 +41,12 @@ export default function() {
     <Fragment>
       <Tabs
         className={layoutStyles.mainContentTab}
-        onChange={(key)=>{history.push(fundSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
-        activeKey={'position'}
+        onChange={(key)=>{history.push(wealthSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
+        activeKey={'history'}
       >
-        {fundSecondaryTabData.map(item => (
+        {wealthSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'position' ? mainContent : <div/>}
+            {item.value === 'history' ? mainContent : <div/>}
           </TabPane>
         ))}
       </Tabs>

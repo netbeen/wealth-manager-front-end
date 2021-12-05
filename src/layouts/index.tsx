@@ -35,7 +35,7 @@ const tabs = [
   {
     key: 'wealth',
     title: '财富',
-    url: '/wealth',
+    url: '/wealth/history',
     icon: <PayCircleOutline />,
   },
   {

@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Tabs } from 'antd-mobile';
-import { fundSecondaryTabData } from '@/pages/fund/const';
+import { fundSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
