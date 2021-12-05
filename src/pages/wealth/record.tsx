@@ -6,6 +6,7 @@ import { history } from 'umi'
 import MobileDetect from 'mobile-detect'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
+import { getAllWealthCategory } from '@/services/wealthCategory';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -33,6 +34,13 @@ export default function() {
   }, {
     refreshDeps: [debouncedIdentifier],
   });
+
+  const { data: allWealthCategory } = useRequest(async () => {
+    return await getAllWealthCategory()
+  }, {
+    refreshDeps: [],
+  });
+  console.log('allWealthCategory', allWealthCategory);
 
   const {unitPrice, unitPriceErrorMessage}: {unitPrice: number|null, unitPriceErrorMessage: string} = useMemo(()=>{
     if(!fundUnitPriceList || fundUnitPriceList.length === 0 || !date){
