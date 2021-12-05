@@ -7,6 +7,8 @@ import axios from 'axios'
 import {
   UnorderedListOutline,
   UserOutline,
+  CheckShieldOutline,
+  PayCircleOutline,
 } from 'antd-mobile-icons'
 import {history} from 'umi';
 
@@ -30,24 +32,24 @@ axios.interceptors.response.use(
 )
 
 const tabs = [
-  // {
-  //   key: 'home',
-  //   title: '首页',
-  //   icon: <AppOutline />,
-  //   badge: Badge.dot,
-  // },
+  {
+    key: 'wealth',
+    title: '财富',
+    url: '/wealth',
+    icon: <PayCircleOutline />,
+  },
   {
     key: 'fund',
     title: '基金',
     url: '/fund/position',
     icon: <UnorderedListOutline />,
   },
-  // {
-  //   key: 'message',
-  //   title: '我的消息',
-  //   icon: (active: boolean) =>
-  //     active ? <MessageFill /> : <MessageOutline />,
-  // },
+  {
+    key: 'insurance',
+    title: '保险',
+    url: '/insurance',
+    icon: <CheckShieldOutline/>,
+  },
   {
     key: 'me',
     title: '个人中心',
