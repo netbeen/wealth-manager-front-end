@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useState } from 'react';
-import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile'
+import { Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks'
 import { history } from 'umi'
@@ -96,6 +96,9 @@ export default function() {
             <Button block type='submit' color='primary'>
               提交
             </Button>
+            <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}}>
+              增加类别
+            </Button>
             {
               !mobilePhoneModel &&
               <Button
@@ -137,16 +140,6 @@ export default function() {
           disabled
         >
           <div>{fundBasicInfo?.name ?? (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}</div>
-        </Form.Item>
-        <Form.Item name='direction' label='交易方向'>
-          <Selector
-            defaultValue={[TRANSACTION_DIRECTION.BUY]}
-            columns={2}
-            options={[
-              { label: '买入', value: TRANSACTION_DIRECTION.BUY },
-              { label: '卖出', value: TRANSACTION_DIRECTION.SELL },
-            ]}
-          />
         </Form.Item>
         <Form.Item name='unitPrice' label='成交价格' disabled>
           <div>{unitPrice ?? unitPriceErrorMessage}</div>
