@@ -7,6 +7,7 @@ import MobileDetect from 'mobile-detect'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory } from '@/services/wealthCategory';
+import { insertWealthHistoryRecord } from '@/services/wealthHistory';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -104,7 +105,9 @@ export default function() {
             <Button block type='submit' color='primary'>
               提交
             </Button>
-            <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}}>
+            <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}} onClick={()=>{
+              insertWealthHistoryRecord(dayjs().hour(0).minute(0).second(0).millisecond(0), {'dsadasdas': 123, 'bbbb': 45.64});
+            }}>
               增加类别
             </Button>
             {
