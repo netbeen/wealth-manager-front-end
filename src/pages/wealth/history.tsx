@@ -67,6 +67,7 @@ export default function() {
         {
           code: 'sum',
           name: '净资产',
+          align: 'right',
           render: (value: any) => (
             Intl.NumberFormat('en-US', {
               maximumFractionDigits: 2,
@@ -80,6 +81,7 @@ export default function() {
             return {
               code: categoryIdentifier,
               name: targetCategory.name,
+              align: 'right',
               render: (value: any) => (
                 Intl.NumberFormat('en-US', {
                   maximumFractionDigits: 2,
