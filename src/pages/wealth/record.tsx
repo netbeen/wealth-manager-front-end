@@ -7,7 +7,7 @@ import MobileDetect from 'mobile-detect'
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory } from '@/services/wealthCategory';
-import { insertWealthHistoryRecord } from '@/services/wealthHistory';
+import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -25,6 +25,12 @@ export default function() {
     return await fetchBasicInfo(debouncedIdentifier)
   }, {
     refreshDeps: [debouncedIdentifier],
+  });
+
+  const { data: latestHistoryRecord, error: latestHistoryRecordError } = useRequest(async () => {
+    return await getLatestHistoryRecord()
+  }, {
+    refreshDeps: [],
   });
 
   const { data: fundUnitPriceList } = useRequest(async () => {

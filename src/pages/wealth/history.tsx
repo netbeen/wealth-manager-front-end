@@ -5,9 +5,8 @@ import { Button, Tabs } from 'antd-mobile';
 import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import PositionTable from '@/components/positionTable';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
+import { getAllHistoryRecord } from '@/services/wealthHistory';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane
@@ -17,8 +16,8 @@ export default function() {
     return await fetchCurrentOrganizationWithPermission()
   }, { refreshDeps: [] });
 
-  const { data: transactionSets } = useRequest(async () => {
-    return await fetchTransactionSetsByStatus(TransactionSetStatus.Active)
+  const { data: allHistory } = useRequest(async () => {
+    return await getAllHistoryRecord()
   }, { refreshDeps: [] });
 
   const mainContent = useMemo(()=>(
@@ -33,9 +32,8 @@ export default function() {
           !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
         }
       >添加记录</Button>
-      {Array.isArray(transactionSets) && <PositionTable transactionSets={transactionSets}/>}
     </div>
-  ),[currentOrganizationWithPermissionResult, transactionSets]);
+  ),[currentOrganizationWithPermissionResult]);
 
   return (
     <Fragment>
