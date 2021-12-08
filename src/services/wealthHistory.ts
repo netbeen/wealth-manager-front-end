@@ -1,9 +1,14 @@
 import axios from 'axios';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 export interface WealthHistoryType {_id: string, date: Dayjs, detail: { [key: string]: number }}
+
+const convertDtoToWealthHistoryType: (input: any) => WealthHistoryType = (input) => ({
+  ...input,
+  date: dayjs(input.date)
+})
 
 export const insertWealthHistoryRecord: (date: Dayjs, detail: { [key: string]: number })=>Promise<WealthHistoryType> = async (
   date, detail
@@ -15,7 +20,7 @@ export const insertWealthHistoryRecord: (date: Dayjs, detail: { [key: string]: n
     headers: getAuthorizationHeaders()
   })).data;
   if(result.data){
-    return result;
+    return result.data;
   }
   throw new Error('Not Found')
 };
@@ -25,7 +30,7 @@ export const getLatestHistoryRecord: ()=>Promise<WealthHistoryType|null> = async
     headers: getAuthorizationHeaders()
   })).data;
   if(result.data){
-    return result;
+    return convertDtoToWealthHistoryType(result.data);
   }
   throw new Error('Not Found')
 };
@@ -35,7 +40,7 @@ export const getAllHistoryRecord: ()=>Promise<Array<WealthHistoryType>> = async 
     headers: getAuthorizationHeaders()
   })).data;
   if(result.data){
-    return result;
+    return result.data.map(convertDtoToWealthHistoryType);
   }
   throw new Error('Not Found')
 };
