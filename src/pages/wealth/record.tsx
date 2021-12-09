@@ -10,6 +10,7 @@ import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/we
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
+  const [netAssets, setNetAssets] = useState<number>(0)
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
   const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
 
@@ -47,6 +48,16 @@ export default function() {
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
           date: date.toDate(),
+        }}
+        onFieldsChange={(field, allField)=>{
+          const netAssetsResult = allField.reduce((prev, cur)=>{
+            if(["netAssets", 'date'].includes(cur.name[0]) || !cur.value){
+              return prev
+            }
+            // todo: 未处理负债的情况，负债应该减去
+            return prev + Number(cur.value)
+          }, 0);
+          setNetAssets(netAssetsResult);
         }}
         onFinish={async (values)=>{
           const recordDetail: { [key: string]: number } = {};
@@ -118,6 +129,13 @@ export default function() {
             </Form.Item>
           ))
         }
+        <Form.Item
+          name="netAssets"
+          label="净资产"
+          disabled
+        >
+          <div>{netAssets}</div>
+        </Form.Item>
       </Form>
     </Fragment>
   );
