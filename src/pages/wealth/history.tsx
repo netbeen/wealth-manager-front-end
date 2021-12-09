@@ -60,6 +60,7 @@ export default function() {
         {
           code: 'date',
           name: '记录日期',
+          width: 100,
           render: (value: any) => (
             value
           )
@@ -68,6 +69,7 @@ export default function() {
           code: 'sum',
           name: '净资产',
           align: 'right',
+          width: 100,
           render: (value: any) => (
             Intl.NumberFormat('en-US', {
               maximumFractionDigits: 2,
@@ -82,6 +84,7 @@ export default function() {
               code: categoryIdentifier,
               name: targetCategory.name,
               align: 'right',
+              width: 100,
               render: (value: any) => (
                 Intl.NumberFormat('en-US', {
                   maximumFractionDigits: 2,
