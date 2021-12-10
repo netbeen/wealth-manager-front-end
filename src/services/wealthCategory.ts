@@ -4,7 +4,7 @@ import { getAuthorizationHeaders } from '@/utils';
 
 export interface WealthCategoryType {_id: string, name: string, type: string}
 
-export const getAllWealthCategory: ()=>Promise<WealthCategoryType> = async () => {
+export const getAllWealthCategory: ()=>Promise<Array<WealthCategoryType>> = async () => {
   const result = (await axios.get(`${API_PREFIX}/wealthCategory/findAll`, {
     headers: getAuthorizationHeaders()
   })).data;

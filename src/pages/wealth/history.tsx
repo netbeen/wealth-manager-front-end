@@ -18,7 +18,7 @@ export default function() {
     return await fetchCurrentOrganizationWithPermission()
   }, { refreshDeps: [] });
 
-  const { data: allHistory } = useRequest(async () => {
+  const { data: allHistory, loading: allHistoryLoading } = useRequest(async () => {
     return await getAllHistoryRecord()
   }, { refreshDeps: [] });
 
@@ -115,7 +115,7 @@ export default function() {
         dataSource={tableData}
         columns={columns}
         isStickyHeader={false}
-        // isLoading={tableLoading}
+        isLoading={allHistoryLoading}
       />
     </div>
   ),[currentOrganizationWithPermissionResult, tableData, columns]);
