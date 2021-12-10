@@ -11,6 +11,7 @@ import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/we
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [netAssets, setNetAssets] = useState<number>(0)
+  const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
   const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
 
@@ -72,17 +73,19 @@ export default function() {
             }
             recordDetail[displayCategoryItem._id] = numberValue;
           }
+          setSubmitLoading(true);
           const result = await insertWealthHistoryRecord(date, recordDetail)
           if(result._id){
             Toast.show({
               icon: 'success',
               content: '添加成功',
             })
+            setSubmitLoading(false);
           }
         }}
         footer={
           <Fragment>
-            <Button block type='submit' color='primary'>
+            <Button block type='submit' color='primary' loading={submitLoading}>
               提交
             </Button>
             <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}} onClick={()=>{
