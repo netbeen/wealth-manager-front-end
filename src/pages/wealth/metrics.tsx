@@ -60,7 +60,10 @@ export default function() {
         }
         assetsCategoryDistributionChartData.push({
           date: historyItem.date.format('YYYY-MM-DD'),
-          value: historyItem.detail[categoryIdentifier] / totalAssets,
+          value: Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(historyItem.detail[categoryIdentifier] * 100 / totalAssets),
           category: categoryIdentifier
         })
       })
@@ -93,7 +96,10 @@ export default function() {
           value: {
             type:"linear",
             min: 0,
-            // max: 1,
+            max: 100,
+            formatter: (v: string) => {
+              return `${v}%`
+            }
           },
           category: {
             formatter: (v: string) => {
