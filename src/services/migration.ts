@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
 // @ts-ignore
-import source from './testData/jtzh';
+import source from './testData/zxy';
 import { insertWealthHistoryRecord } from '@/services/wealthHistory';
 
 const a = [

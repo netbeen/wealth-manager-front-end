@@ -2,6 +2,6 @@ import React, { useEffect } from 'react';
 import { history } from '@@/core/history';
 
 export default function() {
-  useEffect(()=>{history.push('/fund/position')}, [])
+  useEffect(()=>{history.push('/wealth/metrics')}, [])
   return <div> </div>;
 }
