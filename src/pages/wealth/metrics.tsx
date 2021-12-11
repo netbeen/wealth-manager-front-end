@@ -50,7 +50,7 @@ export default function() {
     }
     const assetsCategoryDistributionChartData: any[] = [];
     const assetChartData: any[] = [];
-    allHistory.forEach((historyItem)=>{
+    allHistory.reverse().forEach((historyItem)=>{
       const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>(
         pre + historyItem.detail[cur]
       ), 0);
@@ -66,20 +66,24 @@ export default function() {
           }).format(historyItem.detail[categoryIdentifier] * 100 / totalAssets),
           category: categoryIdentifier
         })
+        assetChartData.push({
+          date: historyItem.date.format('YYYY-MM-DD'),
+          value: totalAssets,
+          type: 'totalAssets',
+        })
+        assetChartData.push({
+          date: historyItem.date.format('YYYY-MM-DD'),
+          value: totalAssets,
+          type: 'netAssets',
+        })
       })
     })
     return {
       assetsCategoryDistributionChartData,
       assetChartData,
     };
-    // priceChartDataResult.push({
-    //   date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
-    //   type: "unitCost",
-    //   price: Math.round(unitCost * 10000)/10000
-    // })
   }, [allHistory, allWealthCategory])
 
-  console.log('assetsCategoryDistributionChartData', assetsCategoryDistributionChartData);
   const mainContent = useMemo(()=>{
     if(assetsCategoryDistributionChartData.length === 0){
       return '无数据'
@@ -111,9 +115,8 @@ export default function() {
       >
         <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
         <Axis name="date" />
-        <Axis name="price" />
+        <Axis name="value" />
         <Line shape="smooth" position="date*value" color="category"/>
-        {/*<Point position="date*value" />*/}
       </Chart>
       <Chart
         height={250}
@@ -122,9 +125,21 @@ export default function() {
           date: {
             type: 'time',
           },
+          value: {
+            type:"linear",
+            formatter: (v: string) => {
+              return Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+              }).format(Number(v))
+            }
+          },
           type: {
             formatter: (v: string) => {
-              return ''
+              return {
+                totalAssets: '净资产',
+                netAssets: '净资产',
+              }[v]
             }
           }
         }}
@@ -132,12 +147,15 @@ export default function() {
       >
         <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
         <Axis name="date" />
-        <Axis name="price" />
-        <Line shape="smooth" position="date*price" color="type"/>
+        <Axis name="value" label={{
+          formatter(text) {
+            return `${Number(text.replace(/,/g,''))/10000}W`;
+          }
+        }}/>
+        <Line shape="smooth" position="date*value" color="type"/>
       </Chart>
     </div>
   )},[assetsCategoryDistributionChartData, assetChartData, allWealthCategoryNameMapObject]);
-  console.log('allWealthCategoryNameMapObject', allWealthCategoryNameMapObject);
 
   return (
     <Fragment>
