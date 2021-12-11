@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
-import { Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
+import { Toast, Picker, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest } from 'ahooks'
 import { history } from 'umi'
@@ -14,6 +14,7 @@ export default function() {
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
   const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
+  const [categoryPickVisible, setCategoryPickVisible] = useState(false)
 
   const mobilePhoneModel = useMemo(()=>((new MobileDetect(window.navigator.userAgent)).mobile()), [])
 
@@ -28,6 +29,15 @@ export default function() {
   }, {
     refreshDeps: [],
   });
+
+  const categoryPickData = useMemo(()=>{
+    if(!allWealthCategory){
+      return []
+    }
+    return [
+      allWealthCategory.filter(category => !displayCategory.map(displayCategoryItem => displayCategoryItem._id).includes(category._id)).map(category => category.name)
+    ];
+  }, [allWealthCategory, displayCategory])
 
   useEffect(()=>{
     if(!Array.isArray(allWealthCategory) || allWealthCategory.length === 0 || latestHistoryRecordLoading){
@@ -45,6 +55,19 @@ export default function() {
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>财富记录</NavBar>
+      <Picker
+        columns={categoryPickData}
+        visible={categoryPickVisible}
+        onClose={() => {
+          setCategoryPickVisible(false)
+        }}
+        onConfirm={categoryName => {
+          const targetCategory = allWealthCategory?.find(item => item.name === categoryName[0]);
+          if(targetCategory){
+            setDisplayCategory([...displayCategory, targetCategory]);
+          }
+        }}
+      />
       <Form
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
@@ -90,6 +113,7 @@ export default function() {
             </Button>
             <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}} onClick={()=>{
               // insertWealthHistoryRecord(dayjs().hour(0).minute(0).second(0).millisecond(0), {'dsadasdas': 123, 'bbbb': 45.64});
+              setCategoryPickVisible(true);
             }}>
               增加类别
             </Button>

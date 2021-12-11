@@ -85,12 +85,17 @@ export default function() {
               name: targetCategory.name,
               align: 'right',
               width: 100,
-              render: (value: any) => (
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(value)
-              )
+              render: (value: any) => {
+                if(isNaN(value)){
+                  return '--'
+                }
+                return (
+                  Intl.NumberFormat('en-US', {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2
+                  }).format(value)
+                )
+              }
             }
           }
         }))
