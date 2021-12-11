@@ -51,11 +51,42 @@ export default function() {
     const assetsCategoryDistributionChartData: any[] = [];
     const assetChartData: any[] = [];
     allHistory.reverse().forEach((historyItem)=>{
-      const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>(
-        pre + historyItem.detail[cur]
-      ), 0);
+      const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
+        const targetCategory = allWealthCategory.find(item => item._id === cur);
+        if(targetCategory?.type === 'debt'){
+          return (pre)
+        }
+        return (
+          pre + historyItem.detail[cur]
+        )
+      }, 0);
+      const netAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
+        const targetCategory = allWealthCategory.find(item => item._id === cur);
+        if(targetCategory?.type === 'debt'){
+          return (
+            pre - historyItem.detail[cur]
+          )
+        }
+        return (
+          pre + historyItem.detail[cur]
+        )
+      }, 0);
+      assetChartData.push({
+        date: historyItem.date.format('YYYY-MM-DD'),
+        value: totalAssets,
+        type: 'totalAssets',
+      })
+      assetChartData.push({
+        date: historyItem.date.format('YYYY-MM-DD'),
+        value: netAssets,
+        type: 'netAssets',
+      })
       Object.keys(historyItem.detail).forEach((categoryIdentifier)=>{
         if(historyItem.detail[categoryIdentifier] === 0){
+          return;
+        }
+        const targetCategory = allWealthCategory.find(item => item._id === categoryIdentifier);
+        if(targetCategory?.type === 'debt'){
           return;
         }
         assetsCategoryDistributionChartData.push({
@@ -65,16 +96,6 @@ export default function() {
             minimumFractionDigits: 2
           }).format(historyItem.detail[categoryIdentifier] * 100 / totalAssets),
           category: categoryIdentifier
-        })
-        assetChartData.push({
-          date: historyItem.date.format('YYYY-MM-DD'),
-          value: totalAssets,
-          type: 'totalAssets',
-        })
-        assetChartData.push({
-          date: historyItem.date.format('YYYY-MM-DD'),
-          value: totalAssets,
-          type: 'netAssets',
         })
       })
     })
@@ -137,7 +158,7 @@ export default function() {
           type: {
             formatter: (v: string) => {
               return {
-                totalAssets: '净资产',
+                totalAssets: '总资产',
                 netAssets: '净资产',
               }[v]
             }

@@ -41,17 +41,18 @@ export default function() {
       const currentRowData: {[key: string]: number|string} = {
         date: historyItem.date.format('YYYY-MM-DD')
       };
-      let sum = 0;
+      let netAssets = 0;
       Object.keys(historyItem.detail).forEach((categoryIdentifier)=>{
         const numberValue = Number(historyItem.detail[categoryIdentifier])
         if(numberValue === 0){
           return;
         }
+        const targetCategory = allWealthCategory.find(item => item._id === categoryIdentifier);
         currentRowData[categoryIdentifier] = numberValue;
-        sum += numberValue
+        netAssets += targetCategory?.type === 'debt' ? -numberValue : numberValue
         existCategoryIdentifiers.add(categoryIdentifier)
       })
-      currentRowData.sum = sum;
+      currentRowData.sum = netAssets;
       tableData.push(currentRowData)
     })
     return {

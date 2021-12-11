@@ -75,11 +75,12 @@ export default function() {
         }}
         onFieldsChange={(field, allField)=>{
           const netAssetsResult = allField.reduce((prev, cur)=>{
-            if(["netAssets", 'date'].includes(cur.name[0]) || !cur.value){
+            if(!Array.isArray(cur.name) || typeof cur.name[0] !== 'string' || ["netAssets", 'date'].includes(cur.name[0]) || !cur.value){
               return prev
             }
-            // todo: 未处理负债的情况，负债应该减去
-            return prev + Number(cur.value)
+            // @ts-ignore
+            const targetCategory = allWealthCategory?.find(item => item._id === cur.name[0]) as WealthCategoryType;
+            return prev + (targetCategory.type === 'debt' ? -Number(cur.value) : Number(cur.value))
           }, 0);
           setNetAssets(netAssetsResult);
         }}
