@@ -305,10 +305,15 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           type: {
             formatter: (v: string) => {
               return {
-                totalRateOfReturn: '收益率%',
+                totalRateOfReturn: '收益率',
               }[v]
             }
-          }
+          },
+          rate: {
+            formatter: (v: string) => {
+              return `${v}%`
+            }
+          },
         }}
         {...restChartProps}
       >
@@ -324,8 +329,13 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
           type: {
             formatter: (v: string) => {
               return {
-                totalAnnualizedRateOfReturn: '年化收益率%'
+                totalAnnualizedRateOfReturn: '年化收益率'
               }[v]
+            }
+          },
+          rate: {
+            formatter: (v: string) => {
+              return `${v}%`
             }
           },
         }}
