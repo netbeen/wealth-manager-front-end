@@ -35,13 +35,13 @@ const tabs = [
   {
     key: 'wealth',
     title: '财富',
-    url: '/wealth/history',
+    url: '/wealth/metrics',
     icon: <PayCircleOutline />,
   },
   {
     key: 'fund',
     title: '基金',
-    url: '/fund/position',
+    url: '/fund/metrics',
     icon: <UnorderedListOutline />,
   },
   {
