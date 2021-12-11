@@ -5,6 +5,7 @@ import { useRequest } from 'ahooks'
 import { history } from 'umi'
 import MobileDetect from 'mobile-detect'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
+import migration from '@/services/migration';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
 
@@ -113,11 +114,15 @@ export default function() {
               提交
             </Button>
             <Button block fill='outline' color='primary' style={{marginTop: '0.25rem'}} onClick={()=>{
-              // insertWealthHistoryRecord(dayjs().hour(0).minute(0).second(0).millisecond(0), {'dsadasdas': 123, 'bbbb': 45.64});
               setCategoryPickVisible(true);
             }}>
               增加类别
             </Button>
+            {false && <Button block fill='outline' color='danger' style={{marginTop: '0.25rem'}} onClick={()=>{
+              migration();
+            }}>
+              WARNING 数据迁移
+            </Button>}
             {
               !mobilePhoneModel &&
               <Button
