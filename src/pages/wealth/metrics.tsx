@@ -50,6 +50,7 @@ export default function() {
     }
     const assetsCategoryDistributionChartData: any[] = [];
     const assetChartData: any[] = [];
+    const displayCategoryId = Array.from(new Set(allHistory.map(historyItem => (Object.keys(historyItem.detail).filter(categoryId => historyItem.detail[categoryId] > 0))).flat(1)))
     allHistory.reverse().forEach((historyItem)=>{
       const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
         const targetCategory = allWealthCategory.find(item => item._id === cur);
@@ -81,10 +82,7 @@ export default function() {
         value: netAssets,
         type: 'netAssets',
       })
-      Object.keys(historyItem.detail).forEach((categoryIdentifier)=>{
-        if(historyItem.detail[categoryIdentifier] === 0){
-          return;
-        }
+      displayCategoryId.forEach((categoryIdentifier)=>{
         const targetCategory = allWealthCategory.find(item => item._id === categoryIdentifier);
         if(targetCategory?.type === 'debt'){
           return;
@@ -94,7 +92,7 @@ export default function() {
           value: Intl.NumberFormat('en-US', {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
-          }).format(historyItem.detail[categoryIdentifier] * 100 / totalAssets),
+          }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] * 100 / totalAssets),
           category: categoryIdentifier
         })
       })

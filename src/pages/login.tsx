@@ -29,7 +29,7 @@ export default function() {
 
     const availableOrganizationsResult = await fetchAvailableOrganizations();
     cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult[0]._id, { expires: 6 })
-    history.push('/fund/position'); // 首页一期不会建设，先跳转到基金持仓
+    history.push('/');
   }, [])
 
   return (

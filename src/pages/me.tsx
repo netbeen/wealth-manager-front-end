@@ -68,7 +68,7 @@ export default function() {
         value={value}
         onConfirm={name => {
           cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizations?.find(item => item.name === name[0])?._id ?? '', { expires: 6 })
-          window.location.reload()
+          window.location.href = '/';
         }}
       />
     </div>
