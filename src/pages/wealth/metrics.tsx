@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
-import { Button, Tabs } from 'antd-mobile';
+import { Loading, Tabs } from 'antd-mobile';
 import { Line, Point, Chart, Axis, Tooltip } from 'bizcharts';
 import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
@@ -107,7 +107,7 @@ export default function() {
 
   const mainContent = useMemo(()=>{
     if(assetsCategoryDistributionChartData.length === 0){
-      return '无数据'
+      return <div style={{textAlign: 'center'}}><Loading /></div>
     }
     return (
     <div style={{display: 'flex', flexDirection: 'column'}}>
