@@ -134,7 +134,7 @@ export default function() {
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
-            fontWeight: 'bold',
+            // fontWeight: 'bold',
           }}>
             <div>
               <div>净资产</div>
