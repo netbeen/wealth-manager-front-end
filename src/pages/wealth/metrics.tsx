@@ -8,6 +8,7 @@ import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
+import dayjs, { Dayjs } from 'dayjs';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane
@@ -107,7 +108,17 @@ export default function() {
     if(!Array.isArray(assetChartData) || assetChartData.length === 0){
       return null;
     }
-    const netAssets: number = [...assetChartData].reverse().find(item => item.type === 'netAssets').value;
+    const {netAssets, endDate}: {netAssets: number, endDate: Dayjs} = {
+        netAssets: [...assetChartData].reverse().find(item => item.type === 'netAssets').value,
+        endDate: dayjs([...assetChartData].reverse().find(item => item.type === 'netAssets').date),
+    };
+    const {netAssetsAtStartDate, startDate}: {netAssetsAtStartDate: number, startDate: Dayjs} = {
+      netAssetsAtStartDate: [...assetChartData].find(item => item.type === 'netAssets').value,
+      startDate: dayjs([...assetChartData].find(item => item.type === 'netAssets').date),
+    };
+    // 年复合增长率公式: https://baike.baidu.com/item/%E5%B9%B4%E5%A4%8D%E5%90%88%E5%A2%9E%E9%95%BF%E7%8E%87/3952268?fr=aladdin
+    const compoundAnnualGrowthRate = (netAssets/netAssetsAtStartDate)**(1/(endDate.diff(startDate, 'year', true)))-1
+
     const totalAssets: number = [...assetChartData].reverse().find(item => item.type === 'totalAssets').value;
     return (
       <Fragment>
@@ -122,7 +133,8 @@ export default function() {
         >
           <div style={{
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            fontWeight: 'bold',
           }}>
             <div>
               <div>净资产</div>
@@ -154,15 +166,15 @@ export default function() {
                 }).format(totalAssets)
               }</div>
             </div>
-            {/*<div style={{textAlign: 'center'}}>*/}
-            {/*  <div>收益率</div>*/}
-            {/*  <div>{*/}
-            {/*    Intl.NumberFormat('en-US', {*/}
-            {/*      maximumFractionDigits: 2,*/}
-            {/*      minimumFractionDigits: 2*/}
-            {/*    }).format(overviewData.totalRateOfReturn*100)*/}
-            {/*  }%</div>*/}
-            {/*</div>*/}
+            <div style={{textAlign: 'center'}}>
+              <div>年复合增长率</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(compoundAnnualGrowthRate*100)
+              }%</div>
+            </div>
             <div style={{textAlign: 'right'}}>
               <div>资产负债率</div>
               <div>{
