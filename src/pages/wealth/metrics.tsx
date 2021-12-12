@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Loading, Tabs } from 'antd-mobile';
-import { Line, Point, Chart, Axis, Tooltip } from 'bizcharts';
+import { Line, Chart, Axis, Tooltip } from 'bizcharts';
 import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
@@ -103,6 +103,81 @@ export default function() {
     };
   }, [allHistory, allWealthCategory])
 
+  const overviewContent = useMemo(()=>{
+    if(!Array.isArray(assetChartData) || assetChartData.length === 0){
+      return null;
+    }
+    const netAssets: number = [...assetChartData].reverse().find(item => item.type === 'netAssets').value;
+    const totalAssets: number = [...assetChartData].reverse().find(item => item.type === 'totalAssets').value;
+    return (
+      <Fragment>
+        <div
+          style={{
+            background: '#1677ff',
+            borderRadius: 4,
+            margin: '0 6px 6px 6px',
+            padding: '6px 6px',
+            color: 'white'
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+          }}>
+            <div>
+              <div>净资产</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(netAssets)
+              }</div>
+            </div>
+            <div style={{textAlign: 'right'}}>
+              <div>更新日期</div>
+              <div>{
+                assetChartData[assetChartData.length - 1].date
+              }</div>
+            </div>
+          </div>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginTop: '0.5rem'
+          }}>
+            <div>
+              <div>总资产</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(totalAssets)
+              }</div>
+            </div>
+            {/*<div style={{textAlign: 'center'}}>*/}
+            {/*  <div>收益率</div>*/}
+            {/*  <div>{*/}
+            {/*    Intl.NumberFormat('en-US', {*/}
+            {/*      maximumFractionDigits: 2,*/}
+            {/*      minimumFractionDigits: 2*/}
+            {/*    }).format(overviewData.totalRateOfReturn*100)*/}
+            {/*  }%</div>*/}
+            {/*</div>*/}
+            <div style={{textAlign: 'right'}}>
+              <div>资产负债率</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format((totalAssets - netAssets)/totalAssets*100)
+              }%</div>
+            </div>
+          </div>
+        </div>
+      </Fragment>
+    );
+  }, [assetChartData])
+
   const mainContent = useMemo(()=>{
     if(assetsCategoryDistributionChartData.length === 0){
       return <div style={{textAlign: 'center'}}><Loading /></div>
@@ -185,7 +260,10 @@ export default function() {
       >
         {wealthSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'metrics' ? mainContent : <div/>}
+            {item.value === 'metrics' ? <div>
+              {overviewContent}
+              {mainContent}
+            </div> : <div/>}
           </TabPane>
         ))}
       </Tabs>
