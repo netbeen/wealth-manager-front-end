@@ -115,7 +115,7 @@ export default function() {
           style={{
             background: '#1677ff',
             borderRadius: 4,
-            margin: '0 6px 6px 6px',
+            // margin: '0 6px 6px 6px',
             padding: '6px 6px',
             color: 'white'
           }}
