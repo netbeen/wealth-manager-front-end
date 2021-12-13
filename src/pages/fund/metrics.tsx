@@ -31,7 +31,6 @@ export default function() {
   const [unitPricesList, setUnitPricesList] = useState<Array<Array<FundPriceType>>>([])
   const [dividendsList, setDividendsList] = useState<Array<Array<FundDividendType>>>([])
   const [splitsList, setSplitsList] = useState<Array<Array<FundSpitType>>>([])
-  const [tableLoading, setTableLoading] = useState<boolean>(true)
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([])
 
   const { data: transactionSets } = useRequest(async () => {
@@ -49,7 +48,6 @@ export default function() {
     setSplitsList(basicInfoUnitPriceSplitDividendResult.splits);
     const transactionResult = await batchFetchTransaction(transactionSets)
     setTransactionsList(transactionResult);
-    setTableLoading(false);
   }, [transactionSets]);
 
   const tableData = useMemo(()=>{
