@@ -61,6 +61,7 @@ export default function() {
         {
           code: 'date',
           name: '记录日期',
+          align: 'left',
           width: 100,
           render: (value: any) => (
             value
@@ -82,8 +83,8 @@ export default function() {
           const targetCategory = allWealthCategory.find(item => item._id === categoryIdentifier);
           if(targetCategory){
             return {
-              code: categoryIdentifier,
-              name: targetCategory.name,
+              code: categoryIdentifier as string,
+              name: targetCategory.name ?? '',
               align: 'right',
               width: 100,
               render: (value: any) => {
@@ -103,28 +104,26 @@ export default function() {
       ],
     };
   }, [allHistory, allWealthCategory])
-  console.log('tableData, columns', tableData, columns);
 
-  const mainContent = useMemo(()=>(
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      <Button
-        color='primary'
-        style={{marginBottom: 12}}
-        onClick={()=>{history.push('/wealth/record')}}
-        disabled={
-          Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
-          !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
-          !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
-        }
-      >添加记录</Button>
-      <AntdBaseTable
-        dataSource={tableData}
-        columns={columns}
-        isStickyHeader={false}
-        isLoading={allHistoryLoading}
-      />
-    </div>
-  ),[currentOrganizationWithPermissionResult, tableData, columns]);
+  const mainContent = useMemo(()=>{
+    // @ts-ignore
+    const t = <AntdBaseTable dataSource={tableData} columns={columns.filter(item => item)} isStickyHeader={false} isLoading={allHistoryLoading} />
+    return (
+      <div style={{display: 'flex', flexDirection: 'column'}}>
+        <Button
+          color='primary'
+          style={{marginBottom: 12}}
+          onClick={()=>{history.push('/wealth/record')}}
+          disabled={
+            Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
+            !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
+            !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
+          }
+        >添加记录</Button>
+        {t}
+      </div>
+    )
+  },[currentOrganizationWithPermissionResult, tableData, columns]);
 
   return (
     <Fragment>

@@ -1,8 +1,8 @@
 import { IConfig } from 'umi-types';
 
 // ref: https://umijs.org/config/
-const config: IConfig = {
-  antd: { mobile: false },
+// @ts-ignore
+const config: IConfig = { antd: { mobile: false },
   title: 'Wealth Manager',
   links: [{
     rel: 'icon',

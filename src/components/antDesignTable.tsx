@@ -1,6 +1,7 @@
 import { BaseTable, BaseTableProps, Classes, LoadingContentWrapperProps } from 'ali-react-table'
 import { Spin } from 'antd'
 import React from 'react'
+// @ts-ignore
 import styled from 'styled-components'
 
 const StyledBaseTable = (styled(BaseTable)`

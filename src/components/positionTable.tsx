@@ -46,8 +46,9 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
     return ([
       {
         code: 'name',
-        name: '基金名称',
+        name: <span>基金名称</span>,
         width: 150,
+        align: 'left',
         render: (value: any, record: any) => (
           <div style={{cursor: 'pointer'}} onClick={()=>{
             history.push(`/fund/transactionSet/${record.transactionSet}`)
@@ -58,7 +59,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
       },
       transactionSetActive ? {
         code: 'positionValue',
-        name: '市值',
+        name: <span>市值</span>,
         width: 100,
         align: 'right',
         render: (value: any, record: any) => (
@@ -172,12 +173,6 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
     });
   }, [transactionSets, fundBasicInfoList, unitPricesList, dividendsList, splitsList, transactionsList])
 
-  return (
-    <AntdBaseTable
-      dataSource={tableData}
-      columns={columns}
-      isStickyHeader={false}
-      isLoading={tableLoading}
-    />
-  );
+  // @ts-ignore
+  return (<AntdBaseTable dataSource={tableData} columns={columns} isStickyHeader={false} isLoading={tableLoading} />);
 }

@@ -35,8 +35,8 @@ const a = [
 ]
 
 // getNUmberFromWealthRecordItems
-const get = (wealthRecordItems, categoryId) => {
-  const result = Number(wealthRecordItems.find(recordItem => recordItem.categoryId === categoryId)?.value);
+const get = (wealthRecordItems: any, categoryId: number) => {
+  const result = Number(wealthRecordItems.find((recordItem: any) => recordItem.categoryId === categoryId)?.value);
   if(isNaN(result)){
     return 0;
   }else{
