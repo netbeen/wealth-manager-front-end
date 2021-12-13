@@ -104,18 +104,96 @@ export default function() {
     });
   }, [transactionSets, fundBasicInfoList, unitPricesList, dividendsList, splitsList, transactionsList])
 
-  const chartData = useMemo(()=>{
+  const { chartData, overviewData } = useMemo(()=>{
     if(!Array.isArray(tableData) || !tableData[0] || typeof tableData[0].positionValue !== 'number'){
-      return [];
+      return {
+        chartData: [],
+      };
     }
-    let sum = 0;
-    tableData.forEach((item)=>{ sum += item.positionValue ?? 0 })
+    let totalValue = tableData.reduce((pre, cur)=>(pre + (cur?.positionValue ?? 0)), 0);
 
-    return tableData.map((item)=>({
-      name: item.name,
-      percentage: (item.positionValue ?? 0) / sum
-    }))
+    return {
+      chartData: tableData.map((item)=>({
+        name: item.name,
+        percentage: (item.positionValue ?? 0) / totalValue
+      })),
+      overviewData: {
+        totalValue,
+      }
+    }
   }, [tableData])
+
+  const overviewContent = useMemo(()=>{
+    if(!overviewData){
+      return null;
+    }
+    return (
+      <Fragment>
+        <div
+          style={{
+            background: '#1677ff',
+            borderRadius: 4,
+            padding: '6px 6px',
+            color: 'white'
+          }}
+        >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}>
+            <div>
+              <div>总市值</div>
+              <div>{
+                Intl.NumberFormat('en-US', {
+                  maximumFractionDigits: 2,
+                  minimumFractionDigits: 2
+                }).format(overviewData.totalValue)
+              }</div>
+            </div>
+            <div style={{textAlign: 'right'}}>
+              <div>更新日期</div>
+              <div>{
+                ''
+              }</div>
+            </div>
+          </div>
+          {/*<div style={{*/}
+          {/*  display: 'flex',*/}
+          {/*  justifyContent: 'space-between',*/}
+          {/*  marginTop: '0.5rem'*/}
+          {/*}}>*/}
+          {/*  <div>*/}
+          {/*    <div>总资产</div>*/}
+          {/*    <div>{*/}
+          {/*      Intl.NumberFormat('en-US', {*/}
+          {/*        maximumFractionDigits: 2,*/}
+          {/*        minimumFractionDigits: 2*/}
+          {/*      }).format(totalAssets)*/}
+          {/*    }</div>*/}
+          {/*  </div>*/}
+          {/*  <div style={{textAlign: 'center'}}>*/}
+          {/*    <div>年复合增长率</div>*/}
+          {/*    <div>{*/}
+          {/*      Intl.NumberFormat('en-US', {*/}
+          {/*        maximumFractionDigits: 2,*/}
+          {/*        minimumFractionDigits: 2*/}
+          {/*      }).format(compoundAnnualGrowthRate*100)*/}
+          {/*    }%</div>*/}
+          {/*  </div>*/}
+          {/*  <div style={{textAlign: 'right'}}>*/}
+          {/*    <div>资产负债率</div>*/}
+          {/*    <div>{*/}
+          {/*      Intl.NumberFormat('en-US', {*/}
+          {/*        maximumFractionDigits: 2,*/}
+          {/*        minimumFractionDigits: 2*/}
+          {/*      }).format((totalAssets - netAssets)/totalAssets*100)*/}
+          {/*    }%</div>*/}
+          {/*  </div>*/}
+          {/*</div>*/}
+        </div>
+      </Fragment>
+    );
+  }, [overviewData])
 
   const cols = {
     percentage: {
@@ -177,7 +255,10 @@ export default function() {
       >
         {fundSecondaryTabData.map(item => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'metrics' && mainContent}
+            {item.value === 'metrics' && <div>
+              {overviewContent}
+              {mainContent}
+            </div>}
           </TabPane>
         ))}
       </Tabs>
