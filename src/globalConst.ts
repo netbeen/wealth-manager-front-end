@@ -31,3 +31,12 @@ export const wealthSecondaryTabData = [
     value: 'history', label: '明细数据', url: '/wealth/history'
   },
 ]
+
+export const insuranceSecondaryTabData = [
+  {
+    value: 'list', label: '列表', url: '/insurance/list'
+  },
+  {
+    value: 'history', label: '缴费提醒', url: '/insurance/renewalReminder'
+  },
+]

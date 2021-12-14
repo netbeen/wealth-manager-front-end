@@ -47,7 +47,7 @@ const tabs = [
   {
     key: 'insurance',
     title: '保险',
-    url: '/insurance',
+    url: '/insurance/list',
     icon: <CheckShieldOutline/>,
   },
   {
