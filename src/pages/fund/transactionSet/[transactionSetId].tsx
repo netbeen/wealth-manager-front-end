@@ -11,6 +11,7 @@ import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } fro
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 import { COLOR } from '@/globalConst';
+import Overview from '@/components/overview';
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
@@ -189,71 +190,32 @@ export default function({match: {params: {transactionSetId}}}: {match: {params: 
       return null;
     }
     return (
-      <Fragment>
-        <div
-          style={{
-            background: overviewData.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking,
-            borderRadius: 4,
-            margin: '0 6px 6px 6px',
-            padding: '6px 6px',
-            color: 'white'
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
-            <div>
-              <div>总市值</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(overviewData.positionValue)
-              }</div>
-            </div>
-            <div style={{textAlign: 'right'}}>
-              <div>更新日期</div>
-              <div>{
-                (transactionSetActive ? lastOfArray(fourBasicData.unitPrice) : lastOfArray(transactions)) .date.format('YYYY-MM-DD')
-              }</div>
-            </div>
-          </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: '0.5rem'
-          }}>
-            <div>
-              <div>收益额</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(overviewData.totalReturn)
-              }</div>
-            </div>
-            <div style={{textAlign: 'center'}}>
-              <div>收益率</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(overviewData.totalRateOfReturn*100)
-              }%</div>
-            </div>
-            <div style={{textAlign: 'right'}}>
-              <div>年化收益率</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(overviewData.totalAnnualizedRateOfReturn*100)
-              }%</div>
-            </div>
-          </div>
-        </div>
-      </Fragment>
+      <div style={{
+        margin: '0 6px 6px 6px',
+      }}>
+        <Overview
+          backgroundColor={overviewData.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking}
+          data={[
+            ['总市值', Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            }).format(overviewData.positionValue)],
+            ['更新日期', (transactionSetActive ? lastOfArray(fourBasicData.unitPrice) : lastOfArray(transactions)) .date.format('YYYY-MM-DD')],
+            ['收益额', Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            }).format(overviewData.totalReturn)],
+            ['收益率', Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            }).format(overviewData.totalRateOfReturn*100)+'%'],
+            ['年化收益率', Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2
+            }).format(overviewData.totalAnnualizedRateOfReturn*100)+'%'],
+          ]}
+        />
+      </div>
     );
   }, [overviewData])
 

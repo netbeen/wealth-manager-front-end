@@ -8,6 +8,7 @@ import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
+import Overview from '@/components/overview';
 import dayjs, { Dayjs } from 'dayjs';
 
 // @ts-ignore
@@ -121,72 +122,28 @@ export default function() {
 
     const totalAssets: number = [...assetChartData].reverse().find(item => item.type === 'totalAssets').value;
     return (
-      <Fragment>
-        <div
-          style={{
-            background: '#1677ff',
-            borderRadius: 4,
-            // margin: '0 6px 6px 6px',
-            padding: '6px 6px',
-            color: 'white'
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            // fontWeight: 'bold',
-          }}>
-            <div>
-              <div>净资产</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(netAssets)
-              }</div>
-            </div>
-            <div style={{textAlign: 'right'}}>
-              <div>更新日期</div>
-              <div>{
-                assetChartData[assetChartData.length - 1].date
-              }</div>
-            </div>
-          </div>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginTop: '0.5rem'
-          }}>
-            <div>
-              <div>总资产</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(totalAssets)
-              }</div>
-            </div>
-            <div style={{textAlign: 'center'}}>
-              <div>年复合增长率</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(compoundAnnualGrowthRate*100)
-              }%</div>
-            </div>
-            <div style={{textAlign: 'right'}}>
-              <div>资产负债率</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format((totalAssets - netAssets)/totalAssets*100)
-              }%</div>
-            </div>
-          </div>
-        </div>
-      </Fragment>
+      <Overview
+        backgroundColor={'#1677ff'}
+        data={[
+          ['净资产', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(netAssets)],
+          ['更新日期', assetChartData[assetChartData.length - 1].date],
+          ['总资产', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(totalAssets)],
+          ['年复合增长率', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(compoundAnnualGrowthRate*100)+'%'],
+          ['资产负债率', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format((totalAssets - netAssets)/totalAssets*100)+'%'],
+        ]}
+      />
     );
   }, [assetChartData])
 

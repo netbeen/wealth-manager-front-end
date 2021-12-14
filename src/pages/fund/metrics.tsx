@@ -22,6 +22,7 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, sliceBetween } from 'fund-tools';
 import dayjs, { Dayjs } from 'dayjs';
+import Overview from '@/components/overview';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane;
@@ -128,70 +129,16 @@ export default function() {
       return null;
     }
     return (
-      <Fragment>
-        <div
-          style={{
-            background: '#1677ff',
-            borderRadius: 4,
-            padding: '6px 6px',
-            color: 'white'
-          }}
-        >
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-          }}>
-            <div>
-              <div>总市值</div>
-              <div>{
-                Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2
-                }).format(overviewData.totalValue)
-              }</div>
-            </div>
-            <div style={{textAlign: 'right'}}>
-              <div>更新日期</div>
-              <div>{
-                ''
-              }</div>
-            </div>
-          </div>
-          {/*<div style={{*/}
-          {/*  display: 'flex',*/}
-          {/*  justifyContent: 'space-between',*/}
-          {/*  marginTop: '0.5rem'*/}
-          {/*}}>*/}
-          {/*  <div>*/}
-          {/*    <div>总资产</div>*/}
-          {/*    <div>{*/}
-          {/*      Intl.NumberFormat('en-US', {*/}
-          {/*        maximumFractionDigits: 2,*/}
-          {/*        minimumFractionDigits: 2*/}
-          {/*      }).format(totalAssets)*/}
-          {/*    }</div>*/}
-          {/*  </div>*/}
-          {/*  <div style={{textAlign: 'center'}}>*/}
-          {/*    <div>年复合增长率</div>*/}
-          {/*    <div>{*/}
-          {/*      Intl.NumberFormat('en-US', {*/}
-          {/*        maximumFractionDigits: 2,*/}
-          {/*        minimumFractionDigits: 2*/}
-          {/*      }).format(compoundAnnualGrowthRate*100)*/}
-          {/*    }%</div>*/}
-          {/*  </div>*/}
-          {/*  <div style={{textAlign: 'right'}}>*/}
-          {/*    <div>资产负债率</div>*/}
-          {/*    <div>{*/}
-          {/*      Intl.NumberFormat('en-US', {*/}
-          {/*        maximumFractionDigits: 2,*/}
-          {/*        minimumFractionDigits: 2*/}
-          {/*      }).format((totalAssets - netAssets)/totalAssets*100)*/}
-          {/*    }%</div>*/}
-          {/*  </div>*/}
-          {/*</div>*/}
-        </div>
-      </Fragment>
+      <Overview
+        backgroundColor={'#1677ff'}
+        data={[
+          ['总市值', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(overviewData.totalValue)],
+          ['更新日期', ''],
+        ]}
+      />
     );
   }, [overviewData])
 
