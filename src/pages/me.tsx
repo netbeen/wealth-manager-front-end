@@ -32,6 +32,12 @@ export default function() {
   const [organizationPickerVisible, setOrganizationPickerVisible] = useState<boolean>(false);
   const [value] = useState<(string | null)[]>([organizationWithPermission?.organization.name ?? ''])
 
+  const doSwitchOrganization = async (name: any) => {
+    cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizations?.find(item => item.name === name[0])?._id ?? '', { expires: 6 })
+    await caches.delete('wm-runtime-v2')
+    window.location.href = '/';
+  }
+
   return (
     <div>
       <NavBar backArrow={false}>个人中心</NavBar>
@@ -67,8 +73,7 @@ export default function() {
         }}
         value={value}
         onConfirm={name => {
-          cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizations?.find(item => item.name === name[0])?._id ?? '', { expires: 6 })
-          window.location.href = '/';
+          doSwitchOrganization(name)
         }}
       />
     </div>

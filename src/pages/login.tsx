@@ -29,6 +29,7 @@ export default function() {
 
     const availableOrganizationsResult = await fetchAvailableOrganizations();
     cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult[0]._id, { expires: 6 })
+    await caches.delete('wm-runtime-v2')
     history.push('/');
   }, [])
 

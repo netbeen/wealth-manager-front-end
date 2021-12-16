@@ -16,10 +16,13 @@ const config: IConfig = { antd: { mobile: false },
     content: 'fund, wealth, manager',
   }, {
     name: 'description',
-    content: '一站式基金投资管理平台',
+    content: '一站式家庭财务管理平台',
   }],
   webpack5: {},
   // mfsu: {},
+  scripts: [
+    { src: '/workboxLoader.js', defer: true },
+  ],
 };
 
 export default config;
