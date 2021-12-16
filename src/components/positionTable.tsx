@@ -11,7 +11,7 @@ import {
   FundSpitType,
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { calcReturn, sliceBetween } from 'fund-tools';
+import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
 import { COLOR } from '@/globalConst';
 import dayjs, { Dayjs } from 'dayjs';
 
@@ -150,10 +150,10 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
         return rowData;
       }
       const { positionValue, totalReturn, totalRateOfReturn, totalAnnualizedRateOfReturn } = calcReturn(
-        sliceBetween(unitPricesList[index], transactionsList[index][0].date, dayjs()),
-        dividendsList[index],
-        splitsList[index],
-        transactionsList[index]
+        sliceBetween(unitPricesList[index], transactionsList[index][0].date, lastOfArray(unitPricesList[index]).date),
+        sliceBetween(dividendsList[index], transactionsList[index][0].date, lastOfArray(unitPricesList[index]).date),
+        sliceBetween(splitsList[index], transactionsList[index][0].date, lastOfArray(unitPricesList[index]).date),
+        sliceBetween(transactionsList[index], transactionsList[index][0].date, lastOfArray(unitPricesList[index]).date)
       );
       rowData.positionValue = positionValue;
       rowData.totalRateOfReturn = totalRateOfReturn;

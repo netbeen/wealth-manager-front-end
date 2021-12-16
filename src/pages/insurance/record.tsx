@@ -10,7 +10,6 @@ import { sendTestEmail } from '@/services/insurance';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
-  const [netAssets, setNetAssets] = useState<number>(0)
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
   const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
@@ -70,17 +69,6 @@ export default function() {
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
           date: date.toDate(),
-        }}
-        onFieldsChange={(field, allField)=>{
-          const netAssetsResult = allField.reduce((prev, cur)=>{
-            if(!Array.isArray(cur.name) || typeof cur.name[0] !== 'string' || ["netAssets", 'date'].includes(cur.name[0]) || !cur.value){
-              return prev
-            }
-            // @ts-ignore
-            const targetCategory = allWealthCategory?.find(item => item._id === cur.name[0]) as WealthCategoryType;
-            return prev + (targetCategory.type === 'debt' ? -Number(cur.value) : Number(cur.value))
-          }, 0);
-          setNetAssets(netAssetsResult);
         }}
         onFinish={async (values)=>{
           const recordDetail: { [key: string]: number } = {};
