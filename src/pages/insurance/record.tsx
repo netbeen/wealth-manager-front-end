@@ -3,11 +3,10 @@ import { Selector, Toast, Picker, Form, Button, Input, DatePicker, NavBar } from
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest } from 'ahooks'
 import { history } from 'umi'
-import MobileDetect from 'mobile-detect'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
-import migration from '@/services/migration';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
+import { sendTestEmail } from '@/services/insurance';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -113,7 +112,9 @@ export default function() {
             </Button>
             <Button
               block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
-              // onClick={()=>{history.push('/fund/transactionDesktop')}}
+              onClick={()=>{
+                sendTestEmail().then((res)=>{console.log(res)});
+              }}
             >
               发送「续保提醒」测试邮件
             </Button>
