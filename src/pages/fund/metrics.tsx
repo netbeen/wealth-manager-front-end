@@ -1,5 +1,5 @@
 import React, { Fragment, useMemo, useState } from 'react';
-import { fundSecondaryTabData } from '@/globalConst';
+import { COLOR, fundSecondaryTabData } from '@/globalConst';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { history } from '@@/core/history';
@@ -112,6 +112,7 @@ export default function() {
       };
     }
     let totalValue = tableData.reduce((pre, cur)=>(pre + (cur?.positionValue ?? 0)), 0);
+    let totalReturn = tableData.reduce((pre, cur)=>(pre + (cur?.totalReturn ?? 0)), 0);
 
     return {
       chartData: tableData.map((item)=>({
@@ -120,6 +121,7 @@ export default function() {
       })),
       overviewData: {
         totalValue,
+        totalReturn,
       }
     }
   }, [tableData])
@@ -130,13 +132,17 @@ export default function() {
     }
     return (
       <Overview
-        backgroundColor={'#1677ff'}
+        backgroundColor={overviewData.totalReturn > 0 ? COLOR.Profitable : COLOR.LossMaking}
         data={[
           ['总市值', Intl.NumberFormat('en-US', {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2
           }).format(overviewData.totalValue)],
           ['更新日期', ''],
+          ['持仓收益', Intl.NumberFormat('en-US', {
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 2
+          }).format(overviewData.totalReturn)],
         ]}
       />
     );
