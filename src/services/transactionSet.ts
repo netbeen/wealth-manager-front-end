@@ -2,7 +2,10 @@ import axios from 'axios';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
 
-export interface TransactionSetType {_id: string, target: string, status: string}
+export interface TransactionSetType {
+  _id: string, target: string, status: string,
+  transactionSet: string,
+}
 
 export enum TransactionSetStatus {
   Active = 'active',
@@ -18,8 +21,23 @@ export const fetchTransactionSetsByStatus: (
       status
     }
   })).data;
-  return result
+
+  // 兼容后端接口格式切换的逻辑，等待缓存过期后可以删除
+  if(Array.isArray(result)){
+    return result;
+  } else {
+    return result.data
+  }
 };
+
+export const fetchAllTransactionSets: ()=>Promise<Array<TransactionSetType>> = async () => {
+  const result = (await axios.get(`${API_PREFIX}/fund/transactionSet`, {
+    headers: getAuthorizationHeaders(),
+  })).data;
+
+  return result.data
+};
+
 
 export const fetchTransactionSetById: (
   id: string

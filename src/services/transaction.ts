@@ -4,7 +4,10 @@ import { getAuthorizationHeaders } from '@/utils';
 import dayjs, { Dayjs } from 'dayjs';
 import { TransactionSetType } from '@/services/transactionSet';
 
-export interface TransactionType {_id: string, date: Dayjs, direction: TRANSACTION_DIRECTION, volume: number, commission: number}
+export interface TransactionType {
+  _id: string, date: Dayjs, direction: TRANSACTION_DIRECTION, volume: number, commission: number,
+  transactionSet: string
+}
 
 export enum TRANSACTION_DIRECTION {
   BUY = 'BUY',

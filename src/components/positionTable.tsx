@@ -13,7 +13,7 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
 import { COLOR } from '@/globalConst';
-import dayjs, { Dayjs } from 'dayjs';
+import { Dayjs } from 'dayjs';
 
 export default function({transactionSets}: {transactionSets: TransactionSetType[]}) {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([])

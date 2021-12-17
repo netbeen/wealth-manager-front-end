@@ -19,7 +19,7 @@ export const fundSecondaryTabData = [
     value: 'positionHistory', label: '历史持仓', url: '/fund/positionHistory'
   },
   {
-    value: 'transactions', label: '交易记录', url: '/fund/transactions'
+    value: 'transactionList', label: '交易记录', url: '/fund/transactionList'
   }
 ]
 
