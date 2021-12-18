@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Tabs } from 'antd-mobile';
-import { fundSecondaryTabData } from '@/globalConst';
+import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { fetchAllTransactionSets } from '@/services/transactionSet';
@@ -89,7 +89,7 @@ export default function() {
             align: 'right',
             render: (value: any, record: any) => (
               <div>
-                <div>
+                <div style={{color: record.direction === TRANSACTION_DIRECTION.BUY ? COLOR.LossMaking : COLOR.Profitable}}>
                   {record.direction === TRANSACTION_DIRECTION.BUY ? '买入' : '卖出'}
                 </div>
                 <div>
