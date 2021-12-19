@@ -1,70 +1,19 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
-import { Selector, Toast, Picker, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
+import React, { Fragment, useState } from 'react';
+import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
-import { useRequest } from 'ahooks'
 import { history } from 'umi'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
-import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
-import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
+import { insertWealthHistoryRecord } from '@/services/wealthHistory';
 import { sendTestEmail } from '@/services/insurance';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
-  const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
-  const [categoryPickVisible, setCategoryPickVisible] = useState(false)
-
-  const { data: latestHistoryRecord, loading: latestHistoryRecordLoading } = useRequest(async () => {
-    return await getLatestHistoryRecord()
-  }, {
-    refreshDeps: [],
-  });
-
-  const { data: allWealthCategory } = useRequest(async () => {
-    return await getAllWealthCategory()
-  }, {
-    refreshDeps: [],
-  });
-
-  const categoryPickData = useMemo(()=>{
-    if(!allWealthCategory){
-      return []
-    }
-    return [
-      allWealthCategory.filter(category => !displayCategory.map(displayCategoryItem => displayCategoryItem._id).includes(category._id)).map(category => category.name)
-    ];
-  }, [allWealthCategory, displayCategory])
-
-  useEffect(()=>{
-    if(!Array.isArray(allWealthCategory) || allWealthCategory.length === 0 || latestHistoryRecordLoading){
-      return;
-    }
-    if(!latestHistoryRecord || Object.keys(latestHistoryRecord.detail).length === 0){
-      setDisplayCategory(allWealthCategory)
-    }else{
-      setDisplayCategory(allWealthCategory.filter(wealthCategory => (
-        Object.keys(latestHistoryRecord.detail).includes(wealthCategory._id) && latestHistoryRecord.detail[wealthCategory._id] > 0
-      )))
-    }
-  }, [allWealthCategory, latestHistoryRecordLoading, latestHistoryRecord])
 
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>保险记录</NavBar>
-      <Picker
-        columns={categoryPickData}
-        visible={categoryPickVisible}
-        onClose={() => {
-          setCategoryPickVisible(false)
-        }}
-        onConfirm={categoryName => {
-          const targetCategory = allWealthCategory?.find(item => item.name === categoryName[0]);
-          if(targetCategory){
-            setDisplayCategory([...displayCategory, targetCategory]);
-          }
-        }}
-      />
       <Form
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
@@ -72,17 +21,6 @@ export default function() {
         }}
         onFinish={async (values)=>{
           const recordDetail: { [key: string]: number } = {};
-          for(let displayCategoryItem of displayCategory) {
-            const numberValue = Number(values[displayCategoryItem._id]);
-            if(isNaN(numberValue)){
-              Toast.show({
-                icon: 'fail',
-                content: '表单字段格式错误，请检查各输入项',
-              })
-              return;
-            }
-            recordDetail[displayCategoryItem._id] = numberValue;
-          }
           setSubmitLoading(true);
           const result = await insertWealthHistoryRecord(date, recordDetail)
           if(result._id){
