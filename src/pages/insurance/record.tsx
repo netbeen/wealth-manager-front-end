@@ -5,6 +5,9 @@ import { history } from 'umi'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { insertWealthHistoryRecord } from '@/services/wealthHistory';
 import { sendTestEmail } from '@/services/insurance';
+import { API_PREFIX } from '@/globalConst';
+import { getAuthorizationHeaders } from '@/utils';
+import axios from 'axios';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -43,6 +46,25 @@ export default function() {
               }}
             >
               发送「续保提醒」测试邮件
+            </Button>
+            <Button
+              block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
+              onClick={()=>{
+                // sendTestEmail().then((res)=>{console.log(res)});
+                axios.post(`${API_PREFIX}/insurance/insert`, {
+                  type: 'type1',
+                  name: 'name',
+                  insured: 'insured',
+                  insuredAmount: 'insuredAmount',
+                  firstPaymentDate: 'firstPaymentDate',
+                  paymentPlan: 'paymentPlan',
+                  contractUrl: 'contractUrl',
+                }, {
+                  headers: getAuthorizationHeaders()
+                })
+              }}
+            >
+              测试插入保险
             </Button>
           </Fragment>
         }
