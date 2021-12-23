@@ -73,6 +73,16 @@ export default function() {
             >
               测试插入保险
             </Button>
+            <Button
+              block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
+              onClick={()=>{
+                axios.get(`${API_PREFIX}/insurance/list`,{
+                  headers: getAuthorizationHeaders()
+                })
+              }}
+            >
+              测试保险列表
+            </Button>
           </Fragment>
         }
       >
