@@ -55,34 +55,6 @@ export default function() {
             >
               发送「续保提醒」测试邮件
             </Button>
-            <Button
-              block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
-              onClick={()=>{
-                axios.post(`${API_PREFIX}/insurance/insert`, {
-                  type: 'type1',
-                  name: 'name',
-                  insured: 'insured',
-                  insuredAmount: 'insuredAmount',
-                  firstPaymentDate: 'firstPaymentDate',
-                  paymentPlan: 'paymentPlan',
-                  contractUrl: 'contractUrl',
-                }, {
-                  headers: getAuthorizationHeaders()
-                })
-              }}
-            >
-              测试插入保险
-            </Button>
-            <Button
-              block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
-              onClick={()=>{
-                axios.get(`${API_PREFIX}/insurance/list`,{
-                  headers: getAuthorizationHeaders()
-                })
-              }}
-            >
-              测试保险列表
-            </Button>
           </Fragment>
         }
       >
