@@ -46,7 +46,7 @@ export default function() {
               code: 'name',
               name: '名称',
               align: 'left',
-              width: 100,
+              width: 140,
               render: (value: any) => (
                 value
               )
@@ -55,7 +55,7 @@ export default function() {
               code: 'type',
               name: '类型',
               align: 'left',
-              width: 100,
+              width: 50,
               render: (value: any) => (
                 value
               )
@@ -64,7 +64,7 @@ export default function() {
               code: 'insured',
               name: '被保险人',
               align: 'left',
-              width: 100,
+              width: 75,
               render: (value: any) => (
                 value
               )
@@ -73,7 +73,7 @@ export default function() {
               code: 'insuredAmount',
               name: '保额',
               align: 'right',
-              width: 100,
+              width: 75,
               render: (value: any) => (
                 value
               )
