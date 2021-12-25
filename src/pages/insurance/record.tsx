@@ -45,7 +45,7 @@ export default function() {
         footer={
           <Fragment>
             <Button block type='submit' color='primary' loading={submitLoading}>
-              提交
+              确定
             </Button>
             <Button
               block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
