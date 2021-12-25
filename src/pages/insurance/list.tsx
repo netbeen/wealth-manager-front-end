@@ -6,7 +6,7 @@ import { history } from 'umi'
 import layoutStyles from '@/layouts/index.less';
 import { insuranceSecondaryTabData } from '@/globalConst';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
-import { fetchList } from '@/services/insurance';
+import { fetchList, INSURANCE_TYPE, insuranceTypeName } from '@/services/insurance';
 import { AntdBaseTable } from '@/components/antDesignTable';
 
 // @ts-ignore
@@ -36,7 +36,7 @@ export default function() {
       {Array.isArray(insuranceList) && (
         <AntdBaseTable
           dataSource={insuranceList.map(insuranceRecord => ({
-            type: insuranceRecord.type,
+            type: insuranceTypeName[insuranceRecord.type as INSURANCE_TYPE],
             name: insuranceRecord.name,
             insured: insuranceRecord.insured,
             insuredAmount: insuranceRecord.insuredAmount,

@@ -10,6 +10,14 @@ export enum INSURANCE_TYPE {
   Annuity = 'Annuity',
 }
 
+export const insuranceTypeName = {
+  [INSURANCE_TYPE.Accident]: '意外',
+  [INSURANCE_TYPE.Medical]: '医疗',
+  [INSURANCE_TYPE.CriticalIllness]: '重疾',
+  [INSURANCE_TYPE.Life]: '人寿',
+  [INSURANCE_TYPE.Annuity]: '年金',
+}
+
 export enum INSURANCE_PAYMENT_PLAN {
   Bulk = 'Bulk',
   Monthly = 'Monthly',
