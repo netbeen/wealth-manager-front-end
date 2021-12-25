@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { history } from 'umi'
-import { INSURANCE_PAYMENT_PLAN, INSURANCE_TYPE, sendTestEmail } from '@/services/insurance';
+import { INSURANCE_PAYMENT_PLAN, INSURANCE_TYPE, insuranceTypeName, sendTestEmail } from '@/services/insurance';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
 import axios from 'axios';
@@ -63,11 +63,11 @@ export default function() {
             defaultValue={[INSURANCE_TYPE.Accident]}
             columns={5}
             options={[
-              { label: '意外', value: INSURANCE_TYPE.Accident },
-              { label: '医疗', value: INSURANCE_TYPE.Medical },
-              { label: '重疾', value: INSURANCE_TYPE.CriticalIllness },
-              { label: '人寿', value: INSURANCE_TYPE.Life },
-              { label: '年金', value: INSURANCE_TYPE.Annuity },
+              { label: insuranceTypeName[INSURANCE_TYPE.Accident], value: INSURANCE_TYPE.Accident },
+              { label: insuranceTypeName[INSURANCE_TYPE.Medical], value: INSURANCE_TYPE.Medical },
+              { label: insuranceTypeName[INSURANCE_TYPE.CriticalIllness], value: INSURANCE_TYPE.CriticalIllness },
+              { label: insuranceTypeName[INSURANCE_TYPE.Life], value: INSURANCE_TYPE.Life },
+              { label: insuranceTypeName[INSURANCE_TYPE.Annuity], value: INSURANCE_TYPE.Annuity },
             ]}
           />
         </Form.Item>
