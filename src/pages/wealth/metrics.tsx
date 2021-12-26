@@ -121,7 +121,7 @@ export default function() {
 
     const duration = endDate.diff(startDate, 'day')
     const irrData = [];
-    for(let i = 0; i < duration; i++){
+    for(let i = 0; i < (duration + 1); i++){
       if(i === 0){
         irrData.push(-netAssetsAtStartDate)
       } else if(i === duration - 1) {
