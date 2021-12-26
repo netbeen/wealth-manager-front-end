@@ -36,6 +36,7 @@ export default function() {
       {Array.isArray(insuranceList) && (
         <AntdBaseTable
           dataSource={insuranceList.map(insuranceRecord => ({
+            _id: insuranceRecord._id,
             type: insuranceTypeName[insuranceRecord.type as INSURANCE_TYPE],
             name: insuranceRecord.name,
             insured: insuranceRecord.insured,
@@ -47,8 +48,12 @@ export default function() {
               name: '名称',
               align: 'left',
               width: 140,
-              render: (value: any) => (
-                value
+              render: (value: any, record: any) => (
+                <div
+                  onClick={()=>{
+                    history.push(`/insurance/record?id=${record._id}`)
+                  }}
+                >{value}</div>
               )
             },
             {
