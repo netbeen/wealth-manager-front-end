@@ -9,6 +9,7 @@ import { useRequest } from 'ahooks';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
 import Overview from '@/components/overview';
+import { irr } from 'financial';
 import dayjs, { Dayjs } from 'dayjs';
 
 // @ts-ignore
@@ -117,8 +118,20 @@ export default function() {
       netAssetsAtStartDate: [...assetChartData].find(item => item.type === 'netAssets').value,
       startDate: dayjs([...assetChartData].find(item => item.type === 'netAssets').date),
     };
-    // 年复合增长率公式: https://baike.baidu.com/item/%E5%B9%B4%E5%A4%8D%E5%90%88%E5%A2%9E%E9%95%BF%E7%8E%87/3952268?fr=aladdin
-    const compoundAnnualGrowthRate = (netAssets/netAssetsAtStartDate)**(1/(endDate.diff(startDate, 'year', true)))-1
+
+    const duration = endDate.diff(startDate, 'day')
+    const irrData = [];
+    for(let i = 0; i < duration; i++){
+      if(i === 0){
+        irrData.push(-netAssetsAtStartDate)
+      } else if(i === duration - 1) {
+        irrData.push(netAssets)
+      } else {
+        irrData.push(0)
+      }
+    }
+    // 年复合增长率算法：irr
+    const compoundAnnualGrowthRate = irr(irrData, 0, 0.00001, 1000) * 365;
 
     const totalAssets: number = [...assetChartData].reverse().find(item => item.type === 'totalAssets').value;
     return (

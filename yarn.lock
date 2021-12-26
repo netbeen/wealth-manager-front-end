@@ -4548,6 +4548,11 @@ filter-obj@^1.1.0:
   resolved "https://registry.npmjs.org/filter-obj/-/filter-obj-1.1.0.tgz#9b311112bc6c6127a16e016c6c5d7f19e0805c5b"
   integrity sha1-mzERErxsYSehbgFsbF1/GeCAXFs=
 
+financial@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.npmjs.org/financial/-/financial-0.1.3.tgz#cab9bc28f84f65ef474b57032cc34dd17cb59659"
+  integrity sha512-vdv2nx8x+u1bgfcdt/BsKU4Gpqfu9u2485UJoQAs6GqrASszm6QWY7d8H7x968G5rAdV4SU2Nz4JoLTtHUnlcA==
+
 find-parent-dir@^0.3.0:
   version "0.3.1"
   resolved "https://registry.npmjs.org/find-parent-dir/-/find-parent-dir-0.3.1.tgz#c5c385b96858c3351f95d446cab866cbf9f11125"
