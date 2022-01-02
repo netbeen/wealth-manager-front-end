@@ -2,16 +2,24 @@ import React, { Fragment, useState } from 'react';
 import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { history } from 'umi'
-import { INSURANCE_PAYMENT_PLAN, INSURANCE_TYPE, insuranceTypeName, sendTestEmail } from '@/services/insurance';
+import {
+  fetchById,
+  INSURANCE_PAYMENT_PLAN,
+  INSURANCE_TYPE,
+  insuranceTypeName,
+  sendTestEmail,
+} from '@/services/insurance';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
 import axios from 'axios';
 
-export default function() {
+export default function({location}: {location: {query: {id: string}}}) {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [firstPaymentDate, setFirstPaymentDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
 
+  console.log(location.query.id);
+  fetchById(location.query.id)
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>保险记录</NavBar>

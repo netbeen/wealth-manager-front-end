@@ -47,3 +47,15 @@ export const fetchList: ()=>Promise<boolean> = async () => {
   }
 };
 
+export const fetchById: (id: string)=>Promise<boolean> = async (id) => {
+  const result = (await axios.get(`${API_PREFIX}/insurance/getById?id=${id}`,{
+    headers: getAuthorizationHeaders()
+  })).data;
+  if(Array.isArray(result?.data)){
+    return result.data
+  } else {
+    console.error('Cannot get insurance list', result)
+    return []
+  }
+};
+
