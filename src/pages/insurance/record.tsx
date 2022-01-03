@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { history } from 'umi'
+import { useAsyncEffect } from 'ahooks'
 import {
   fetchById,
   INSURANCE_PAYMENT_PLAN,
@@ -19,7 +20,16 @@ export default function({location}: {location: {query: {id: string}}}) {
   const [firstPaymentDate, setFirstPaymentDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
 
   console.log(location.query.id);
-  fetchById(location.query.id)
+
+  useAsyncEffect(async ()=>{
+    const existedInsuranceData = await fetchById(location.query.id)
+    if(!existedInsuranceData){
+      return
+    }
+    setFirstPaymentDate(existedInsuranceData.firstPaymentDate)
+    console.log('result', existedInsuranceData);
+  }, [location.query.id])
+
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>保险记录</NavBar>

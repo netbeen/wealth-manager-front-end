@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
+import dayjs, { Dayjs } from 'dayjs';
 
 export enum INSURANCE_TYPE {
   Accident = 'Accident',
@@ -22,6 +23,18 @@ export enum INSURANCE_PAYMENT_PLAN {
   Bulk = 'Bulk',
   Monthly = 'Monthly',
   Annual = 'Annual',
+}
+
+export interface InsuranceType {
+  _id: string;
+  firstPaymentDate: Dayjs;
+}
+
+const convertDTO2Object = (dto: any) => {
+  return {
+    ...dto,
+    firstPaymentDate: dayjs(dto.firstPaymentDate)
+  } as InsuranceType
 }
 
 export const sendTestEmail: ()=>Promise<boolean> = async () => {
@@ -47,15 +60,15 @@ export const fetchList: ()=>Promise<boolean> = async () => {
   }
 };
 
-export const fetchById: (id: string)=>Promise<boolean> = async (id) => {
+export const fetchById: (id: string)=>Promise<InsuranceType|null> = async (id) => {
   const result = (await axios.get(`${API_PREFIX}/insurance/getById?id=${id}`,{
     headers: getAuthorizationHeaders()
   })).data;
-  if(Array.isArray(result?.data)){
-    return result.data
+  if(result?.data._id){
+    return convertDTO2Object(result.data)
   } else {
-    console.error('Cannot get insurance list', result)
-    return []
+    console.error('Cannot get insurance', result)
+    return null
   }
 };
 
