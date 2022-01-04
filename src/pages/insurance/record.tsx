@@ -9,6 +9,7 @@ import {
   INSURANCE_TYPE,
   insuranceTypeName,
   sendTestEmail,
+  InsuranceType,
 } from '@/services/insurance';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
@@ -18,26 +19,32 @@ export default function({location}: {location: {query: {id: string}}}) {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
   const [submitLoading, setSubmitLoading] = useState<boolean>(false)
   const [firstPaymentDate, setFirstPaymentDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
-
-  console.log(location.query.id);
+  const [existedInsurance, setExistedInsurance] = useState<InsuranceType|null>(null);
 
   useAsyncEffect(async ()=>{
-    const existedInsuranceData = await fetchById(location.query.id)
-    if(!existedInsuranceData){
+    const result = await fetchById(location.query.id)
+    if(!result){
       return
     }
-    setFirstPaymentDate(existedInsuranceData.firstPaymentDate)
-    console.log('result', existedInsuranceData);
+    setFirstPaymentDate(result.firstPaymentDate)
+    setExistedInsurance(result)
   }, [location.query.id])
 
+  if(location.query.id && !existedInsurance){
+    return null;
+  }
   return (
     <Fragment>
       <NavBar onBack={()=>{history.goBack()}}>保险记录</NavBar>
       <Form
         initialValues={{
-          type: [INSURANCE_TYPE.Accident],
-          paymentPlan: [INSURANCE_PAYMENT_PLAN.Bulk],
+          type: [existedInsurance?.type ?? INSURANCE_TYPE.Accident],
+          name: existedInsurance?.name ?? '',
+          insured: existedInsurance?.insured ?? '',
+          insuredAmount: existedInsurance?.insuredAmount ?? '',
+          paymentPlan: [existedInsurance?.paymentPlan ?? INSURANCE_PAYMENT_PLAN.Bulk],
           firstPaymentDate: firstPaymentDate.toDate(),
+          contractUrl: existedInsurance?.contractUrl ?? '',
         }}
         onFinish={async (values)=>{
           setSubmitLoading(true);

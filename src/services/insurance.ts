@@ -27,7 +27,13 @@ export enum INSURANCE_PAYMENT_PLAN {
 
 export interface InsuranceType {
   _id: string;
+  type: INSURANCE_TYPE,
+  insured: string,
+  insuredAmount: string,
+  name: string,
+  paymentPlan: INSURANCE_PAYMENT_PLAN,
   firstPaymentDate: Dayjs;
+  contractUrl: string;
 }
 
 const convertDTO2Object = (dto: any) => {
