@@ -2,7 +2,7 @@ import React, { Fragment, useMemo } from 'react';
 // @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Loading, Tabs } from 'antd-mobile';
-import { Line, Chart, Axis, Tooltip } from 'bizcharts';
+import { Line, Chart, Axis, Tooltip, Coordinate, Interval, Interaction } from 'bizcharts';
 import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
@@ -44,7 +44,7 @@ export default function() {
     return result;
   }, [allWealthCategory])
 
-  const { assetsCategoryDistributionChartData, assetChartData } = useMemo(()=>{
+  const { assetsCategoryDistributionChartData, assetChartData, assetsCategoryDistributionPieChartData } = useMemo(()=>{
     if(!Array.isArray(allHistory) || allHistory.length === 0 || !Array.isArray(allWealthCategory) || allWealthCategory.length === 0){
       return {
         assetsCategoryDistributionChartData: [],
@@ -53,8 +53,9 @@ export default function() {
     }
     const assetsCategoryDistributionChartData: any[] = [];
     const assetChartData: any[] = [];
+    const assetsCategoryDistributionPieChartData: any[] = [];
     const displayCategoryId = Array.from(new Set(allHistory.map(historyItem => (Object.keys(historyItem.detail).filter(categoryId => historyItem.detail[categoryId] > 0))).flat(1)))
-    allHistory.reverse().forEach((historyItem)=>{
+    allHistory.reverse().forEach((historyItem, index)=>{
       const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
         const targetCategory = allWealthCategory.find(item => item._id === cur);
         if(targetCategory?.type === 'debt'){
@@ -98,11 +99,22 @@ export default function() {
           }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] * 100 / totalAssets),
           category: categoryIdentifier
         })
+        if(index === allHistory.length - 1){
+          assetsCategoryDistributionPieChartData.push({
+            percentage: Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 4,
+              minimumFractionDigits: 4
+            }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] / totalAssets),
+            value: historyItem.detail[categoryIdentifier],
+            category: categoryIdentifier
+          })
+        }
       })
     })
     return {
       assetsCategoryDistributionChartData,
       assetChartData,
+      assetsCategoryDistributionPieChartData
     };
   }, [allHistory, allWealthCategory])
 
@@ -230,8 +242,45 @@ export default function() {
         }}/>
         <Line shape="smooth" position="date*value" color="type"/>
       </Chart>
+      <Chart
+        animate={false}
+        height={300}
+        data={assetsCategoryDistributionPieChartData}
+        scale={{
+          category: {
+            formatter: (v: string) => {
+              return allWealthCategoryNameMapObject[v]
+            }
+          }
+        }}
+        autoFit
+      >
+        <Coordinate type="theta" radius={0.75} />
+        <Tooltip showTitle={false} />
+        <Axis visible={false} />
+        <Interval
+          position="value"
+          adjust="stack"
+          color="category"
+          style={{
+            lineWidth: 1,
+            stroke: '#fff',
+          }}
+          label={['percentage', {
+            // label 太长自动截断
+            layout: { type: 'limit-in-plot', cfg: { action: 'ellipsis' } },
+            content: (data) => {
+              return `${allWealthCategoryNameMapObject[data.category]}: ${Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2
+              }).format(data.percentage * 100)}%`;
+            },
+          }]}
+        />
+        <Interaction type='element-single-selected' />
+      </Chart>
     </div>
-  )},[assetsCategoryDistributionChartData, assetChartData, allWealthCategoryNameMapObject]);
+  )},[assetsCategoryDistributionChartData, assetsCategoryDistributionPieChartData, assetChartData, allWealthCategoryNameMapObject]);
 
   return (
     <Fragment>
