@@ -255,7 +255,7 @@ export default function() {
         }}
         autoFit
       >
-        <Coordinate type="theta" radius={0.75} />
+        <Coordinate type="theta" radius={0.60} />
         <Tooltip showTitle={false} />
         <Axis visible={false} />
         <Interval
