@@ -31,6 +31,8 @@ yarn dev
   - Data: MongoDB
 - Architecture
   - Cloud Native: Deploy client on Vercel.com, APIs on Tencent Cloud Serverless
+  - Client Framework: Refactor client logic using Umi.js
+  - Typescript: Restrict type on both client and server
 - Feature:
   - Multiple Account: Enable multi-account for virtual account management, like co-account, permission control using RBAC
   - Mobile Default: Design layout for mobile device access
