@@ -1,22 +1,88 @@
-![UmiJS Logo](https://github.com/vercel/vercel/blob/master/packages/frameworks/logos/umi.svg)
+# Wealth Manager V4
 
-# UmiJS Example
+A web app deigned for managing your home wealth, especially funds and insurances.
 
-This directory is a brief example of a [UmiJS](https://umijs.org/) app that can be deployed with Vercel and zero configuration.
+## Features
 
-## Deploy Your Own
+- Overview: Show wealth distribution like percentage and amount of each investment approaches. 
+- Funds: List each funds you have held and calculate the `ROR (Rate of Return)` and `AROR (Annualized Rate of Return)` to help you catch the good buy/sell opportunities.
+- Insurances: List each insurances you held and send email notice before renew date.
+- Common: Support multi-accounts under a single user.
 
-Deploy your own UmiJS project with Vercel.
+## Development
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/vercel/tree/main/examples/umijs&template=umijs)
-
-_Live Example: https://umijs.now-examples.now.sh_
-
-### How We Created This Example
-
-To get started with UmiJS deployed with Vercel, you can use the [Umi CLI](https://github.com/umijs/create-umi) to initialize the project:
-
-```shell
-$ yarn create umi app-name
+```bash
+cd wealth-manager-front-end/
+yarn
+yarn dev
 ```
 
+## Release Note
+
+### v4.0
+
+- Released at 2022-01-22 
+- Repos:
+  - Client: [https://github.com/netbeen/wealth-manager-front-end](https://github.com/netbeen/wealth-manager-front-end)
+  - Server: [https://github.com/netbeen/wealth-manager-serverless-api](https://github.com/netbeen/wealth-manager-serverless-api)
+- Technology Stack
+  - Client: Umi.js, Ant Design, Ant Design Mobile, BizCharts
+  - Server: Midway Serverless
+  - Data: MongoDB
+- Architecture
+  - Cloud Native: Deploy client on Vercel.com, APIs on Tencent Cloud Serverless
+- Feature:
+  - Multiple Account: Enable multi-account for virtual account management, like co-account, permission control using RBAC
+  - Mobile Default: Design layout for mobile device access
+  - AROR: Update algorithm of AROR to IRR
+
+### v3.0
+
+- Released at 2019-01-20 
+- Repo: [https://github.com/netbeen/wealth-manager](https://github.com/netbeen/wealth-manager)
+- Technology Stack
+  - Client: React, React Router, AISC, G2
+  - Server: Node.js, Egg.js, Sequelize
+  - Data: MySQL
+- Architecture
+  - React: Refactor all the client logic using React
+  - Service Worker: Cache responses using Workbox
+  - Server Framework: Refactor all the server logic using Egg.js, instead of Express
+  - Container: Maintain system dependency in dockerfile
+- Feature
+  - Dark Mode: Enable dark mode
+  - Multiple User: Enable sign in / sign out to support multiple users 
+
+![v3预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v3.png)
+
+### v2.0
+
+- Released at 2016-09-30
+- Repo: [https://github.com/netbeen/FundManagerWeb](https://github.com/netbeen/FundManagerWeb)
+- Technology Stack
+  - Client: jQuery, Bootstrap, ECharts
+  - Server: Node.js, Express
+  - Data: MySQL
+- Architecture
+  - B/S: Change to B/S architecture to run crawler and reminder 24h
+  - Storage: store transaction data using MySQL
+- Features
+  - Wealth Dashboard: Calculate percentage and amount of each invest approaches.
+  - Buy/Sell Opportunities Reminder: Notice via email when AROR reaches 15%
+
+![v2预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v2.png)
+
+
+### v1.0
+
+- Released at 2016-01-12 
+- Repo: [https://github.com/netbeen/FundManager](https://github.com/netbeen/FundManager)
+- Technology Stack
+  - Client: JavaScript, ECharts
+  - Generator: Python, urllib
+- Features
+  - Grab funds price data using crawler
+  - Calculate AROR using transactions stored in config file
+  - Visualization using EChart
+
+![v1预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v1.jpg)
