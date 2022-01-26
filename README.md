@@ -38,6 +38,8 @@ yarn dev
   - Mobile Default: Design layout for mobile device access
   - AROR: Update algorithm of AROR to IRR
 
+![v4-screenshot](https://raw.githubusercontent.com/netbeen/wealth-manager-front-end/main/readme-images/v4-all.png)
+
 ### v3.0
 
 - Released at 2019-01-20 
@@ -55,7 +57,7 @@ yarn dev
   - Dark Mode: Enable dark mode
   - Multiple User: Enable sign in / sign out to support multiple users 
 
-![v3预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v3.png)
+![v3-screenshot](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v3.png)
 
 ### v2.0
 
@@ -72,7 +74,7 @@ yarn dev
   - Wealth Dashboard: Calculate percentage and amount of each invest approaches.
   - Buy/Sell Opportunities Reminder: Notice via email when AROR reaches 15%
 
-![v2预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v2.png)
+![v2-screenshot](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v2.png)
 
 
 ### v1.0
@@ -87,4 +89,4 @@ yarn dev
   - Calculate AROR using transactions stored in config file
   - Visualization using EChart
 
-![v1预览图](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v1.jpg)
+![v1-screenshot](https://raw.githubusercontent.com/netbeen/wealth-manager/master/readme/v1.jpg)
