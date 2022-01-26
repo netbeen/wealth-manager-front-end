@@ -26,8 +26,8 @@ yarn dev
   - Client: [https://github.com/netbeen/wealth-manager-front-end](https://github.com/netbeen/wealth-manager-front-end)
   - Server: [https://github.com/netbeen/wealth-manager-serverless-api](https://github.com/netbeen/wealth-manager-serverless-api)
 - Technology Stack
-  - Client: Umi.js, Ant Design, Ant Design Mobile, BizCharts
-  - Server: Midway Serverless
+  - Client: Typescript, React, Umi.js, Ant Design, Ant Design Mobile, BizCharts
+  - Server: Typescript, Node.js, Midway Serverless
   - Data: MongoDB
 - Architecture
   - Cloud Native: Deploy client on Vercel.com, APIs on Tencent Cloud Serverless
