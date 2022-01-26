@@ -36,7 +36,8 @@ yarn dev
 - Feature:
   - Multiple Account: Enable multi-account for virtual account management, like co-account, permission control using RBAC
   - Mobile Default: Design layout for mobile device access
-  - AROR: Update algorithm of AROR to IRR
+  - AROR Algorithm Update: Update algorithm of AROR to IRR
+  - Insurance Management: List insurances you hold and remind you when approaching renew date.
 
 ![v4-screenshot](https://raw.githubusercontent.com/netbeen/wealth-manager-front-end/main/readme-images/v4-all.png)
 
