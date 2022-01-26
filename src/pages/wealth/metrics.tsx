@@ -176,8 +176,8 @@ export default function() {
     if(assetsCategoryDistributionChartData.length === 0){
       return <div style={{textAlign: 'center'}}><Loading /></div>
     }
-    return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
+
+    const assetsCategoryDistributionChart = (
       <Chart
         height={250}
         data={assetsCategoryDistributionChartData}
@@ -206,6 +206,8 @@ export default function() {
         <Axis name="value" />
         <Line shape="smooth" position="date*value" color="category"/>
       </Chart>
+    );
+    const assetsChart = (
       <Chart
         height={250}
         data={assetChartData}
@@ -242,6 +244,8 @@ export default function() {
         }}/>
         <Line shape="smooth" position="date*value" color="type"/>
       </Chart>
+    );
+    const assetsCategoryDistributionPieChart = (
       <Chart
         animate={false}
         height={300}
@@ -279,6 +283,12 @@ export default function() {
         />
         <Interaction type='element-single-selected' />
       </Chart>
+    );
+    return (
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+      {assetsChart}
+      {assetsCategoryDistributionChart}
+      {assetsCategoryDistributionPieChart}
     </div>
   )},[assetsCategoryDistributionChartData, assetsCategoryDistributionPieChartData, assetChartData, allWealthCategoryNameMapObject]);
 
