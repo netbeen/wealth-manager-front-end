@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
 import { Toast, Picker, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile'
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest } from 'ahooks'
@@ -7,6 +7,7 @@ import MobileDetect from 'mobile-detect'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
+import { COLOR } from '@/globalConst';
 
 export default function() {
   const [datePickerVisible, setDatePickerVisible] = useState(false)
@@ -15,6 +16,7 @@ export default function() {
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
   const [displayCategory, setDisplayCategory] = useState<Array<WealthCategoryType>>([])
   const [categoryPickVisible, setCategoryPickVisible] = useState(false)
+  const [formNumberData, setFormNumberData] = useState<{[id: string]: number}>({})
 
   const mobilePhoneModel = useMemo(()=>((new MobileDetect(window.navigator.userAgent)).mobile()), [])
 
@@ -23,6 +25,7 @@ export default function() {
   }, {
     refreshDeps: [],
   });
+  console.log('latestHistoryRecord', latestHistoryRecord);
 
   const { data: allWealthCategory } = useRequest(async () => {
     return await getAllWealthCategory()
@@ -51,6 +54,22 @@ export default function() {
       )))
     }
   }, [allWealthCategory, latestHistoryRecordLoading, latestHistoryRecord])
+
+  const renderDiff = (current: number, previous: number) => {
+    if(current === previous){
+      return <div>环比持平</div>
+    }else if(current > previous) {
+      return <div style={{color: COLOR.Profitable}}>环比增加{Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }).format(current - previous)} ↑</div>
+    }else{
+      return <div style={{color: COLOR.LossMaking}}>环比减少{Intl.NumberFormat('en-US', {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2
+      }).format(previous - current)} ↓</div>
+    }
+  }
 
   return (
     <Fragment>
@@ -83,6 +102,13 @@ export default function() {
             return prev + (targetCategory.type === 'debt' ? -Number(cur.value) : Number(cur.value))
           }, 0);
           setNetAssets(netAssetsResult);
+          const numberData = {};
+          allField
+            .filter(item=>!['date', 'netAssets'].includes(item.name[0]))
+            .forEach(item => {
+              numberData[item.name[0]] = !item.value ? NaN : Number(item.value);
+            })
+          setFormNumberData(numberData);
         }}
         onFinish={async (values)=>{
           const recordDetail: { [key: string]: number } = {};
@@ -148,13 +174,18 @@ export default function() {
         </Form.Item>
         {
           displayCategory.map((displayCategoryItem)=>(
-            <Form.Item
-              name={displayCategoryItem._id}
-              label={displayCategoryItem.name}
-              rules={[{ required: true, message: `请输入${displayCategoryItem.name}的金额` }]}
-            >
-              <Input placeholder='请输入该项金额，若无请填0'/>
-            </Form.Item>
+            <div style={{position: 'relative'}}>
+              <div style={{position: 'absolute', right: 0, top: 39}}>
+                {!isNaN(formNumberData[displayCategoryItem._id]) && renderDiff(formNumberData[displayCategoryItem._id], latestHistoryRecord.detail[displayCategoryItem._id])}
+              </div>
+              <Form.Item
+                name={displayCategoryItem._id}
+                label={displayCategoryItem.name}
+                rules={[{ required: true, message: `请输入${displayCategoryItem.name}的金额` }]}
+              >
+                <Input placeholder='请输入该项金额，若无请填0'/>
+              </Form.Item>
+            </div>
           ))
         }
         <Form.Item
