@@ -5,7 +5,6 @@ import { useRequest } from 'ahooks'
 import { history } from 'umi'
 import MobileDetect from 'mobile-detect'
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
-import migration from '@/services/migration';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
 
@@ -106,6 +105,7 @@ export default function() {
               content: '添加成功',
             })
             setSubmitLoading(false);
+            history.push('/wealth/history')
           }
         }}
         footer={
@@ -118,11 +118,6 @@ export default function() {
             }}>
               增加类别
             </Button>
-            {false && <Button block fill='outline' color='danger' style={{marginTop: '0.25rem'}} onClick={()=>{
-              migration();
-            }}>
-              WARNING 数据迁移
-            </Button>}
             {
               !mobilePhoneModel &&
               <Button
