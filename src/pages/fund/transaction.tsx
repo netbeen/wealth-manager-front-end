@@ -89,6 +89,7 @@ export default function() {
               icon: 'success',
               content: '添加成功',
             })
+            history.push('/fund/position');
           }
         }}
         footer={
