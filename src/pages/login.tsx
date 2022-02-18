@@ -1,53 +1,53 @@
 import React, { Fragment, useCallback } from 'react';
 // @ts-ignore
 import styles from './login.less';
-import axios from 'axios';
 import {Input, Form, Button, Toast } from 'antd-mobile';
 import sha1 from 'sha1';
-import { API_PREFIX, ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
+import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
 import cookies from 'js-cookie';
 import { history } from 'umi';
-import { getAuthorizationHeaders } from '@/utils';
 import { fetchAvailableOrganizations } from '@/services/organization';
+import { login } from '@/services/user';
+import { useRequest } from 'ahooks'
 
 export default function() {
+  const { loading, runAsync: runAsyncLogin } = useRequest((username, passwordHash)=>(login(username, passwordHash)), {
+    manual: true
+  });
+
   const doLogin = useCallback(async (username, passwordHash) => {
-    const loginResult = await axios.post(`${API_PREFIX}/user/login`, {
-      username: username,
-      passwordHash: passwordHash,
-    }, {
-      headers: getAuthorizationHeaders(),
-    });
-    if(!loginResult?.data?.code || loginResult?.data?.code !== 200){
+    try {
+      const token = await runAsyncLogin(username, passwordHash);
+      cookies.set(TOKEN_COOKIE_NAME, token, { expires: 6 })
+
+      const availableOrganizationsResult = await fetchAvailableOrganizations();
+      cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult[0]._id, { expires: 6 })
+      await caches.delete('wm-runtime-v2')
+      history.push('/');
+    } catch (e) {
       Toast.show({
         icon: 'fail',
         content: '用户名或密码错误',
       })
       return;
     }
-    cookies.set(TOKEN_COOKIE_NAME, loginResult.data.data.token, { expires: 6 })
-
-    const availableOrganizationsResult = await fetchAvailableOrganizations();
-    cookies.set(ORGANIZATION_COOKIE_NAME, availableOrganizationsResult[0]._id, { expires: 6 })
-    await caches.delete('wm-runtime-v2')
-    history.push('/');
   }, [])
 
   return (
     <div className={styles.loginPage}>
-      <img style={{marginBottom: '2rem'}} width={100} src="/img/logo.svg" />
+      <img alt="logo" style={{marginBottom: '2rem'}} width={100} src="/img/logo.svg" />
       <Form
         onFinish={(values)=>{ doLogin(values.username, sha1(values.password)) }}
         className={styles.loginForm}
         footer={(
           <Fragment>
-            <Button block type='submit' color='primary' size="large">
+            <Button loading={loading} block type='submit' color='primary' size="large">
               登录
             </Button>
             <Button block size="large" onClick={()=>{ history.push('/register') }}>
               注册
             </Button>
-            <Button block size="large" onClick={()=>{ doLogin('访客', 'visitorHash') }}>
+            <Button block size="large" loading={loading} onClick={()=>{ doLogin('访客', 'visitorHash') }}>
               访客身份登录
             </Button>
           </Fragment>

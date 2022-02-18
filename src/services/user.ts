@@ -32,3 +32,18 @@ export const register: (username: string, passwordHash: string)=>Promise<UserTyp
   }
   throw new Error('Register Failed')
 };
+
+export const login: (username: string, passwordHash: string)=>Promise<string> = async (username, passwordHash) => {
+  const result = (await axios.post(`${API_PREFIX}/user/login`, {
+    username,
+    passwordHash,
+  }, {
+    headers: getAuthorizationHeaders()
+  })).data;
+  if(result?.code !== 200){
+    throw new Error('Login Failed')
+  }
+  return result.data.token;
+};
+
+
