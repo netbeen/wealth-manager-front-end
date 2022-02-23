@@ -339,21 +339,7 @@
     size-sensor "^1.0.1"
     tslib "^2.0.3"
 
-"@antv/g2plot@2.4.7":
-  version "2.4.7"
-  resolved "https://registry.npmjs.org/@antv/g2plot/-/g2plot-2.4.7.tgz#4eed8aeefe0104df83719c145277ac37c4d6c7ae"
-  integrity sha512-eICPXazX1xTXSu/46z1URTyRCchmZV4FO2LJx20SYGRbgaYM1NFTAqR5lp20KpgQTBnZR1NiiCgUkDqK3LNATw==
-  dependencies:
-    "@antv/event-emitter" "^0.1.2"
-    "@antv/g2" "^4.1.26"
-    d3-hierarchy "^2.0.0"
-    d3-regression "^1.3.5"
-    fmin "^0.0.2"
-    pdfast "^0.2.0"
-    size-sensor "^1.0.1"
-    tslib "^2.0.3"
-
-"@antv/g2plot@^2.2.11":
+"@antv/g2plot@2.4.8", "@antv/g2plot@^2.2.11":
   version "2.4.8"
   resolved "https://registry.npmjs.org/@antv/g2plot/-/g2plot-2.4.8.tgz#9b3432468d1a5719c584e35ea8e9a5fbd302091e"
   integrity sha512-Ox9ZAYKfaZR5q69PQSWPsQKp4fNHJIS6BxMeKLp+OHmwXwVWFYA6YvsxivnKKdom/2QBJGzcA9EwdNUjs1gkQA==
