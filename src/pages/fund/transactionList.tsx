@@ -72,7 +72,7 @@ export default function() {
     }).filter(item => item);
 
     return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
+    <div>
       <AntdBaseTable
         dataSource={dataSource}
         columns={[{

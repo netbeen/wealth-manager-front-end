@@ -99,12 +99,16 @@ export default function() {
             </Button>
             {
               !mobilePhoneModel &&
+              <div className="mt-1">
               <Button
-                block color='primary' fill='outline' style={{marginTop: '0.25rem'}}
+                block
+                color='primary'
+                fill='outline'
                 onClick={()=>{history.push('/fund/transactionDesktop')}}
               >
                 切换到桌面端页面
               </Button>
+              </div>
             }
           </Fragment>
         }

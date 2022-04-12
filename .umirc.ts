@@ -8,6 +8,7 @@ const config: IConfig = { antd: { mobile: false },
     rel: 'icon',
     href: '/img/logo.svg',
   }],
+  styles: [`https://unpkg.com/tailwindcss@2.2.19/dist/tailwind.min.css`],
   metas: [{
     name: 'google-site-verification',
     content: 'nfOPr4G-D6vPaud2_lZtu7JpzA6FZ71Zy3XV-ekCL8w',
