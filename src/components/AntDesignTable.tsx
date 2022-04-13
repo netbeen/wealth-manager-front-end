@@ -1,8 +1,8 @@
-import { BaseTable, BaseTableProps, Classes, LoadingContentWrapperProps } from 'ali-react-table'
-import { Spin } from 'antd'
-import React from 'react'
+import { BaseTable, BaseTableProps, Classes, LoadingContentWrapperProps } from 'ali-react-table';
+import { Spin } from 'antd';
+import React from 'react';
 // @ts-ignore
-import styled from 'styled-components'
+import styled from 'styled-components';
 
 const StyledBaseTable = (styled(BaseTable)`
   --line-height: 1.5715;
@@ -61,11 +61,17 @@ const StyledBaseTable = (styled(BaseTable)`
       border-top: none;
     }
   }
-` as unknown) as typeof BaseTable
+` as unknown) as typeof BaseTable;
 
 const AntEmptyContent = React.memo(() => (
   <>
-    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="41" className="ant-empty-img-simple" viewBox="0 0 64 41">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="64"
+      height="41"
+      className="ant-empty-img-simple"
+      viewBox="0 0 64 41"
+    >
       <g fill="none" fillRule="evenodd" transform="translate(0 1)">
         <ellipse cx="32" cy="33" className="ant-empty-img-simple-ellipse" rx="32" ry="7" />
         <g fillRule="nonzero" className="ant-empty-img-simple-g">
@@ -81,18 +87,18 @@ const AntEmptyContent = React.memo(() => (
       暂无数据
     </div>
   </>
-))
+));
 
 function AntLoadingContentWrapper({ children, visible }: LoadingContentWrapperProps) {
   return (
     <div className="ant-loading-content-wrapper" style={{ opacity: visible ? 0.6 : undefined }}>
       {children}
     </div>
-  )
+  );
 }
 
 function BlockSpin() {
-  return <Spin style={{ display: 'block' }} />
+  return <Spin style={{ display: 'block' }} />;
 }
 
 /** Ant Design 风格的基础表格组件.
@@ -115,4 +121,4 @@ export const AntdBaseTable = React.forwardRef<BaseTable, BaseTableProps>((props,
       ...props.components,
     }}
   />
-))
+));

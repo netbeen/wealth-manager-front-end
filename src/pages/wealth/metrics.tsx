@@ -13,168 +13,210 @@ import { irr } from 'financial';
 import dayjs, { Dayjs } from 'dayjs';
 
 // @ts-ignore
-const TabPane = Tabs.TabPane
+const TabPane = Tabs.TabPane;
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
   animate: false,
   padding: [10, 10, 60, 40],
   autoFit: true,
-}
+};
 
-export default function() {
-  const { data: allHistory, loading: allHistoryLoading } = useRequest(async () => {
-    return await getAllHistoryRecord()
-  }, { refreshDeps: [] });
+export default function () {
+  const { data: allHistory, loading: allHistoryLoading } = useRequest(
+    async () => {
+      return await getAllHistoryRecord();
+    },
+    { refreshDeps: [] },
+  );
 
-  const { data: allWealthCategory } = useRequest(async () => {
-    return await getAllWealthCategory()
-  }, {
-    refreshDeps: [],
-  });
+  const { data: allWealthCategory } = useRequest(
+    async () => {
+      return await getAllWealthCategory();
+    },
+    {
+      refreshDeps: [],
+    },
+  );
 
-  const allWealthCategoryNameMapObject = useMemo(()=>{
-    if(!allWealthCategory || allWealthCategory.length === 0){
+  const allWealthCategoryNameMapObject = useMemo(() => {
+    if (!allWealthCategory || allWealthCategory.length === 0) {
       return {};
     }
-    const result: {[key: string]: string} = {};
-    allWealthCategory.forEach((categoryItem)=>{
-      result[categoryItem._id] = categoryItem.name
-    })
+    const result: { [key: string]: string } = {};
+    allWealthCategory.forEach((categoryItem) => {
+      result[categoryItem._id] = categoryItem.name;
+    });
     return result;
-  }, [allWealthCategory])
+  }, [allWealthCategory]);
 
-  const { assetsCategoryDistributionChartData, assetChartData, assetsCategoryDistributionPieChartData } = useMemo(()=>{
-    if(!Array.isArray(allHistory) || allHistory.length === 0 || !Array.isArray(allWealthCategory) || allWealthCategory.length === 0){
+  const {
+    assetsCategoryDistributionChartData,
+    assetChartData,
+    assetsCategoryDistributionPieChartData,
+  } = useMemo(() => {
+    if (
+      !Array.isArray(allHistory) ||
+      allHistory.length === 0 ||
+      !Array.isArray(allWealthCategory) ||
+      allWealthCategory.length === 0
+    ) {
       return {
         assetsCategoryDistributionChartData: [],
-        assetChartData: []
+        assetChartData: [],
       };
     }
     const assetsCategoryDistributionChartData: any[] = [];
     const assetChartData: any[] = [];
     const assetsCategoryDistributionPieChartData: any[] = [];
-    const displayCategoryId = Array.from(new Set(allHistory.map(historyItem => (Object.keys(historyItem.detail).filter(categoryId => historyItem.detail[categoryId] > 0))).flat(1)))
-    allHistory.reverse().forEach((historyItem, index)=>{
-      const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
-        const targetCategory = allWealthCategory.find(item => item._id === cur);
-        if(targetCategory?.type === 'debt'){
-          return (pre)
-        }
-        return (
-          pre + historyItem.detail[cur]
-        )
-      }, 0);
-      const netAssets = Object.keys(historyItem.detail).reduce((pre, cur)=>{
-        const targetCategory = allWealthCategory.find(item => item._id === cur);
-        if(targetCategory?.type === 'debt'){
-          return (
-            pre - historyItem.detail[cur]
+    const displayCategoryId = Array.from(
+      new Set(
+        allHistory
+          .map((historyItem) =>
+            Object.keys(historyItem.detail).filter(
+              (categoryId) => historyItem.detail[categoryId] > 0,
+            ),
           )
+          .flat(1),
+      ),
+    );
+    allHistory.reverse().forEach((historyItem, index) => {
+      const totalAssets = Object.keys(historyItem.detail).reduce((pre, cur) => {
+        const targetCategory = allWealthCategory.find((item) => item._id === cur);
+        if (targetCategory?.type === 'debt') {
+          return pre;
         }
-        return (
-          pre + historyItem.detail[cur]
-        )
+        return pre + historyItem.detail[cur];
+      }, 0);
+      const netAssets = Object.keys(historyItem.detail).reduce((pre, cur) => {
+        const targetCategory = allWealthCategory.find((item) => item._id === cur);
+        if (targetCategory?.type === 'debt') {
+          return pre - historyItem.detail[cur];
+        }
+        return pre + historyItem.detail[cur];
       }, 0);
       assetChartData.push({
         date: historyItem.date.format('YYYY-MM-DD'),
         value: totalAssets,
         type: 'totalAssets',
-      })
+      });
       assetChartData.push({
         date: historyItem.date.format('YYYY-MM-DD'),
         value: netAssets,
         type: 'netAssets',
-      })
-      displayCategoryId.forEach((categoryIdentifier)=>{
-        const targetCategory = allWealthCategory.find(item => item._id === categoryIdentifier);
-        if(targetCategory?.type === 'debt'){
+      });
+      displayCategoryId.forEach((categoryIdentifier) => {
+        const targetCategory = allWealthCategory.find((item) => item._id === categoryIdentifier);
+        if (targetCategory?.type === 'debt') {
           return;
         }
         assetsCategoryDistributionChartData.push({
           date: historyItem.date.format('YYYY-MM-DD'),
           value: Intl.NumberFormat('en-US', {
             maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] * 100 / totalAssets),
-          category: categoryIdentifier
-        })
-        if(index === allHistory.length - 1){
+            minimumFractionDigits: 2,
+          }).format(
+            totalAssets === 0 ? 0 : (historyItem.detail[categoryIdentifier] * 100) / totalAssets,
+          ),
+          category: categoryIdentifier,
+        });
+        if (index === allHistory.length - 1) {
           assetsCategoryDistributionPieChartData.push({
             percentage: Intl.NumberFormat('en-US', {
               maximumFractionDigits: 4,
-              minimumFractionDigits: 4
+              minimumFractionDigits: 4,
             }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] / totalAssets),
             value: historyItem.detail[categoryIdentifier],
-            category: categoryIdentifier
-          })
+            category: categoryIdentifier,
+          });
         }
-      })
-    })
+      });
+    });
     return {
       assetsCategoryDistributionChartData,
       assetChartData,
-      assetsCategoryDistributionPieChartData
+      assetsCategoryDistributionPieChartData,
     };
-  }, [allHistory, allWealthCategory])
+  }, [allHistory, allWealthCategory]);
 
-  const overviewContent = useMemo(()=>{
-    if(!Array.isArray(assetChartData) || assetChartData.length === 0){
+  const overviewContent = useMemo(() => {
+    if (!Array.isArray(assetChartData) || assetChartData.length === 0) {
       return null;
     }
-    const {netAssets, endDate}: {netAssets: number, endDate: Dayjs} = {
-        netAssets: [...assetChartData].reverse().find(item => item.type === 'netAssets').value,
-        endDate: dayjs([...assetChartData].reverse().find(item => item.type === 'netAssets').date),
+    const { netAssets, endDate }: { netAssets: number; endDate: Dayjs } = {
+      netAssets: [...assetChartData].reverse().find((item) => item.type === 'netAssets').value,
+      endDate: dayjs([...assetChartData].reverse().find((item) => item.type === 'netAssets').date),
     };
-    const {netAssetsAtStartDate, startDate}: {netAssetsAtStartDate: number, startDate: Dayjs} = {
-      netAssetsAtStartDate: [...assetChartData].find(item => item.type === 'netAssets').value,
-      startDate: dayjs([...assetChartData].find(item => item.type === 'netAssets').date),
+    const {
+      netAssetsAtStartDate,
+      startDate,
+    }: { netAssetsAtStartDate: number; startDate: Dayjs } = {
+      netAssetsAtStartDate: [...assetChartData].find((item) => item.type === 'netAssets').value,
+      startDate: dayjs([...assetChartData].find((item) => item.type === 'netAssets').date),
     };
 
-    const duration = endDate.diff(startDate, 'day')
+    const duration = endDate.diff(startDate, 'day');
     const irrData = [];
-    for(let i = 0; i < (duration + 1); i++){
-      if(i === 0){
-        irrData.push(-netAssetsAtStartDate)
-      } else if(i === duration - 1) {
-        irrData.push(netAssets)
+    for (let i = 0; i < duration + 1; i++) {
+      if (i === 0) {
+        irrData.push(-netAssetsAtStartDate);
+      } else if (i === duration - 1) {
+        irrData.push(netAssets);
       } else {
-        irrData.push(0)
+        irrData.push(0);
       }
     }
     // 年复合增长率算法：irr
     const compoundAnnualGrowthRate = irr(irrData, 0, 0.00001, 1000) * 365;
 
-    const totalAssets: number = [...assetChartData].reverse().find(item => item.type === 'totalAssets').value;
+    const totalAssets: number = [...assetChartData]
+      .reverse()
+      .find((item) => item.type === 'totalAssets').value;
     return (
       <Overview
         backgroundColor={'#1677ff'}
         data={[
-          ['净资产', Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          }).format(netAssets)],
+          [
+            '净资产',
+            Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            }).format(netAssets),
+          ],
           ['更新日期', assetChartData[assetChartData.length - 1].date],
-          ['总资产', Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          }).format(totalAssets)],
-          ['年复合增长率', Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          }).format(compoundAnnualGrowthRate*100)+'%'],
-          ['资产负债率', Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2
-          }).format((totalAssets - netAssets)/totalAssets*100)+'%'],
+          [
+            '总资产',
+            Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            }).format(totalAssets),
+          ],
+          [
+            '年复合增长率',
+            Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            }).format(compoundAnnualGrowthRate * 100) + '%',
+          ],
+          [
+            '资产负债率',
+            Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+            }).format(((totalAssets - netAssets) / totalAssets) * 100) + '%',
+          ],
         ]}
       />
     );
-  }, [assetChartData])
+  }, [assetChartData]);
 
-  const mainContent = useMemo(()=>{
-    if(assetsCategoryDistributionChartData.length === 0){
-      return <div style={{textAlign: 'center'}}><Loading /></div>
+  const mainContent = useMemo(() => {
+    if (assetsCategoryDistributionChartData.length === 0) {
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <Loading />
+        </div>
+      );
     }
 
     const assetsCategoryDistributionChart = (
@@ -186,25 +228,25 @@ export default function() {
             type: 'time',
           },
           value: {
-            type:"linear",
+            type: 'linear',
             min: 0,
             max: 100,
             formatter: (v: string) => {
-              return `${v}%`
-            }
+              return `${v}%`;
+            },
           },
           category: {
             formatter: (v: string) => {
-              return allWealthCategoryNameMapObject[v]
-            }
-          }
+              return allWealthCategoryNameMapObject[v];
+            },
+          },
         }}
         {...restChartProps}
       >
-        <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey" />
         <Axis name="date" />
         <Axis name="value" />
-        <Line shape="smooth" position="date*value" color="category"/>
+        <Line shape="smooth" position="date*value" color="category" />
       </Chart>
     );
     const assetsChart = (
@@ -216,33 +258,36 @@ export default function() {
             type: 'time',
           },
           value: {
-            type:"linear",
+            type: 'linear',
             formatter: (v: string) => {
               return Intl.NumberFormat('en-US', {
                 maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-              }).format(Number(v))
-            }
+                minimumFractionDigits: 2,
+              }).format(Number(v));
+            },
           },
           type: {
             formatter: (v: string) => {
               return {
                 totalAssets: '总资产',
                 netAssets: '净资产',
-              }[v]
-            }
-          }
+              }[v];
+            },
+          },
         }}
         {...restChartProps}
       >
-        <Tooltip shared showCrosshairs showMarkers linkage="someKey"/>
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey" />
         <Axis name="date" />
-        <Axis name="value" label={{
-          formatter(text) {
-            return `${Number(text.replace(/,/g,''))/10000}W`;
-          }
-        }}/>
-        <Line shape="smooth" position="date*value" color="type"/>
+        <Axis
+          name="value"
+          label={{
+            formatter(text) {
+              return `${Number(text.replace(/,/g, '')) / 10000}W`;
+            },
+          }}
+        />
+        <Line shape="smooth" position="date*value" color="type" />
       </Chart>
     );
     const assetsCategoryDistributionPieChart = (
@@ -253,13 +298,13 @@ export default function() {
         scale={{
           category: {
             formatter: (v: string) => {
-              return allWealthCategoryNameMapObject[v]
-            }
-          }
+              return allWealthCategoryNameMapObject[v];
+            },
+          },
         }}
         autoFit
       >
-        <Coordinate type="theta" radius={0.60} />
+        <Coordinate type="theta" radius={0.6} />
         <Tooltip showTitle={false} />
         <Axis visible={false} />
         <Interval
@@ -270,41 +315,59 @@ export default function() {
             lineWidth: 1,
             stroke: '#fff',
           }}
-          label={['percentage', {
-            // label 太长自动截断
-            layout: { type: 'limit-in-plot', cfg: { action: 'ellipsis' } },
-            content: (data) => {
-              return `${allWealthCategoryNameMapObject[data.category]}: ${Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2
-              }).format(data.percentage * 100)}%`;
+          label={[
+            'percentage',
+            {
+              // label 太长自动截断
+              layout: { type: 'limit-in-plot', cfg: { action: 'ellipsis' } },
+              content: (data) => {
+                return `${allWealthCategoryNameMapObject[data.category]}: ${Intl.NumberFormat(
+                  'en-US',
+                  {
+                    maximumFractionDigits: 2,
+                    minimumFractionDigits: 2,
+                  },
+                ).format(data.percentage * 100)}%`;
+              },
             },
-          }]}
+          ]}
         />
-        <Interaction type='element-single-selected' />
+        <Interaction type="element-single-selected" />
       </Chart>
     );
     return (
-    <div style={{display: 'flex', flexDirection: 'column'}}>
-      {assetsChart}
-      {assetsCategoryDistributionChart}
-      {assetsCategoryDistributionPieChart}
-    </div>
-  )},[assetsCategoryDistributionChartData, assetsCategoryDistributionPieChartData, assetChartData, allWealthCategoryNameMapObject]);
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {assetsChart}
+        {assetsCategoryDistributionChart}
+        {assetsCategoryDistributionPieChart}
+      </div>
+    );
+  }, [
+    assetsCategoryDistributionChartData,
+    assetsCategoryDistributionPieChartData,
+    assetChartData,
+    allWealthCategoryNameMapObject,
+  ]);
 
   return (
     <Fragment>
       <Tabs
         className={layoutStyles.mainContentTab}
-        onChange={(key)=>{history.push(wealthSecondaryTabData.find(item => item.value === key)?.url ?? '')}}
+        onChange={(key) => {
+          history.push(wealthSecondaryTabData.find((item) => item.value === key)?.url ?? '');
+        }}
         activeKey={'metrics'}
       >
-        {wealthSecondaryTabData.map(item => (
+        {wealthSecondaryTabData.map((item) => (
           <TabPane title={item.label} key={item.value}>
-            {item.value === 'metrics' ? <div>
-              {overviewContent}
-              {mainContent}
-            </div> : <div/>}
+            {item.value === 'metrics' ? (
+              <div>
+                {overviewContent}
+                {mainContent}
+              </div>
+            ) : (
+              <div />
+            )}
           </TabPane>
         ))}
       </Tabs>

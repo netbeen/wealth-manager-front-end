@@ -1,65 +1,74 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { message, Form, Input, Button, Radio, DatePicker } from 'antd';
 import dayjs, { Dayjs } from 'dayjs';
-import { useRequest, useDebounce } from 'ahooks'
+import { useRequest, useDebounce } from 'ahooks';
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
 
-export default function() {
-  const [submitButtonLoading, setSubmitButtonLoading] = useState<boolean>(false)
-  const [fundIdentifier, setFundIdentifier] = useState<string>('')
-  const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0))
+export default function () {
+  const [submitButtonLoading, setSubmitButtonLoading] = useState<boolean>(false);
+  const [fundIdentifier, setFundIdentifier] = useState<string>('');
+  const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0));
 
-  const debouncedIdentifier = useDebounce(fundIdentifier, { wait: 500 })
+  const debouncedIdentifier = useDebounce(fundIdentifier, { wait: 500 });
 
-  const { data: fundBasicInfo, error: fundBasicInfoError } = useRequest(async () => {
-    if(debouncedIdentifier.length === 0){
-      return;
-    }
-    return await fetchBasicInfo(debouncedIdentifier)
-  }, {
-    refreshDeps: [debouncedIdentifier],
-  });
+  const { data: fundBasicInfo, error: fundBasicInfoError } = useRequest(
+    async () => {
+      if (debouncedIdentifier.length === 0) {
+        return;
+      }
+      return await fetchBasicInfo(debouncedIdentifier);
+    },
+    {
+      refreshDeps: [debouncedIdentifier],
+    },
+  );
 
-  const { data: fundUnitPriceList } = useRequest(async () => {
-    if(debouncedIdentifier.length === 0){
-      return;
-    }
-    return await fetchUnitPriceByIdentifier(debouncedIdentifier)
-  }, {
-    refreshDeps: [debouncedIdentifier],
-  });
+  const { data: fundUnitPriceList } = useRequest(
+    async () => {
+      if (debouncedIdentifier.length === 0) {
+        return;
+      }
+      return await fetchUnitPriceByIdentifier(debouncedIdentifier);
+    },
+    {
+      refreshDeps: [debouncedIdentifier],
+    },
+  );
 
-  const {unitPrice, unitPriceErrorMessage}: {unitPrice: number|null, unitPriceErrorMessage: string} = useMemo(()=>{
-    if(!fundUnitPriceList || fundUnitPriceList.length === 0 || !date){
+  const {
+    unitPrice,
+    unitPriceErrorMessage,
+  }: { unitPrice: number | null; unitPriceErrorMessage: string } = useMemo(() => {
+    if (!fundUnitPriceList || fundUnitPriceList.length === 0 || !date) {
       return {
         unitPrice: null,
-        unitPriceErrorMessage: '选择交易日期后自动获取'
+        unitPriceErrorMessage: '选择交易日期后自动获取',
       };
     }
-    const targetUnitPriceObject = fundUnitPriceList.find(item => item.date.isSame(date))
-    if(!targetUnitPriceObject){
+    const targetUnitPriceObject = fundUnitPriceList.find((item) => item.date.isSame(date));
+    if (!targetUnitPriceObject) {
       return {
         unitPrice: null,
-        unitPriceErrorMessage: '当前选择的交易日无数据，请重新选择'
+        unitPriceErrorMessage: '当前选择的交易日无数据，请重新选择',
       };
     }
     return {
       unitPrice: targetUnitPriceObject.price,
-      unitPriceErrorMessage: ''
-    }
-  }, [fundUnitPriceList, date])
+      unitPriceErrorMessage: '',
+    };
+  }, [fundUnitPriceList, date]);
 
   const onFinish = async (values: any) => {
     console.log('Success:', values);
-    if(
+    if (
       typeof Number(values.commission) !== 'number' ||
       typeof Number(values.volume) !== 'number' ||
       typeof date?.format() !== 'string' ||
       ![TRANSACTION_DIRECTION.BUY, TRANSACTION_DIRECTION.SELL].includes(values.direction) ||
       !/^\d{6}$/.test(values.fundIdentifier) ||
       typeof unitPrice !== 'number'
-    ){
+    ) {
       message.error('表单字段格式错误，请检查各输入项');
       return;
     }
@@ -69,10 +78,10 @@ export default function() {
       Number(values.volume),
       Number(values.commission),
       date,
-      values.direction
+      values.direction,
     );
     setSubmitButtonLoading(false);
-    if(result._id){
+    if (result._id) {
       message.success('添加成功');
     }
   };
@@ -83,7 +92,7 @@ export default function() {
 
   return (
     <Fragment>
-      <div style={{width: 600, margin: 20}}>
+      <div style={{ width: 600, margin: 20 }}>
         <Form
           name="basic"
           labelCol={{ span: 4 }}
@@ -93,23 +102,20 @@ export default function() {
           onFinishFailed={onFinishFailed}
           autoComplete="off"
         >
-          <Form.Item
-            label="基金代码"
-            name="fundIdentifier"
-            rules={[{ required: true }]}
-          >
-            <Input onChange={(e)=>{ setFundIdentifier(e.target.value ?? '')}}/>
+          <Form.Item label="基金代码" name="fundIdentifier" rules={[{ required: true }]}>
+            <Input
+              onChange={(e) => {
+                setFundIdentifier(e.target.value ?? '');
+              }}
+            />
           </Form.Item>
-          <Form.Item
-            label="基金名称"
-            name="fundName"
-          >
-            <div>{fundBasicInfo?.name ?? (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}</div>
+          <Form.Item label="基金名称" name="fundName">
+            <div>
+              {fundBasicInfo?.name ??
+                (fundBasicInfoError ? '基金代码错误' : '输入基金代码后自动获取')}
+            </div>
           </Form.Item>
-          <Form.Item
-            label="交易方向"
-            name="direction"
-          >
+          <Form.Item label="交易方向" name="direction">
             <Radio.Group>
               <Radio.Button value={TRANSACTION_DIRECTION.BUY}>买入</Radio.Button>
               <Radio.Button value={TRANSACTION_DIRECTION.SELL}>卖出</Radio.Button>
@@ -121,30 +127,21 @@ export default function() {
             rules={[{ type: 'object' as const, required: true, message: 'Please select time!' }]}
           >
             <DatePicker
-              style={{width: '100%'}}
-              onChange={(e)=>{
-                if(e) {
+              style={{ width: '100%' }}
+              onChange={(e) => {
+                if (e) {
                   setDate(dayjs(e.valueOf()).hour(0).minute(0).second(0).millisecond(0));
                 }
               }}
             />
           </Form.Item>
-          <Form.Item
-            label="成交价格"
-            name="unitPrice"
-          >
+          <Form.Item label="成交价格" name="unitPrice">
             <div>{unitPrice ?? unitPriceErrorMessage}</div>
           </Form.Item>
-          <Form.Item
-            label="成交量"
-            name="volume"
-          >
+          <Form.Item label="成交量" name="volume">
             <Input />
           </Form.Item>
-          <Form.Item
-            label="手续费"
-            name="commission"
-          >
+          <Form.Item label="手续费" name="commission">
             <Input />
           </Form.Item>
 

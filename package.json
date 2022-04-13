@@ -4,8 +4,8 @@
     "dev": "umi dev",
     "build": "umi build",
     "test": "umi test",
-    "lint:es": "eslint --ext .js src mock tests",
-    "lint:ts": "tslint \"src/**/*.ts\" \"src/**/*.tsx\"",
+    "eslint": "eslint --ext=.jsx,.js,.tsx,.ts src",
+    "eslint-fix": "eslint --ext=.jsx,.js,.tsx,.ts src --fix",
     "precommit": "lint-staged"
   },
   "dependencies": {
@@ -41,6 +41,10 @@
     "@types/react-dom": "18.0.0",
     "@types/react-test-renderer": "18.0.0",
     "@umijs/preset-react": "2.1.2",
+    "@typescript-eslint/parser": "^5.19.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "@typescript-eslint/eslint-plugin": "^5.19.0",
     "babel-eslint": "10.1.0",
     "eslint": "8.13.0",
     "eslint-config-umi": "^1.4.0",
