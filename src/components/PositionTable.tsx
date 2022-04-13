@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
-import { AntdBaseTable } from '@/components/antDesignTable';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 import { TransactionSetType } from '@/services/transactionSet';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,

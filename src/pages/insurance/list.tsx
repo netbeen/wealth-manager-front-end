@@ -7,7 +7,7 @@ import layoutStyles from '@/layouts/index.less';
 import { insuranceSecondaryTabData } from '@/globalConst';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { fetchList, INSURANCE_TYPE, insuranceTypeName } from '@/services/insurance';
-import { AntdBaseTable } from '@/components/antDesignTable';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 
 // @ts-ignore
 const TabsPane = Tabs.Pane

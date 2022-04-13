@@ -11,7 +11,7 @@ import { fetchTransactionSetById, TransactionSetStatus, TransactionSetType } fro
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 import { COLOR } from '@/globalConst';
-import Overview from '@/components/overview';
+import Overview from '@/components/Overview';
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],

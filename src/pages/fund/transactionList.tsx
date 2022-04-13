@@ -7,7 +7,7 @@ import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { fetchAllTransactionSets } from '@/services/transactionSet';
 import { batchFetchTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
-import { AntdBaseTable } from '@/components/antDesignTable';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
 
 // @ts-ignore

@@ -8,7 +8,7 @@ import { useRequest } from 'ahooks';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
-import { AntdBaseTable } from '@/components/antDesignTable';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane

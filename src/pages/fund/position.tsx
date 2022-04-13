@@ -5,7 +5,7 @@ import { Button, Tabs } from 'antd-mobile';
 import { fundSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import PositionTable from '@/components/positionTable';
+import PositionTable from '@/components/PositionTable';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 

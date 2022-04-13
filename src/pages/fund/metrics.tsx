@@ -22,7 +22,7 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, sliceBetween } from 'fund-tools';
 import dayjs, { Dayjs } from 'dayjs';
-import Overview from '@/components/overview';
+import Overview from '@/components/Overview';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane;

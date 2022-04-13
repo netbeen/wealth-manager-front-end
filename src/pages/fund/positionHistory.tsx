@@ -6,7 +6,7 @@ import { fundSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
-import PositionTable from '@/components/positionTable';
+import PositionTable from '@/components/PositionTable';
 
 // @ts-ignore
 const TabPane = Tabs.TabPane
