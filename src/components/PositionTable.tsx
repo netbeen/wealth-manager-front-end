@@ -233,7 +233,6 @@ export default function ({ transactionSets }: { transactionSets: TransactionSetT
     transactionsList,
   ]);
 
-  // @ts-ignore
   return (
     <AntdBaseTable
       dataSource={tableData}

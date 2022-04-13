@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// @ts-ignore
-import styles from './login.less';
 import { Picker, List, Button, NavBar } from 'antd-mobile';
 import cookies from 'js-cookie';
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';

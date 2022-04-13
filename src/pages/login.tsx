@@ -1,5 +1,4 @@
 import React, { Fragment, useCallback } from 'react';
-// @ts-ignore
 import styles from './login.less';
 import { Input, Form, Button, Toast } from 'antd-mobile';
 import sha1 from 'sha1';
@@ -18,7 +17,7 @@ export default function () {
     },
   );
 
-  const doLogin = useCallback(async (username, passwordHash) => {
+  const doLogin = useCallback(async (username: string, passwordHash: string) => {
     try {
       const token = await runAsyncLogin(username, passwordHash);
       cookies.set(TOKEN_COOKIE_NAME, token, { expires: 6 });

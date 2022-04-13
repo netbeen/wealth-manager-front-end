@@ -1,5 +1,4 @@
 import React, { Fragment, useMemo } from 'react';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Tabs } from 'antd-mobile';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
@@ -10,7 +9,6 @@ import { batchFetchTransaction, TRANSACTION_DIRECTION } from '@/services/transac
 import { AntdBaseTable } from '@/components/AntDesignTable';
 import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
 
-// @ts-ignore
 const TabPane = Tabs.TabPane;
 
 export default function () {

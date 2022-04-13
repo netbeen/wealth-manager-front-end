@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react';
-// @ts-ignore
 import styles from './index.less';
 import useLoginStatusChecker from '@/hooks/useLoginStatusChecker';
 import { TabBar, Toast } from 'antd-mobile';

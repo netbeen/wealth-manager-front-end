@@ -1,5 +1,4 @@
 import React, { Fragment, useMemo } from 'react';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Button, Tabs } from 'antd-mobile';
 import { wealthSecondaryTabData } from '@/globalConst';
@@ -10,7 +9,6 @@ import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
 import { AntdBaseTable } from '@/components/AntDesignTable';
 
-// @ts-ignore
 const TabPane = Tabs.TabPane;
 
 export default function () {
@@ -115,7 +113,6 @@ export default function () {
   }, [allHistory, allWealthCategory]);
 
   const mainContent = useMemo(() => {
-    // @ts-ignore
     const t = (
       <AntdBaseTable
         dataSource={tableData}

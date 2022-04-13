@@ -1,5 +1,4 @@
 import React, { Fragment, useMemo } from 'react';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Loading, Tabs } from 'antd-mobile';
 import { Line, Chart, Axis, Tooltip, Coordinate, Interval, Interaction } from 'bizcharts';
@@ -12,7 +11,6 @@ import Overview from '@/components/Overview';
 import { irr } from 'financial';
 import dayjs, { Dayjs } from 'dayjs';
 
-// @ts-ignore
 const TabPane = Tabs.TabPane;
 
 const restChartProps = {
@@ -23,7 +21,7 @@ const restChartProps = {
 };
 
 export default function () {
-  const { data: allHistory, loading: allHistoryLoading } = useRequest(
+  const { data: allHistory } = useRequest(
     async () => {
       return await getAllHistoryRecord();
     },

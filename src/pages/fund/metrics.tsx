@@ -1,6 +1,5 @@
 import React, { Fragment, useMemo, useState } from 'react';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { history } from '@@/core/history';
 import { Tabs, Loading } from 'antd-mobile';
@@ -19,7 +18,6 @@ import { calcReturn, sliceBetween } from 'fund-tools';
 import dayjs, { Dayjs } from 'dayjs';
 import Overview from '@/components/Overview';
 
-// @ts-ignore
 const TabPane = Tabs.TabPane;
 
 export default function () {

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { Toast, Picker, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest } from 'ahooks';
@@ -141,7 +141,6 @@ export default function () {
             ) {
               return prev;
             }
-            // @ts-ignore
             const targetCategory = allWealthCategory?.find(
               (item) => item._id === cur.name[0],
             ) as WealthCategoryType;

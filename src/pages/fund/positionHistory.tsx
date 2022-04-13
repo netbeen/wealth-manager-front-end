@@ -1,5 +1,4 @@
 import React, { Fragment, useMemo } from 'react';
-// @ts-ignore
 import layoutStyles from '@/layouts/index.less';
 import { Tabs } from 'antd-mobile';
 import { fundSecondaryTabData } from '@/globalConst';
@@ -8,7 +7,6 @@ import { useRequest } from 'ahooks';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 import PositionTable from '@/components/PositionTable';
 
-// @ts-ignore
 const TabPane = Tabs.TabPane;
 
 export default function () {
