@@ -1,8 +1,7 @@
 import { IConfig } from 'umi-types';
 
 // ref: https://umijs.org/config/
-// @ts-ignore
-const config: IConfig = { antd: { mobile: false },
+const config: IConfig = {
   title: 'Wealth Manager',
   links: [{
     rel: 'icon',
@@ -20,7 +19,6 @@ const config: IConfig = { antd: { mobile: false },
     content: '一站式家庭财务管理平台',
   }],
   webpack5: {},
-  // mfsu: {},
   scripts: [
     { src: '/workboxLoader.js', defer: true },
   ],
