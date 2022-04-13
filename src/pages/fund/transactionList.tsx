@@ -39,7 +39,7 @@ export default function() {
   }, { refreshDeps: [transactionSets] });
 
   const mainContent = useMemo(()=>{
-    let loading = true;
+    let dataSource = [];
 
     if(
       transactions && fourBasicInfo &&
@@ -47,29 +47,27 @@ export default function() {
       fourBasicInfo.unitPrices?.length > 0 &&
       transactionSets
     ){
-      loading = false;
+      dataSource = transactions.map(transaction => {
+        const targetTransactionSet = transactionSets.find(transactionSet => transactionSet._id === transaction.transactionSet)
+        if(!targetTransactionSet){
+          return null;
+        }
+        const transactionIndex= transactionSets.map(item => item._id).indexOf(targetTransactionSet._id);
+        if(transactionIndex === -1){
+          console.error('find targetTransactionSet failed', targetTransactionSet, transactionSets)
+        }
+        const targetBasicInfo = fourBasicInfo.basicInfos[transactionIndex];
+        const targetUnitPrices = fourBasicInfo.unitPrices[transactionIndex];
+        const targetUnitPrice = targetUnitPrices.find(item => item.date.isSame(transaction.date))?.price ?? 0;
+
+        return ({
+          name: targetBasicInfo?.name,
+          date: transaction.date.format('YYYY-MM-DD'),
+          direction: transaction.direction,
+          transactionValue: Math.round(((targetUnitPrice * transaction.volume) + transaction.commission) * 10)/10,
+        })
+      }).filter(item => item);
     }
-
-    const dataSource = loading ? [] : transactions.map(transaction => {
-      const targetTransactionSet = transactionSets.find(transactionSet => transactionSet._id === transaction.transactionSet)
-      if(!targetTransactionSet){
-        return null;
-      }
-      const transactionIndex= transactionSets.map(item => item._id).indexOf(targetTransactionSet._id);
-      if(transactionIndex === -1){
-        console.error('find targetTransactionSet failed', targetTransactionSet, transactionSets)
-      }
-      const targetBasicInfo = fourBasicInfo.basicInfos[transactionIndex];
-      const targetUnitPrices = fourBasicInfo.unitPrices[transactionIndex];
-      const targetUnitPrice = targetUnitPrices.find(item => item.date.isSame(transaction.date))?.price ?? 0;
-
-      return ({
-        name: targetBasicInfo?.name,
-        date: transaction.date.format('YYYY-MM-DD'),
-        direction: transaction.direction,
-        transactionValue: Math.round(((targetUnitPrice * transaction.volume) + transaction.commission) * 10)/10,
-      })
-    }).filter(item => item);
 
     return (
     <div>

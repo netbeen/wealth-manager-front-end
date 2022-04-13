@@ -26,7 +26,7 @@ export default function({transactionSets}: {transactionSets: TransactionSetType[
   const transactionSetActive = !window.location.pathname.includes('History');
 
   useAsyncEffect(async () => {
-    if(!Array.isArray(transactionSets)){
+    if(!Array.isArray(transactionSets) || transactionSets.length === 0){
       return;
     }
     const basicInfoUnitPriceSplitDividendResult = await fetchBasicInfoUnitPriceSplitDividendByIdentifier(transactionSets.map(transactionSet => transactionSet.target))

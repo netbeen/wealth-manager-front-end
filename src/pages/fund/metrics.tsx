@@ -39,7 +39,7 @@ export default function() {
   }, { refreshDeps: [] });
 
   useAsyncEffect(async () => {
-    if(!Array.isArray(transactionSets)){
+    if(!Array.isArray(transactionSets) || transactionSets.length === 0){
       return;
     }
     const basicInfoUnitPriceSplitDividendResult = await fetchBasicInfoUnitPriceSplitDividendByIdentifier(transactionSets.map(transactionSet => transactionSet.target))
