@@ -18,6 +18,9 @@ export default defineConfig({
   content: '一站式家庭财务管理平台',
 }],
   webpack5: {},
+  chainWebpack: function (config) {
+    config.module.rule('mjs-rule').test(/.m?js/).resolve.set('fullySpecified', false);
+  },
   scripts: [
     { src: '/workboxLoader.js', defer: true },
   ],
