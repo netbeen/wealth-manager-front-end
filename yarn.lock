@@ -3021,10 +3021,10 @@ antd-mobile-v5-count@^1.0.1:
   resolved "https://registry.npmjs.org/antd-mobile-v5-count/-/antd-mobile-v5-count-1.0.1.tgz#85f20c46d1635c24e856bcf5ad55e8c98e44a523"
   integrity sha512-YGsiEDCPUDz3SzfXi6gLZn/HpeSMW+jgPc4qiYUr1fSopg3hkUie2TnooJdExgfiETHefH3Ggs58He0OVfegLA==
 
-antd-mobile@5.6.1:
-  version "5.6.1"
-  resolved "https://registry.npmjs.org/antd-mobile/-/antd-mobile-5.6.1.tgz#718e325affede1aa406e8667879bd9f9375d2d3a"
-  integrity sha512-N0I/IMrzXIyT1P+Zdyz1QN10rbB287Vw0MxiYf7ZNqq/uqaZRk0pBsi44LZ6sbIlTeeqUbR5bIdXDKZtEs3nWg==
+antd-mobile@5.7.2:
+  version "5.7.2"
+  resolved "https://registry.npmjs.org/antd-mobile/-/antd-mobile-5.7.2.tgz#61ed886e279cdb747bc3237b4d9cacc14b2272b3"
+  integrity sha512-WlkXC7PUWVQkFroaFZZx3Kun7NKZ3QfHriCvDt+XCYj9d6ciwKVw9n+ZvEJu49U9tTEm1UjXaKdLNMCgWpjSsw==
   dependencies:
     "@floating-ui/dom" "^0.3.1"
     "@react-spring/web" "^9.4.3"
