@@ -37,8 +37,8 @@
   },
   "devDependencies": {
     "@types/jest": "27.4.1",
-    "@types/react": "18.0.4",
-    "@types/react-dom": "18.0.0",
+    "@types/react": "18.0.5",
+    "@types/react-dom": "18.0.1",
     "@types/react-test-renderer": "18.0.0",
     "@types/styled-components": "^5.1.25",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
