@@ -16,7 +16,7 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, sliceBetween } from 'fund-tools';
 import dayjs, { Dayjs } from 'dayjs';
-import Overview from '@/components/Overview';
+import { Overview } from '@/components/Overview';
 
 const TabPane = Tabs.TabPane;
 

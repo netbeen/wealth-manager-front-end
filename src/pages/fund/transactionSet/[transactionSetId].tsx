@@ -18,8 +18,9 @@ import {
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
 import { COLOR } from '@/globalConst';
-import Overview from '@/components/Overview';
-
+import { Overview } from '@/components/Overview';
+import { AddOutline } from 'antd-mobile-icons';
+import { usePermission } from '@/hooks/usePermission';
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
   animate: false,
@@ -34,6 +35,8 @@ export default function ({
 }: {
   match: { params: { transactionSetId: string } };
 }) {
+  const { result: enableCreateTransaction } = usePermission(['Admin', 'Collaborator']);
+
   const { data: transactionSet } = useRequest(
     async () => {
       return await fetchTransactionSetById(transactionSetId);
@@ -418,7 +421,22 @@ export default function ({
         onBack={() => {
           history.goBack();
         }}
-      >{`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}</NavBar>
+        right={
+          <div className="flex justify-end">
+            {enableCreateTransaction && (
+              <AddOutline
+                fontSize={24}
+                className="cursor-pointer"
+                onClick={() => {
+                  history.push(`/fund/transaction?targetFund=${transactionSet?.target}`);
+                }}
+              />
+            )}
+          </div>
+        }
+      >
+        {`[${transactionSet?.target ?? ''}] ${fourBasicData?.basicInfo.name ?? ''}`}
+      </NavBar>
       <div>
         {calcProgress !== 1 ? (
           loadingTip

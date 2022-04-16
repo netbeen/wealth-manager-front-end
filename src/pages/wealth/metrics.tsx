@@ -7,7 +7,7 @@ import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
-import Overview from '@/components/Overview';
+import { Overview } from '@/components/Overview';
 import { irr } from 'financial';
 import dayjs, { Dayjs } from 'dayjs';
 

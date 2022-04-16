@@ -1,12 +1,9 @@
 import React from 'react';
 
-export default function ({
-  backgroundColor = '#1677ff',
-  data,
-}: {
+export const Overview: React.FC<{
   backgroundColor?: string;
   data: [string, string][];
-}) {
+}> = function ({ backgroundColor = '#1677ff', data }) {
   if (!data[0] || !data[0][0]) {
     return null;
   }
@@ -68,4 +65,4 @@ export default function ({
       )}
     </div>
   );
-}
+};

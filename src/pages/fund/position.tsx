@@ -1,23 +1,16 @@
 import React, { Fragment, useMemo } from 'react';
 import layoutStyles from '@/layouts/index.less';
-import { Button, Tabs } from 'antd-mobile';
+import { Tabs } from 'antd-mobile';
 import { fundSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import PositionTable from '@/components/PositionTable';
-import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
+import { PositionTable } from '@/components/PositionTable';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
+import { AddTransactionButton } from '@/components/AddTransactionButton';
 
 const TabPane = Tabs.TabPane;
 
 export default function () {
-  const { data: currentOrganizationWithPermissionResult } = useRequest(
-    async () => {
-      return await fetchCurrentOrganizationWithPermission();
-    },
-    { refreshDeps: [] },
-  );
-
   const { data: transactionSets } = useRequest(
     async () => {
       return await fetchTransactionSetsByStatus(TransactionSetStatus.Active);
@@ -28,24 +21,11 @@ export default function () {
   const mainContent = useMemo(
     () => (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        <Button
-          color="primary"
-          style={{ marginBottom: 12 }}
-          onClick={() => {
-            history.push('/fund/transaction');
-          }}
-          disabled={
-            Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
-          }
-        >
-          添加交易
-        </Button>
+        <AddTransactionButton />
         {Array.isArray(transactionSets) && <PositionTable transactionSets={transactionSets} />}
       </div>
     ),
-    [currentOrganizationWithPermissionResult, transactionSets],
+    [transactionSets],
   );
 
   return (

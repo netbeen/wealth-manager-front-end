@@ -15,7 +15,9 @@ import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
 import { COLOR } from '@/globalConst';
 import { Dayjs } from 'dayjs';
 
-export default function ({ transactionSets }: { transactionSets: TransactionSetType[] }) {
+export const PositionTable: React.FC<{
+  transactionSets: TransactionSetType[];
+}> = ({ transactionSets }) => {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([]);
   const [unitPricesList, setUnitPricesList] = useState<Array<Array<FundPriceType>>>([]);
   const [dividendsList, setDividendsList] = useState<Array<Array<FundDividendType>>>([]);
@@ -241,4 +243,4 @@ export default function ({ transactionSets }: { transactionSets: TransactionSetT
       isLoading={tableLoading}
     />
   );
-}
+};
