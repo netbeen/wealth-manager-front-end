@@ -4,20 +4,15 @@ import { Button, Tabs } from 'antd-mobile';
 import { wealthSecondaryTabData } from '@/globalConst';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { getAllWealthCategory } from '@/services/wealthCategory';
 import { AntdBaseTable } from '@/components/AntDesignTable';
+import { usePermission } from '@/hooks/usePermission';
 
 const TabPane = Tabs.TabPane;
 
 export default function () {
-  const { data: currentOrganizationWithPermissionResult } = useRequest(
-    async () => {
-      return await fetchCurrentOrganizationWithPermission();
-    },
-    { refreshDeps: [] },
-  );
+  const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);
 
   const { data: allHistory, loading: allHistoryLoading } = useRequest(
     async () => {
@@ -129,18 +124,14 @@ export default function () {
           onClick={() => {
             history.push('/wealth/record');
           }}
-          disabled={
-            Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
-          }
+          disabled={!enableUpdate}
         >
           添加记录
         </Button>
         {t}
       </div>
     );
-  }, [currentOrganizationWithPermissionResult, tableData, columns]);
+  }, [enableUpdate, tableData, columns]);
 
   return (
     <Fragment>

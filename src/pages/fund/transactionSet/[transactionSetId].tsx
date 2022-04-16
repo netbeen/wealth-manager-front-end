@@ -35,7 +35,7 @@ export default function ({
 }: {
   match: { params: { transactionSetId: string } };
 }) {
-  const { result: enableCreateTransaction } = usePermission(['Admin', 'Collaborator']);
+  const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);
 
   const { data: transactionSet } = useRequest(
     async () => {
@@ -423,7 +423,7 @@ export default function ({
         }}
         right={
           <div className="flex justify-end">
-            {enableCreateTransaction && (
+            {enableUpdate && (
               <AddOutline
                 fontSize={24}
                 className="cursor-pointer"

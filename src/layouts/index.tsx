@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import styles from './index.less';
-import useLoginStatusChecker from '@/hooks/useLoginStatusChecker';
+import { useLoginStatusChecker } from '@/hooks/useLoginStatusChecker';
 import { TabBar, Toast } from 'antd-mobile';
 import axios from 'axios';
 import {

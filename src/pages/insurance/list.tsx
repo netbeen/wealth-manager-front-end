@@ -4,19 +4,14 @@ import { useRequest } from 'ahooks';
 import { history } from 'umi';
 import layoutStyles from '@/layouts/index.less';
 import { insuranceSecondaryTabData } from '@/globalConst';
-import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
 import { fetchList, INSURANCE_TYPE, insuranceTypeName } from '@/services/insurance';
 import { AntdBaseTable } from '@/components/AntDesignTable';
+import { usePermission } from '@/hooks/usePermission';
 
 const TabsPane = Tabs.Pane;
 
 export default function () {
-  const { data: currentOrganizationWithPermissionResult } = useRequest(
-    async () => {
-      return await fetchCurrentOrganizationWithPermission();
-    },
-    { refreshDeps: [] },
-  );
+  const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);
 
   const { data: insuranceList, loading: insuranceListLoading } = useRequest(
     async () => {
@@ -34,11 +29,7 @@ export default function () {
           onClick={() => {
             history.push('/insurance/record');
           }}
-          disabled={
-            Array.isArray(currentOrganizationWithPermissionResult?.permissions) &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Admin') &&
-            !currentOrganizationWithPermissionResult?.permissions.includes('Collaborator')
-          }
+          disabled={!enableUpdate}
         >
           添加保险
         </Button>
@@ -95,7 +86,7 @@ export default function () {
         )}
       </div>
     ),
-    [currentOrganizationWithPermissionResult, insuranceList],
+    [enableUpdate, insuranceList],
   );
 
   return (
