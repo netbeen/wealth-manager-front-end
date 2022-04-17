@@ -3,7 +3,7 @@ import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
 import { history } from '@@/core/history';
 import { Tabs, Loading } from 'antd-mobile';
-import { Chart, Interval, Tooltip, Axis, Coordinate, Interaction } from 'bizcharts';
+import { Chart, Interval, Tooltip, Axis, Coordinate, Interaction, Line } from 'bizcharts';
 import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 import { useAsyncEffect, useRequest } from 'ahooks';
 import {
@@ -19,6 +19,13 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Overview } from '@/components/Overview';
 
 const TabPane = Tabs.TabPane;
+
+const restChartProps = {
+  interactions: ['tooltip', 'element-active'],
+  animate: false,
+  padding: [10, 10, 60, 40],
+  autoFit: true,
+};
 
 export default function () {
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([]);
@@ -143,7 +150,7 @@ export default function () {
   }, [tableData]);
 
   const overviewContent = useMemo(() => {
-    if (!overviewData) {
+    if (!overviewData || !transactionSets || !Array.isArray(transactionSets)) {
       return null;
     }
     return (
@@ -157,7 +164,7 @@ export default function () {
               minimumFractionDigits: 2,
             }).format(overviewData.totalValue),
           ],
-          ['更新日期', ''],
+          ['持仓品种', transactionSets.length],
           [
             '持仓收益',
             Intl.NumberFormat('en-US', {
@@ -165,6 +172,7 @@ export default function () {
               minimumFractionDigits: 2,
             }).format(overviewData.totalReturn),
           ],
+          ['持仓收益率', '?'],
         ]}
       />
     );
@@ -191,7 +199,48 @@ export default function () {
         </div>
       );
     }
-    return (
+    const profitHistoryChart = (
+      <Chart
+        height={250}
+        data={[]}
+        scale={{
+          date: {
+            type: 'time',
+          },
+          value: {
+            type: 'linear',
+            formatter: (v: string) => {
+              return Intl.NumberFormat('en-US', {
+                maximumFractionDigits: 2,
+                minimumFractionDigits: 2,
+              }).format(Number(v));
+            },
+          },
+          type: {
+            formatter: (v: string) => {
+              return {
+                totalAssets: '总资产',
+                netAssets: '净资产',
+              }[v];
+            },
+          },
+        }}
+        {...restChartProps}
+      >
+        <Tooltip shared showCrosshairs showMarkers linkage="someKey" />
+        <Axis name="date" />
+        <Axis
+          name="value"
+          label={{
+            formatter(text) {
+              return `${Number(text.replace(/,/g, '')) / 10000}W`;
+            },
+          }}
+        />
+        <Line shape="smooth" position="date*value" color="type" />
+      </Chart>
+    );
+    const distributionChart = (
       <Chart animate={false} height={300} data={chartData} scale={cols} autoFit>
         <Coordinate type="theta" radius={0.75} />
         <Tooltip showTitle={false} />
@@ -220,6 +269,12 @@ export default function () {
         />
         <Interaction type="element-single-selected" />
       </Chart>
+    );
+    return (
+      <>
+        {distributionChart}
+        {profitHistoryChart}
+      </>
     );
   }, [chartData]);
 
