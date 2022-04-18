@@ -2,6 +2,14 @@
 
 A web app deigned for managing your home wealth, especially funds and insurances.
 
+## Official Site
+
+[https://wealth-manager.netbeen.top](https://wealth-manager.netbeen.top)
+
+## Contact Author
+
+Email: [netbeen.cn@gmail.com](netbeen.cn@gmail.com)
+
 ## Features
 
 - Overview: Show wealth distribution like percentage and amount of each investment approaches. 
