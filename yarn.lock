@@ -4588,7 +4588,7 @@ date-fns@2.x:
   resolved "https://registry.npmjs.org/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
   integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
 
-dayjs@1.11.1:
+dayjs@1.11.1, dayjs@^1.11.1:
   version "1.11.1"
   resolved "https://registry.npmjs.org/dayjs/-/dayjs-1.11.1.tgz#90b33a3dda3417258d48ad2771b415def6545eb0"
   integrity sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==
@@ -5695,15 +5695,15 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.npmjs.org/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
-fund-tools@1.0.2:
-  version "1.0.2"
-  resolved "https://registry.npmjs.org/fund-tools/-/fund-tools-1.0.2.tgz#3aa661381abec8deb533b5f9e68b6a8da33b942b"
-  integrity sha512-sdWh5nwce3IB++U4MREbMFCLoKnA46Rtlod2OS4zmYiyrr4EmbUrYbRRH3dcjOB+41fcFInl23hGhse4216Dng==
+fund-tools@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/fund-tools/-/fund-tools-1.0.3.tgz#79f64c9f0ee422ed20d73382f8c7aea0e6be63c2"
+  integrity sha512-LeMNJEp6NgjWwZXOZUMexfuGETqhUOLDZdwvXg8RiAEpX6rbXCgnYL+gNLkxxXL+h7RU891mv/aSuS/ZrkzokA==
   dependencies:
     "@babel/polyfill" "^7.12.1"
     "@babel/runtime" "^7.17.9"
     axios "^0.26.1"
-    dayjs "^1.11.0"
+    dayjs "^1.11.1"
     financial "^0.1.3"
 
 gensync@^1.0.0-beta.1, gensync@^1.0.0-beta.2:
