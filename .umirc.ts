@@ -19,6 +19,7 @@ export default defineConfig({
     }
   ],
   webpack5: {},
+  mfsu: {},
   chainWebpack: function (config) {
     config.module.rule('mjs-rule').test(/.m?js/).resolve.set('fullySpecified', false);
   },
