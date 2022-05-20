@@ -172,7 +172,16 @@ export default function () {
               minimumFractionDigits: 2,
             }).format(overviewData.totalReturn),
           ],
-          ['持仓收益率', '?'],
+          [
+            '持仓收益率',
+            Intl.NumberFormat('en-US', {
+              maximumFractionDigits: 2,
+              minimumFractionDigits: 2,
+              style: 'percent',
+            }).format(
+              overviewData.totalReturn / (overviewData.totalValue - overviewData.totalReturn),
+            ),
+          ],
         ]}
       />
     );
