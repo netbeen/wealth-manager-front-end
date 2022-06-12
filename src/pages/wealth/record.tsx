@@ -235,7 +235,7 @@ export default function () {
         </Form.Item>
         {displayCategory.map((displayCategoryItem) => (
           <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', right: 0, top: 39 }}>
+            <div style={{ position: 'absolute', right: 0, top: 39, zIndex: 1 }}>
               {!isNaN(formNumberData[displayCategoryItem._id]) &&
                 renderDiff(
                   formNumberData[displayCategoryItem._id],
