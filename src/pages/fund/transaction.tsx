@@ -2,14 +2,16 @@ import React, { Fragment, useMemo, useState } from 'react';
 import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
 import { useRequest, useDebounce } from 'ahooks';
+import useUrlState from '@ahooksjs/use-url-state';
 import { history } from 'umi';
 import MobileDetect from 'mobile-detect';
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
 
 export default function () {
+  const [query] = useUrlState();
   const [datePickerVisible, setDatePickerVisible] = useState(false);
-  const [fundIdentifier, setFundIdentifier] = useState<string>('');
+  const [fundIdentifier, setFundIdentifier] = useState<string>(query.targetFund ?? '');
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0));
 
   const mobilePhoneModel = useMemo(() => new MobileDetect(window.navigator.userAgent).mobile(), []);
@@ -76,6 +78,7 @@ export default function () {
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
           date: date.toDate(),
+          fundIdentifier: fundIdentifier,
         }}
         onFinish={async (values) => {
           if (
@@ -136,6 +139,7 @@ export default function () {
             placeholder="请输入六位数字基金代码"
             value={fundIdentifier}
             onChange={setFundIdentifier}
+            disabled={query.targetFund}
           />
         </Form.Item>
         <Form.Item name="fundName" label="基金名称" disabled>

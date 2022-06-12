@@ -10,6 +10,14 @@
     lodash.debounce "^4.0.8"
     lodash.throttle "^4.1.1"
 
+"@ahooksjs/use-url-state@^3.4.1":
+  version "3.4.1"
+  resolved "https://registry.npmjs.org/@ahooksjs/use-url-state/-/use-url-state-3.4.1.tgz#f35430747b67668a0319abbd85dfe3b133a99a27"
+  integrity sha512-6jUNwsmEuKEgLOd7/Or+a/1nrN+NblVmqPWBF7P8E6eI4EelMH9vvUzknb9NP3CGPTu4v4mf/Ri44TGSBTwxrQ==
+  dependencies:
+    ahooks "^3.4.1"
+    query-string "^6.9.0"
+
 "@amap/amap-jsapi-loader@^0.0.3":
   version "0.0.3"
   resolved "https://registry.npmjs.org/@amap/amap-jsapi-loader/-/amap-jsapi-loader-0.0.3.tgz#5d676f1670213de0927c74da77475723e5de2380"
@@ -9371,7 +9379,7 @@ query-string@^4.1.0:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-query-string@^6.11.0:
+query-string@^6.11.0, query-string@^6.9.0:
   version "6.14.1"
   resolved "https://registry.npmjs.org/query-string/-/query-string-6.14.1.tgz#7ac2dca46da7f309449ba0f86b1fd28255b0c86a"
   integrity sha512-XDxAeVmpfu1/6IjyT/gXHOl+S0vQ9owggJ30hhWKdHAsNPOcasn5o9BW0eejZqL2e4vMjhAxoW3jVHcD6mbcYw==
