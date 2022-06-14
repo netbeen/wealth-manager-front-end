@@ -74,9 +74,10 @@ export default function () {
             block
             color="danger"
             size="large"
-            onClick={() => {
+            onClick={async () => {
               cookies.remove(TOKEN_COOKIE_NAME);
               cookies.remove(ORGANIZATION_COOKIE_NAME);
+              await caches.delete('wm-runtime-v2');
               history.push('/login');
             }}
           >
