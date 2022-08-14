@@ -217,6 +217,9 @@ export default function () {
       );
     }
 
+    /**
+     * 资金投资渠道折线图
+     */
     const assetsCategoryDistributionChart = (
       <Chart
         height={250}
@@ -247,6 +250,10 @@ export default function () {
         <Line shape="smooth" position="date*value" color="category" />
       </Chart>
     );
+
+    /**
+     * 净资产总资产折线图
+     */
     const assetsChart = (
       <Chart
         height={250}
@@ -288,6 +295,10 @@ export default function () {
         <Line shape="smooth" position="date*value" color="type" />
       </Chart>
     );
+
+    /**
+     * 资金分布渠道饼图
+     */
     const assetsCategoryDistributionPieChart = (
       <Chart
         animate={false}
