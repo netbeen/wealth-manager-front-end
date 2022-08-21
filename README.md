@@ -38,7 +38,7 @@ yarn dev
   - Server: Typescript, Node.js, Midway Serverless
   - Data: MongoDB
 - Architecture
-  - Cloud Native: Deploy client on `Vercel.com`, APIs on `Tencent Cloud` Serverless
+  - Cloud Native: Deploy client on `Vercel.com`, APIs on `Alibaba Cloud` Serverless
   - Client Framework: Refactor client logic using Umi.js
   - Typescript: Restrict type on both client and server
 - Feature:
