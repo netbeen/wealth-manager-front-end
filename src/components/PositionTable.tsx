@@ -14,10 +14,13 @@ import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
 import { COLOR } from '@/globalConst';
 import { Dayjs } from 'dayjs';
+import { useLocation } from 'umi';
 
 export const PositionTable: React.FC<{
   transactionSets: TransactionSetType[];
 }> = ({ transactionSets }) => {
+  const location = useLocation();
+
   const [fundBasicInfoList, setFundBasicInfoList] = useState<Array<FundBasicInfoType>>([]);
   const [unitPricesList, setUnitPricesList] = useState<Array<Array<FundPriceType>>>([]);
   const [dividendsList, setDividendsList] = useState<Array<Array<FundDividendType>>>([]);
@@ -25,7 +28,7 @@ export const PositionTable: React.FC<{
   const [tableLoading, setTableLoading] = useState<boolean>(true);
   const [transactionsList, setTransactionsList] = useState<Array<Array<TransactionType>>>([]);
 
-  const transactionSetActive = !window.location.pathname.includes('History');
+  const transactionSetActive = !location.pathname.includes('History');
 
   useAsyncEffect(async () => {
     if (!Array.isArray(transactionSets) || transactionSets.length === 0) {

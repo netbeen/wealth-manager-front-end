@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
-import { history } from 'umi';
+import { history, useSearchParams } from 'umi';
 import { useAsyncEffect } from 'ahooks';
 import {
   fetchById,
@@ -15,7 +15,10 @@ import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
 import axios from 'axios';
 
-export default function ({ location }: { location: { query: { id: string } } }) {
+export default function () {
+  let [searchParams] = useSearchParams({});
+  const id = searchParams.get('id');
+
   const [datePickerVisible, setDatePickerVisible] = useState(false);
   const [submitLoading, setSubmitLoading] = useState<boolean>(false);
   const [firstPaymentDate, setFirstPaymentDate] = useState<Dayjs>(
@@ -24,15 +27,18 @@ export default function ({ location }: { location: { query: { id: string } } }) 
   const [existedInsurance, setExistedInsurance] = useState<InsuranceType | null>(null);
 
   useAsyncEffect(async () => {
-    const result = await fetchById(location.query.id);
+    if (!id) {
+      return;
+    }
+    const result = await fetchById(id);
     if (!result) {
       return;
     }
     setFirstPaymentDate(result.firstPaymentDate);
     setExistedInsurance(result);
-  }, [location.query.id]);
+  }, [id]);
 
-  if (location.query.id && !existedInsurance) {
+  if (id && !existedInsurance) {
     return null;
   }
   return (

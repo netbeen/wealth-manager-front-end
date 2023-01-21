@@ -9,7 +9,7 @@ import {
   CheckShieldOutline,
   PayCircleOutline,
 } from 'antd-mobile-icons';
-import { history } from 'umi';
+import { history, Outlet, useLocation } from 'umi';
 
 axios.interceptors.response.use(
   (response) => {
@@ -59,22 +59,24 @@ const tabs = [
   },
 ];
 
-export default function (props: any) {
+export default function () {
   useLoginStatusChecker();
+  let location = useLocation();
 
   const noLayout = ['/login', '/register', '/fund/transactionDesktop'].includes(
-    window.location.pathname,
+    location.pathname,
   );
 
   return (
     <div className={styles.globalLayout}>
-      {noLayout ? (
-        props.children
-      ) : (
+      {noLayout ?
+        <Outlet /> : (
         <Fragment>
-          <div className={styles.mainContent}>{props.children}</div>
+          <div className={styles.mainContent}>
+            <Outlet />
+          </div>
           <TabBar
-            activeKey={tabs.find((item) => window.location.pathname.includes(item.key))?.key ?? ''}
+            activeKey={tabs.find((item) => location.pathname.includes(item.key))?.key ?? ''}
             onChange={(selectedKey) => {
               history.push(tabs.find((item) => item.key === selectedKey)?.url ?? '');
             }}
