@@ -1,11 +1,11 @@
-import React, { Fragment, useMemo } from 'react';
-import layoutStyles from '@/layouts/index.less';
-import { Tabs } from 'antd-mobile';
+import { PositionTable } from '@/components/PositionTable';
 import { fundSecondaryTabData } from '@/globalConst';
+import layoutStyles from '@/layouts/index.less';
+import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
-import { PositionTable } from '@/components/PositionTable';
+import { Tabs } from 'antd-mobile';
+import { Fragment, useMemo } from 'react';
 
 const TabPane = Tabs.TabPane;
 

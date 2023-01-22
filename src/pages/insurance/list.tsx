@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
-import { Tabs, Button } from 'antd-mobile';
-import { useRequest } from 'ahooks';
-import { history } from 'umi';
-import layoutStyles from '@/layouts/index.less';
-import { insuranceSecondaryTabData } from '@/globalConst';
-import { fetchList, INSURANCE_TYPE, insuranceTypeName } from '@/services/insurance';
 import { AntdBaseTable } from '@/components/AntDesignTable';
+import { insuranceSecondaryTabData } from '@/globalConst';
 import { usePermission } from '@/hooks/usePermission';
+import layoutStyles from '@/layouts/index.less';
+import { fetchList, insuranceTypeName, INSURANCE_TYPE } from '@/services/insurance';
+import { useRequest } from 'ahooks';
+import { Button, Tabs } from 'antd-mobile';
+import { useMemo } from 'react';
+import { history } from 'umi';
 
 const TabsPane = Tabs.Pane;
 

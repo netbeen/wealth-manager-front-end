@@ -1,13 +1,13 @@
-import React, { Fragment, useCallback } from 'react';
-import styles from './login.less';
-import { Input, Form, Button, Toast } from 'antd-mobile';
-import sha1 from 'sha1';
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
-import cookies from 'js-cookie';
-import { history } from 'umi';
 import { fetchAvailableOrganizations } from '@/services/organization';
 import { login } from '@/services/user';
 import { useRequest } from 'ahooks';
+import { Button, Form, Input, Toast } from 'antd-mobile';
+import cookies from 'js-cookie';
+import { Fragment, useCallback } from 'react';
+import sha1 from 'sha1';
+import { history } from 'umi';
+import styles from './login.less';
 
 export default function () {
   const { loading, runAsync: runAsyncLogin } = useRequest(

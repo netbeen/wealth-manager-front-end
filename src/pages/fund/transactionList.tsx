@@ -1,13 +1,13 @@
-import React, { Fragment, useMemo } from 'react';
-import layoutStyles from '@/layouts/index.less';
-import { Tabs } from 'antd-mobile';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
+import layoutStyles from '@/layouts/index.less';
+import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
+import { batchFetchTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
+import { fetchAllTransactionSets } from '@/services/transactionSet';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { fetchAllTransactionSets } from '@/services/transactionSet';
-import { batchFetchTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
-import { AntdBaseTable } from '@/components/AntDesignTable';
-import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
+import { Tabs } from 'antd-mobile';
+import { Fragment, useMemo } from 'react';
 
 const TabPane = Tabs.TabPane;
 

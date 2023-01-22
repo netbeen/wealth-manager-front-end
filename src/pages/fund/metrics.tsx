@@ -1,11 +1,6 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import { Overview } from '@/components/Overview';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
-import { history } from '@@/core/history';
-import { Tabs, Loading } from 'antd-mobile';
-import { Chart, Interval, Tooltip, Axis, Coordinate, Interaction, Line } from 'bizcharts';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
-import { useAsyncEffect, useRequest } from 'ahooks';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
@@ -14,9 +9,14 @@ import {
   FundSpitType,
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { calcReturn, sliceBetween } from 'fund-tools';
+import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
+import { history } from '@@/core/history';
+import { useAsyncEffect, useRequest } from 'ahooks';
+import { Loading, Tabs } from 'antd-mobile';
+import { Axis, Chart, Coordinate, Interaction, Interval, Line, Tooltip } from 'bizcharts';
 import dayjs, { Dayjs } from 'dayjs';
-import { Overview } from '@/components/Overview';
+import { calcReturn, sliceBetween } from 'fund-tools';
+import { Fragment, useMemo, useState } from 'react';
 
 const TabPane = Tabs.TabPane;
 
@@ -45,9 +45,10 @@ export default function () {
     if (!Array.isArray(transactionSets) || transactionSets.length === 0) {
       return;
     }
-    const basicInfoUnitPriceSplitDividendResult = await fetchBasicInfoUnitPriceSplitDividendByIdentifier(
-      transactionSets.map((transactionSet) => transactionSet.target),
-    );
+    const basicInfoUnitPriceSplitDividendResult =
+      await fetchBasicInfoUnitPriceSplitDividendByIdentifier(
+        transactionSets.map((transactionSet) => transactionSet.target),
+      );
     setFundBasicInfoList(basicInfoUnitPriceSplitDividendResult.basicInfos);
     setUnitPricesList(basicInfoUnitPriceSplitDividendResult.unitPrices);
     setDividendsList(basicInfoUnitPriceSplitDividendResult.dividends);
@@ -89,17 +90,13 @@ export default function () {
         ) {
           return rowData;
         }
-        const {
-          positionValue,
-          totalReturn,
-          totalRateOfReturn,
-          totalAnnualizedRateOfReturn,
-        } = calcReturn(
-          sliceBetween(unitPricesList[index], transactionsList[index][0].date, dayjs()),
-          dividendsList[index],
-          splitsList[index],
-          transactionsList[index],
-        );
+        const { positionValue, totalReturn, totalRateOfReturn, totalAnnualizedRateOfReturn } =
+          calcReturn(
+            sliceBetween(unitPricesList[index], transactionsList[index][0].date, dayjs()),
+            dividendsList[index],
+            splitsList[index],
+            transactionsList[index],
+          );
         rowData.positionValue = positionValue;
         rowData.totalRateOfReturn = totalRateOfReturn;
         rowData.totalAnnualizedRateOfReturn = totalAnnualizedRateOfReturn;
@@ -164,7 +161,7 @@ export default function () {
               minimumFractionDigits: 2,
             }).format(overviewData.totalValue),
           ],
-          ['持仓品种', transactionSets.length],
+          ['持仓品种', transactionSets.length.toString()],
           [
             '持仓收益',
             Intl.NumberFormat('en-US', {

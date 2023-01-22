@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
+import { useCallback, useEffect, useState } from 'react';
 
 const durationCalcInstance = axios.create();
 

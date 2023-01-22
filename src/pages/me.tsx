@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
-import { Picker, List, Button, NavBar } from 'antd-mobile';
-import cookies from 'js-cookie';
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
-import { history } from 'umi';
-import { useRequest } from 'ahooks';
-import { fetchMe } from '@/services/user';
 import {
   fetchAvailableOrganizations,
   fetchCurrentOrganizationWithPermission,
 } from '@/services/organization';
+import { fetchMe } from '@/services/user';
+import { useRequest } from 'ahooks';
+import { Button, List, NavBar, Picker } from 'antd-mobile';
+import cookies from 'js-cookie';
+import { useState } from 'react';
+import { history } from 'umi';
 
 export default function () {
   const { data: me } = useRequest(

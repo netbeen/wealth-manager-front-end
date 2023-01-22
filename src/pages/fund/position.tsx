@@ -1,12 +1,12 @@
-import React, { Fragment, useMemo } from 'react';
-import layoutStyles from '@/layouts/index.less';
-import { Tabs } from 'antd-mobile';
+import { AddTransactionButton } from '@/components/AddTransactionButton';
+import { PositionTable } from '@/components/PositionTable';
 import { fundSecondaryTabData } from '@/globalConst';
+import layoutStyles from '@/layouts/index.less';
+import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { PositionTable } from '@/components/PositionTable';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
-import { AddTransactionButton } from '@/components/AddTransactionButton';
+import { Tabs } from 'antd-mobile';
+import { Fragment, useMemo } from 'react';
 
 const TabPane = Tabs.TabPane;
 

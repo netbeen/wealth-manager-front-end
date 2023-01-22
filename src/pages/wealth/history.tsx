@@ -1,13 +1,13 @@
-import React, { Fragment, useMemo } from 'react';
-import layoutStyles from '@/layouts/index.less';
-import { Button, Tabs } from 'antd-mobile';
+import { AntdBaseTable } from '@/components/AntDesignTable';
 import { wealthSecondaryTabData } from '@/globalConst';
+import { usePermission } from '@/hooks/usePermission';
+import layoutStyles from '@/layouts/index.less';
+import { getAllWealthCategory } from '@/services/wealthCategory';
+import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { getAllHistoryRecord } from '@/services/wealthHistory';
-import { getAllWealthCategory } from '@/services/wealthCategory';
-import { AntdBaseTable } from '@/components/AntDesignTable';
-import { usePermission } from '@/hooks/usePermission';
+import { Button, Tabs } from 'antd-mobile';
+import { Fragment, useMemo } from 'react';
 
 const TabPane = Tabs.TabPane;
 

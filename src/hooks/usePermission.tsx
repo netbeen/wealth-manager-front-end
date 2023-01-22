@@ -1,5 +1,5 @@
-import { useRequest } from 'ahooks';
 import { fetchCurrentOrganizationWithPermission } from '@/services/organization';
+import { useRequest } from 'ahooks';
 
 export const usePermission: (targetPermission: string[]) => { result: boolean } = (
   targetPermission,

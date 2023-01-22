@@ -1,15 +1,15 @@
-import React, { Fragment } from 'react';
-import styles from './index.less';
 import { useLoginStatusChecker } from '@/hooks/useLoginStatusChecker';
 import { TabBar, Toast } from 'antd-mobile';
-import axios from 'axios';
 import {
-  UnorderedListOutline,
-  UserOutline,
   CheckShieldOutline,
   PayCircleOutline,
+  UnorderedListOutline,
+  UserOutline,
 } from 'antd-mobile-icons';
+import axios from 'axios';
+import { Fragment } from 'react';
 import { history, Outlet, useLocation } from 'umi';
+import styles from './index.less';
 
 axios.interceptors.response.use(
   (response) => {
@@ -61,16 +61,15 @@ const tabs = [
 
 export default function () {
   useLoginStatusChecker();
-  let location = useLocation();
+  const location = useLocation();
 
-  const noLayout = ['/login', '/register', '/fund/transactionDesktop'].includes(
-    location.pathname,
-  );
+  const noLayout = ['/login', '/register', '/fund/transactionDesktop'].includes(location.pathname);
 
   return (
     <div className={styles.globalLayout}>
-      {noLayout ?
-        <Outlet /> : (
+      {noLayout ? (
+        <Outlet />
+      ) : (
         <Fragment>
           <div className={styles.mainContent}>
             <Outlet />

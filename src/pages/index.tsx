@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
 import { history } from '@@/core/history';
+import { useEffect } from 'react';
 
 export default function () {
   useEffect(() => {

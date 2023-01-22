@@ -3,7 +3,7 @@ import { Spin } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 
-const StyledBaseTable = (styled(BaseTable)`
+const StyledBaseTable = styled(BaseTable)`
   --line-height: 1.5715;
   --font-size: 14px;
   --row-height: 32px;
@@ -60,7 +60,7 @@ const StyledBaseTable = (styled(BaseTable)`
       border-top: none;
     }
   }
-` as unknown) as typeof BaseTable;
+` as unknown as typeof BaseTable;
 
 const AntEmptyContent = React.memo(() => (
   <>

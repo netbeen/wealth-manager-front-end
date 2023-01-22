@@ -1,15 +1,15 @@
-import React, { Fragment, useMemo } from 'react';
-import layoutStyles from '@/layouts/index.less';
-import { Loading, Tabs } from 'antd-mobile';
-import { Line, Chart, Axis, Tooltip, Coordinate, Interval, Interaction } from 'bizcharts';
+import { Overview } from '@/components/Overview';
 import { wealthSecondaryTabData } from '@/globalConst';
+import layoutStyles from '@/layouts/index.less';
+import { getAllWealthCategory } from '@/services/wealthCategory';
+import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
-import { getAllHistoryRecord } from '@/services/wealthHistory';
-import { getAllWealthCategory } from '@/services/wealthCategory';
-import { Overview } from '@/components/Overview';
-import { irr } from 'financial';
+import { Loading, Tabs } from 'antd-mobile';
+import { Axis, Chart, Coordinate, Interaction, Interval, Line, Tooltip } from 'bizcharts';
 import dayjs, { Dayjs } from 'dayjs';
+import { irr } from 'financial';
+import { Fragment, useMemo } from 'react';
 
 const TabPane = Tabs.TabPane;
 
@@ -145,13 +145,11 @@ export default function () {
       netAssets: [...assetChartData].reverse().find((item) => item.type === 'netAssets').value,
       endDate: dayjs([...assetChartData].reverse().find((item) => item.type === 'netAssets').date),
     };
-    const {
-      netAssetsAtStartDate,
-      startDate,
-    }: { netAssetsAtStartDate: number; startDate: Dayjs } = {
-      netAssetsAtStartDate: [...assetChartData].find((item) => item.type === 'netAssets').value,
-      startDate: dayjs([...assetChartData].find((item) => item.type === 'netAssets').date),
-    };
+    const { netAssetsAtStartDate, startDate }: { netAssetsAtStartDate: number; startDate: Dayjs } =
+      {
+        netAssetsAtStartDate: [...assetChartData].find((item) => item.type === 'netAssets').value,
+        startDate: dayjs([...assetChartData].find((item) => item.type === 'netAssets').date),
+      };
 
     const duration = endDate.diff(startDate, 'day');
     const irrData = [];

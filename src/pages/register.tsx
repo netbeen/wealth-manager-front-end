@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react';
-import { Toast, Form, Button, Input, NavBar } from 'antd-mobile';
-import { history } from 'umi';
 import { register } from '@/services/user';
+import { Button, Form, Input, NavBar, Toast } from 'antd-mobile';
+import { Fragment } from 'react';
 import sha1 from 'sha1';
+import { history } from 'umi';
 
 const MOCK_INVITE_CODE = '123456';
 

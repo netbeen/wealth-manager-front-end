@@ -1,8 +1,5 @@
-import React, { useMemo, useState } from 'react';
-import { history } from '@@/core/history';
-import { useAsyncEffect } from 'ahooks';
 import { AntdBaseTable } from '@/components/AntDesignTable';
-import { TransactionSetType } from '@/services/transactionSet';
+import { COLOR } from '@/globalConst';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
@@ -11,9 +8,12 @@ import {
   FundSpitType,
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
-import { COLOR } from '@/globalConst';
+import { TransactionSetType } from '@/services/transactionSet';
+import { history } from '@@/core/history';
+import { useAsyncEffect } from 'ahooks';
 import { Dayjs } from 'dayjs';
+import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
+import React, { useMemo, useState } from 'react';
 import { useLocation } from 'umi';
 
 export const PositionTable: React.FC<{
@@ -34,9 +34,10 @@ export const PositionTable: React.FC<{
     if (!Array.isArray(transactionSets) || transactionSets.length === 0) {
       return;
     }
-    const basicInfoUnitPriceSplitDividendResult = await fetchBasicInfoUnitPriceSplitDividendByIdentifier(
-      transactionSets.map((transactionSet) => transactionSet.target),
-    );
+    const basicInfoUnitPriceSplitDividendResult =
+      await fetchBasicInfoUnitPriceSplitDividendByIdentifier(
+        transactionSets.map((transactionSet) => transactionSet.target),
+      );
     setFundBasicInfoList(basicInfoUnitPriceSplitDividendResult.basicInfos);
     setUnitPricesList(basicInfoUnitPriceSplitDividendResult.unitPrices);
     setDividendsList(basicInfoUnitPriceSplitDividendResult.dividends);
@@ -185,33 +186,29 @@ export const PositionTable: React.FC<{
         ) {
           return rowData;
         }
-        const {
-          positionValue,
-          totalReturn,
-          totalRateOfReturn,
-          totalAnnualizedRateOfReturn,
-        } = calcReturn(
-          sliceBetween(
-            unitPricesList[index],
-            transactionsList[index][0].date,
-            lastOfArray(unitPricesList[index]).date,
-          ),
-          sliceBetween(
-            dividendsList[index],
-            transactionsList[index][0].date,
-            lastOfArray(unitPricesList[index]).date,
-          ),
-          sliceBetween(
-            splitsList[index],
-            transactionsList[index][0].date,
-            lastOfArray(unitPricesList[index]).date,
-          ),
-          sliceBetween(
-            transactionsList[index],
-            transactionsList[index][0].date,
-            lastOfArray(unitPricesList[index]).date,
-          ),
-        );
+        const { positionValue, totalReturn, totalRateOfReturn, totalAnnualizedRateOfReturn } =
+          calcReturn(
+            sliceBetween(
+              unitPricesList[index],
+              transactionsList[index][0].date,
+              lastOfArray(unitPricesList[index]).date,
+            ),
+            sliceBetween(
+              dividendsList[index],
+              transactionsList[index][0].date,
+              lastOfArray(unitPricesList[index]).date,
+            ),
+            sliceBetween(
+              splitsList[index],
+              transactionsList[index][0].date,
+              lastOfArray(unitPricesList[index]).date,
+            ),
+            sliceBetween(
+              transactionsList[index],
+              transactionsList[index][0].date,
+              lastOfArray(unitPricesList[index]).date,
+            ),
+          );
         rowData.positionValue = positionValue;
         rowData.totalRateOfReturn = totalRateOfReturn;
         rowData.totalAnnualizedRateOfReturn = totalAnnualizedRateOfReturn;
