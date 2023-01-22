@@ -1,22 +1,22 @@
-import React, { Fragment, useState } from 'react';
-import { Selector, Toast, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile';
-import dayjs, { Dayjs } from 'dayjs';
-import { history, useSearchParams } from 'umi';
-import { useAsyncEffect } from 'ahooks';
+import { API_PREFIX } from '@/globalConst';
 import {
   fetchById,
+  InsuranceType,
+  insuranceTypeName,
   INSURANCE_PAYMENT_PLAN,
   INSURANCE_TYPE,
-  insuranceTypeName,
   sendTestEmail,
-  InsuranceType,
 } from '@/services/insurance';
-import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
+import { useAsyncEffect } from 'ahooks';
+import { Button, DatePicker, Form, Input, NavBar, Selector, Toast } from 'antd-mobile';
 import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs';
+import { Fragment, useState } from 'react';
+import { history, useSearchParams } from 'umi';
 
 export default function () {
-  let [searchParams] = useSearchParams({});
+  const [searchParams] = useSearchParams({});
   const id = searchParams.get('id');
 
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -45,7 +45,7 @@ export default function () {
     <Fragment>
       <NavBar
         onBack={() => {
-          history.goBack();
+          history.back();
         }}
       >
         保险记录

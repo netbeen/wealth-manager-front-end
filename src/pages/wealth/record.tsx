@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useMemo, useState } from 'react';
-import { Toast, Picker, Form, Button, Input, DatePicker, NavBar } from 'antd-mobile';
-import dayjs, { Dayjs } from 'dayjs';
-import { useRequest } from 'ahooks';
-import { history } from 'umi';
-import MobileDetect from 'mobile-detect';
+import { COLOR } from '@/globalConst';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
-import { COLOR } from '@/globalConst';
+import { useRequest } from 'ahooks';
+import { Button, DatePicker, Form, Input, NavBar, Picker, Toast } from 'antd-mobile';
+import dayjs, { Dayjs } from 'dayjs';
+import MobileDetect from 'mobile-detect';
+import { Fragment, useEffect, useMemo, useState } from 'react';
+import { history } from 'umi';
 
 export default function () {
   const [datePickerVisible, setDatePickerVisible] = useState(false);
@@ -108,7 +108,7 @@ export default function () {
     <Fragment>
       <NavBar
         onBack={() => {
-          history.goBack();
+          history.back();
         }}
       >
         财富记录

@@ -1,26 +1,26 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
-import { ProgressCircle, NavBar } from 'antd-mobile';
-import dayjs from 'dayjs';
-import { useRequest } from 'ahooks';
-import { history } from 'umi';
+import { Overview } from '@/components/Overview';
+import { COLOR } from '@/globalConst';
+import { usePermission } from '@/hooks/usePermission';
 import {
   fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundDividendType,
   FundPriceType,
   FundSpitType,
 } from '@/services/fund';
-import { Line, Chart, Axis, Tooltip } from 'bizcharts';
+import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import {
   fetchTransactionSetById,
   TransactionSetStatus,
   TransactionSetType,
 } from '@/services/transactionSet';
-import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { sliceBetween, lastOfArray, calcReturn } from 'fund-tools';
-import { COLOR } from '@/globalConst';
-import { Overview } from '@/components/Overview';
+import { useRequest } from 'ahooks';
+import { NavBar, ProgressCircle } from 'antd-mobile';
 import { AddOutline } from 'antd-mobile-icons';
-import { usePermission } from '@/hooks/usePermission';
+import { Axis, Chart, Line, Tooltip } from 'bizcharts';
+import dayjs from 'dayjs';
+import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
+import { Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { history, useParams } from 'umi';
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],
   animate: false,
@@ -28,13 +28,11 @@ const restChartProps = {
   autoFit: true,
 };
 
-export default function ({
-  match: {
-    params: { transactionSetId },
-  },
-}: {
-  match: { params: { transactionSetId: string } };
-}) {
+export default function () {
+  const { transactionSetId } = useParams();
+  if (!transactionSetId) {
+    return null;
+  }
   const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);
 
   const { data: transactionSet } = useRequest(
@@ -55,12 +53,8 @@ export default function ({
       if (!transactionSet?.target) {
         return;
       }
-      const {
-        basicInfos,
-        dividends,
-        unitPrices,
-        splits,
-      } = await fetchBasicInfoUnitPriceSplitDividendByIdentifier([transactionSet.target]);
+      const { basicInfos, dividends, unitPrices, splits } =
+        await fetchBasicInfoUnitPriceSplitDividendByIdentifier([transactionSet.target]);
       return {
         basicInfo: basicInfos[0],
         dividend: dividends[0],
@@ -419,7 +413,7 @@ export default function ({
     <Fragment>
       <NavBar
         onBack={() => {
-          history.goBack();
+          history.back();
         }}
         right={
           <div className="flex justify-end">

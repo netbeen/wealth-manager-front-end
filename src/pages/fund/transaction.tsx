@@ -1,12 +1,12 @@
-import React, { Fragment, useMemo, useState } from 'react';
-import { Toast, Form, Button, Input, DatePicker, Selector, NavBar } from 'antd-mobile';
-import dayjs, { Dayjs } from 'dayjs';
-import { useRequest, useDebounce } from 'ahooks';
-import useUrlState from '@ahooksjs/use-url-state';
-import { history } from 'umi';
-import MobileDetect from 'mobile-detect';
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { insertTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
+import useUrlState from '@ahooksjs/use-url-state';
+import { useDebounce, useRequest } from 'ahooks';
+import { Button, DatePicker, Form, Input, NavBar, Selector, Toast } from 'antd-mobile';
+import dayjs, { Dayjs } from 'dayjs';
+import MobileDetect from 'mobile-detect';
+import { Fragment, useMemo, useState } from 'react';
+import { history } from 'umi';
 
 export default function () {
   const [query] = useUrlState();
@@ -69,7 +69,7 @@ export default function () {
     <Fragment>
       <NavBar
         onBack={() => {
-          history.goBack();
+          history.back();
         }}
       >
         基金交易记录
