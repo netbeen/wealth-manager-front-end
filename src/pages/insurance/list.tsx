@@ -8,7 +8,7 @@ import { Button, Tabs } from 'antd-mobile';
 import { useMemo } from 'react';
 import { history } from 'umi';
 
-const TabsPane = Tabs.Pane;
+const TabsPane = Tabs.Tab;
 
 export default function () {
   const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);

@@ -6,10 +6,11 @@ import { getAllWealthCategory } from '@/services/wealthCategory';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
+import { ArtColumn, ArtColumnAlign } from 'ali-react-table';
 import { Button, Tabs } from 'antd-mobile';
 import { Fragment, useMemo } from 'react';
 
-const TabPane = Tabs.TabPane;
+const TabPane = Tabs.Tab;
 
 export default function () {
   const { result: enableUpdate } = usePermission(['Admin', 'Collaborator']);
@@ -30,7 +31,7 @@ export default function () {
     },
   );
 
-  const { tableData, columns } = useMemo(() => {
+  const { tableData, columns } = useMemo<{ tableData: any[]; columns: ArtColumn[] }>(() => {
     if (
       !Array.isArray(allHistory) ||
       allHistory.length === 0 ||
@@ -68,14 +69,14 @@ export default function () {
         {
           code: 'date',
           name: '记录日期',
-          align: 'left',
+          align: 'left' as ArtColumnAlign,
           width: 100,
           render: (value: any) => value,
         },
         {
           code: 'sum',
           name: '净资产',
-          align: 'right',
+          align: 'right' as ArtColumnAlign,
           width: 100,
           render: (value: any) =>
             Intl.NumberFormat('en-US', {
@@ -83,13 +84,21 @@ export default function () {
               minimumFractionDigits: 2,
             }).format(value),
         },
-        ...Array.from(existCategoryIdentifiers).map((categoryIdentifier) => {
-          const targetCategory = allWealthCategory.find((item) => item._id === categoryIdentifier);
-          if (targetCategory) {
+        ...Array.from(existCategoryIdentifiers)
+          .filter((categoryIdentifier) =>
+            allWealthCategory.find((item) => item._id === categoryIdentifier),
+          )
+          .map((categoryIdentifier) => {
+            const targetCategory = allWealthCategory.find(
+              (item) => item._id === categoryIdentifier,
+            );
+            if (!targetCategory) {
+              throw new Error('targetCategory not existed.');
+            }
             return {
               code: categoryIdentifier as string,
               name: targetCategory.name ?? '',
-              align: 'right',
+              align: 'right' as ArtColumnAlign,
               width: 100,
               render: (value: any) => {
                 if (isNaN(value)) {
@@ -101,8 +110,7 @@ export default function () {
                 }).format(value);
               },
             };
-          }
-        }),
+          }),
       ],
     };
   }, [allHistory, allWealthCategory]);
@@ -111,7 +119,7 @@ export default function () {
     const t = (
       <AntdBaseTable
         dataSource={tableData}
-        columns={columns.filter((item) => item)}
+        columns={columns}
         isStickyHeader={false}
         isLoading={allHistoryLoading}
       />

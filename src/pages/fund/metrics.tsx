@@ -18,7 +18,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { calcReturn, sliceBetween } from 'fund-tools';
 import { Fragment, useMemo, useState } from 'react';
 
-const TabPane = Tabs.TabPane;
+const TabPane = Tabs.Tab;
 
 const restChartProps = {
   interactions: ['tooltip', 'element-active'],

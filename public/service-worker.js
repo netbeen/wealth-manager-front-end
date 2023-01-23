@@ -1,4 +1,4 @@
-/* eslint-disable no-undef,no-restricted-globals */
+/* eslint-disable no-undef */
 self.addEventListener('error', (e) => {
   self.clients.matchAll().then((clients) => {
     if (clients && clients.length) {

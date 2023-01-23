@@ -11,6 +11,7 @@ import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { TransactionSetType } from '@/services/transactionSet';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
+import { ArtColumn } from 'ali-react-table';
 import { Dayjs } from 'dayjs';
 import { calcReturn, lastOfArray, sliceBetween } from 'fund-tools';
 import React, { useMemo, useState } from 'react';
@@ -47,7 +48,9 @@ export const PositionTable: React.FC<{
     setTableLoading(false);
   }, [transactionSets]);
 
-  const columns = useMemo(() => {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const columns: ArtColumn[] = useMemo(() => {
     if (!transactionSets[0]) {
       return [];
     }

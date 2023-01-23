@@ -7,7 +7,7 @@ import { useRequest } from 'ahooks';
 import { Tabs } from 'antd-mobile';
 import { Fragment, useMemo } from 'react';
 
-const TabPane = Tabs.TabPane;
+const TabPane = Tabs.Tab;
 
 export default function () {
   const { data: transactionSets } = useRequest(
