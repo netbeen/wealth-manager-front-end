@@ -69,6 +69,14 @@ export default function () {
         >
           当前账本
         </List.Item>
+        <List.Item
+          clickable
+          onClick={() => {
+            history.push('/health-check');
+          }}
+        >
+          系统健康检查
+        </List.Item>
         <List.Item>
           <Button
             block
