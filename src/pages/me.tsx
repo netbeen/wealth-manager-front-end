@@ -43,10 +43,12 @@ export default function () {
     organizationWithPermission?.organization.name ?? '',
   ]);
 
-  const doSwitchOrganization = async (name: any) => {
+  const doSwitchOrganization: (organizationName: string) => Promise<void> = async (
+    organizationName,
+  ) => {
     cookies.set(
       ORGANIZATION_COOKIE_NAME,
-      availableOrganizations?.find((item) => item.name === name[0])?._id ?? '',
+      availableOrganizations?.find((item) => item.name === organizationName)?._id ?? '',
       { expires: 6 },
     );
     await caches.delete('wm-runtime-v2');
@@ -100,8 +102,11 @@ export default function () {
           setOrganizationPickerVisible(false);
         }}
         value={value}
-        onConfirm={(name) => {
-          doSwitchOrganization(name);
+        onConfirm={(pickedNames) => {
+          if (!pickedNames || !pickedNames[0]) {
+            return;
+          }
+          doSwitchOrganization(pickedNames[0].toString());
         }}
       />
     </div>
