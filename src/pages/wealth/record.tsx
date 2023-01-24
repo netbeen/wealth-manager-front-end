@@ -237,6 +237,7 @@ export default function () {
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', right: 0, top: 39, zIndex: 1 }}>
               {!isNaN(formNumberData[displayCategoryItem._id]) &&
+                !!latestHistoryRecord &&
                 renderDiff(
                   formNumberData[displayCategoryItem._id],
                   latestHistoryRecord.detail[displayCategoryItem._id],

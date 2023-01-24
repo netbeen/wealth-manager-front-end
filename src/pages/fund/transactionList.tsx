@@ -2,7 +2,11 @@ import { AntdBaseTable } from '@/components/AntDesignTable';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
 import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
-import { batchFetchTransaction, TRANSACTION_DIRECTION } from '@/services/transaction';
+import {
+  batchFetchTransaction,
+  TransactionType,
+  TRANSACTION_DIRECTION,
+} from '@/services/transaction';
 import { fetchAllTransactionSets } from '@/services/transactionSet';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
@@ -46,7 +50,7 @@ export default function () {
   );
 
   const mainContent = useMemo(() => {
-    let dataSource = [];
+    let dataSource: TransactionType[] = [];
 
     if (
       transactions &&
@@ -61,7 +65,7 @@ export default function () {
             (transactionSet) => transactionSet._id === transaction.transactionSet,
           );
           if (!targetTransactionSet) {
-            return null;
+            throw new Error('cannot find targetTransactionSet');
           }
           const transactionIndex = transactionSets
             .map((item) => item._id)
