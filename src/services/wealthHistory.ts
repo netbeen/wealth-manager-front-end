@@ -1,6 +1,6 @@
-import axios from 'axios';
 import { API_PREFIX } from '@/globalConst';
 import { getAuthorizationHeaders } from '@/utils';
+import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 
 export interface WealthHistoryType {
