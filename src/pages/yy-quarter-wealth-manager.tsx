@@ -1,4 +1,4 @@
-import { Annotation, Axis, Chart, Interval, Legend } from 'bizcharts';
+import { Annotation, Axis, Chart, Interval, Legend, Line } from 'bizcharts';
 
 // const netAssetsByQuarters: { netAsset: number; quarter: string }[] = [
 //   {
@@ -12,9 +12,10 @@ import { Annotation, Axis, Chart, Interval, Legend } from 'bizcharts';
 // ];
 const TEXT = {
   netAssets: '净资产',
+  growthRate: '环比增长率',
 };
 
-const data = [
+const netAssetsData = [
   {
     time: '2014Q2',
     netAssets: 1.6,
@@ -155,19 +156,25 @@ const data = [
     time: '2022Q4',
     netAssets: 228,
   },
-  {
-    time: '2023Q1',
-    netAssets: 0,
-  },
 ];
+
+const calcGrowthRate = (inputData) =>
+  inputData.map((item, index) => ({
+    ...item,
+    growthRate:
+      index === 0
+        ? 0
+        : (inputData[index].netAssets - inputData[index - 1].netAssets) /
+          inputData[index - 1].netAssets,
+  }));
 
 export default () => {
   let chartIns = null;
   const scale = {
-    people: {
+    growthRate: {
       // min: 0,
       // tickCount: 4,
-      alias: '人数',
+      alias: TEXT.growthRate,
       type: 'linear-strict',
     },
     netAssets: {
@@ -183,7 +190,7 @@ export default () => {
       scale={scale}
       autoFit
       height={400}
-      data={data}
+      data={calcGrowthRate(netAssetsData)}
       onGetG2Instance={(chart) => {
         chartIns = chart;
       }}
@@ -200,14 +207,14 @@ export default () => {
               style: { fill: colors[0], r: 5 },
             },
           },
-          // {
-          //   value: 'people',
-          //   name: '人数',
-          //   marker: {
-          //     symbol: 'hyphen',
-          //     style: { stroke: colors[1], r: 5, lineWidth: 3 },
-          //   },
-          // },
+          {
+            value: 'growthRate',
+            name: TEXT.growthRate,
+            marker: {
+              symbol: 'hyphen',
+              style: { stroke: colors[1], r: 5, lineWidth: 3 },
+            },
+          },
         ]}
         // onChange={(ev) => {
         //   const item = ev.item;
@@ -230,14 +237,14 @@ export default () => {
       />
       {/*<Tooltip shared />*/}
       <Interval position="time*netAssets" color={colors[0]} />
-      {/*<Line position="time*people" color={colors[1]} size={3} shape="smooth" />*/}
+      <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
       <Annotation.Text
         top
-        position={{ time: '10:10', people: 0.2 }}
+        position={{ time: '10:10', growthRate: 0.2 }}
         style={{ textAlign: 'center', fill: 'red' }}
         content="test"
       />
-      {/*<Point position="time*people" color={colors[1]} size={3} shape="circle" />*/}
+      {/*<Point position="time*growthRate" color={colors[1]} size={3} shape="circle" />*/}
       <Axis
         name="time"
         label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}
