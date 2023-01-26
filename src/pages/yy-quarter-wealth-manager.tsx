@@ -1,4 +1,4 @@
-import { Annotation, Axis, Chart, Interval, Legend, Line } from 'bizcharts';
+import { Axis, Chart, Interval, Legend, Line, Tooltip } from 'bizcharts';
 
 // const netAssetsByQuarters: { netAsset: number; quarter: string }[] = [
 //   {
@@ -235,19 +235,42 @@ export default () => {
         //   }
         // }}
       />
-      {/*<Tooltip shared />*/}
+      <Tooltip shared={true}>
+        {/*{(title, items) => {*/}
+        {/*  // 配置了 class="g2-tooltip-list" 则会将模版中的内容渲染进来*/}
+        {/*  // 您也可以根据 items 自行渲染*/}
+        {/*  return (*/}
+        {/*    <table>*/}
+        {/*      <thead>*/}
+        {/*        <tr>*/}
+        {/*          <th>&nbsp;</th>*/}
+        {/*          <th>名称</th>*/}
+        {/*          <th>值</th>*/}
+        {/*        </tr>*/}
+        {/*      </thead>*/}
+        {/*      <tbody class="g2-tooltip-list"></tbody>*/}
+        {/*    </table>*/}
+        {/*  );*/}
+        {/*}}*/}
+      </Tooltip>
       <Interval position="time*netAssets" color={colors[0]} />
       <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
-      <Annotation.Text
-        top
-        position={{ time: '10:10', growthRate: 0.2 }}
-        style={{ textAlign: 'center', fill: 'red' }}
-        content="test"
-      />
+      {/*<Annotation.Text*/}
+      {/*  top*/}
+      {/*  position={{ time: '10:10', growthRate: 0.2 }}*/}
+      {/*  style={{ textAlign: 'center', fill: 'red' }}*/}
+      {/*  content="test"*/}
+      {/*/>*/}
       {/*<Point position="time*growthRate" color={colors[1]} size={3} shape="circle" />*/}
       <Axis
         name="time"
         label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}
+      />
+      <Axis
+        name="growthRate"
+        label={{
+          formatter: (val: number) => `${(val * 100).toFixed(0)}%`,
+        }}
       />
     </Chart>
   );
