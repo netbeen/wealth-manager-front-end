@@ -1,21 +1,16 @@
 import { Axis, Chart, Interval, Legend, Line, Tooltip } from 'bizcharts';
 
-// const netAssetsByQuarters: { netAsset: number; quarter: string }[] = [
-//   {
-//     netAsset: 1.6,
-//     quarter: '2014Q2',
-//   },
-//   {
-//     netAsset: 1.7,
-//     quarter: '2014Q3',
-//   },
-// ];
+interface NetAssetsDataType {
+  time: string;
+  netAssets: number;
+}
+
 const TEXT = {
   netAssets: '净资产',
   growthRate: '环比增长率',
 };
 
-const netAssetsData = [
+const netAssetsData: NetAssetsDataType[] = [
   {
     time: '2014Q2',
     netAssets: 1.6,
@@ -158,33 +153,35 @@ const netAssetsData = [
   },
 ];
 
-const calcGrowthRate = (inputData) =>
+const scale = {
+  growthRate: {
+    formatter: (val: number) => {
+      return `${val.toFixed(1)}%`;
+    },
+    alias: TEXT.growthRate,
+    type: 'linear-strict',
+  },
+  netAssets: {
+    alias: TEXT.netAssets,
+    type: 'linear-strict',
+  },
+};
+
+const colors = ['#6394f9', '#62daaa'];
+
+const calcGrowthRate: (inputData: NetAssetsDataType[]) => NetAssetsDataType[] = (inputData) =>
   inputData.map((item, index) => ({
     ...item,
     growthRate:
       index === 0
         ? 0
-        : (inputData[index].netAssets - inputData[index - 1].netAssets) /
-          inputData[index - 1].netAssets,
+        : ((inputData[index].netAssets - inputData[index - 1].netAssets) /
+            inputData[index - 1].netAssets) *
+          100,
   }));
 
 export default () => {
   let chartIns = null;
-  const scale = {
-    growthRate: {
-      // min: 0,
-      // tickCount: 4,
-      alias: TEXT.growthRate,
-      type: 'linear-strict',
-    },
-    netAssets: {
-      // min: 0,
-      // tickCount: 4,
-      alias: TEXT.netAssets,
-      type: 'linear-strict',
-    },
-  };
-  const colors = ['#6394f9', '#62daaa'];
   return (
     <Chart
       scale={scale}
@@ -235,24 +232,7 @@ export default () => {
         //   }
         // }}
       />
-      <Tooltip shared={true}>
-        {/*{(title, items) => {*/}
-        {/*  // 配置了 class="g2-tooltip-list" 则会将模版中的内容渲染进来*/}
-        {/*  // 您也可以根据 items 自行渲染*/}
-        {/*  return (*/}
-        {/*    <table>*/}
-        {/*      <thead>*/}
-        {/*        <tr>*/}
-        {/*          <th>&nbsp;</th>*/}
-        {/*          <th>名称</th>*/}
-        {/*          <th>值</th>*/}
-        {/*        </tr>*/}
-        {/*      </thead>*/}
-        {/*      <tbody class="g2-tooltip-list"></tbody>*/}
-        {/*    </table>*/}
-        {/*  );*/}
-        {/*}}*/}
-      </Tooltip>
+      <Tooltip shared={true} showCrosshairs={true} follow={true}></Tooltip>
       <Interval position="time*netAssets" color={colors[0]} />
       <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
       {/*<Annotation.Text*/}
@@ -266,12 +246,7 @@ export default () => {
         name="time"
         label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}
       />
-      <Axis
-        name="growthRate"
-        label={{
-          formatter: (val: number) => `${(val * 100).toFixed(0)}%`,
-        }}
-      />
+      <Axis name="growthRate" />
     </Chart>
   );
 };
