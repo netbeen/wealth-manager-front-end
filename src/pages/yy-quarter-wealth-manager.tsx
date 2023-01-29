@@ -162,6 +162,9 @@ const scale = {
     type: 'linear-strict',
   },
   netAssets: {
+    formatter: (val: number) => {
+      return `${val}W`;
+    },
     alias: TEXT.netAssets,
     type: 'linear-strict',
   },
