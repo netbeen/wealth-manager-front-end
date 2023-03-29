@@ -216,35 +216,10 @@ export default () => {
             },
           },
         ]}
-        // onChange={(ev) => {
-        //   const item = ev.item;
-        //   const value = item.value;
-        //   const checked = !item.unchecked;
-        //   const geoms = chartIns.geometries;
-        //
-        //   for (let i = 0; i < geoms.length; i++) {
-        //     const geom = geoms[i];
-        //
-        //     if (geom.getYScale().field === value) {
-        //       if (checked) {
-        //         geom.show();
-        //       } else {
-        //         geom.hide();
-        //       }
-        //     }
-        //   }
-        // }}
       />
       <Tooltip shared={true} showCrosshairs={true} follow={true}></Tooltip>
       <Interval position="time*netAssets" color={colors[0]} />
       <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
-      {/*<Annotation.Text*/}
-      {/*  top*/}
-      {/*  position={{ time: '10:10', growthRate: 0.2 }}*/}
-      {/*  style={{ textAlign: 'center', fill: 'red' }}*/}
-      {/*  content="test"*/}
-      {/*/>*/}
-      {/*<Point position="time*growthRate" color={colors[1]} size={3} shape="circle" />*/}
       <Axis
         name="time"
         label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}

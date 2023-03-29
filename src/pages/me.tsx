@@ -79,14 +79,16 @@ export default function () {
         >
           系统健康检查
         </List.Item>
-        <List.Item
-          clickable
-          onClick={() => {
-            history.push('/yy-quarter-wealth-manager');
-          }}
-        >
-          季度财务盘点
-        </List.Item>
+        {me?.username == '394062113@qq.com' && (
+          <List.Item
+            clickable
+            onClick={() => {
+              history.push('/yy-quarter-wealth-manager');
+            }}
+          >
+            季度财务盘点
+          </List.Item>
+        )}
         <List.Item>
           <Button
             block
