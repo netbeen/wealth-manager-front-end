@@ -186,45 +186,57 @@ const calcGrowthRate: (inputData: NetAssetsDataType[]) => NetAssetsDataType[] = 
 export default () => {
   let chartIns = null;
   return (
-    <Chart
-      scale={scale}
-      autoFit
-      height={400}
-      data={calcGrowthRate(netAssetsData)}
-      onGetG2Instance={(chart) => {
-        chartIns = chart;
-      }}
-    >
-      <Legend
-        custom={true}
-        allowAllCanceled={true}
-        items={[
-          {
-            value: 'netAssets',
-            name: TEXT.netAssets,
-            marker: {
-              symbol: 'square',
-              style: { fill: colors[0], r: 5 },
+    <div>
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          fontSize: 20,
+          justifyContent: 'center',
+        }}
+      >
+        季度财务盘点
+      </div>
+      <Chart
+        scale={scale}
+        autoFit
+        height={400}
+        data={calcGrowthRate(netAssetsData)}
+        onGetG2Instance={(chart) => {
+          chartIns = chart;
+        }}
+      >
+        <Legend
+          custom={true}
+          allowAllCanceled={true}
+          items={[
+            {
+              value: 'netAssets',
+              name: TEXT.netAssets,
+              marker: {
+                symbol: 'square',
+                style: { fill: colors[0], r: 5 },
+              },
             },
-          },
-          {
-            value: 'growthRate',
-            name: TEXT.growthRate,
-            marker: {
-              symbol: 'hyphen',
-              style: { stroke: colors[1], r: 5, lineWidth: 3 },
+            {
+              value: 'growthRate',
+              name: TEXT.growthRate,
+              marker: {
+                symbol: 'hyphen',
+                style: { stroke: colors[1], r: 5, lineWidth: 3 },
+              },
             },
-          },
-        ]}
-      />
-      <Tooltip shared={true} showCrosshairs={true} follow={true}></Tooltip>
-      <Interval position="time*netAssets" color={colors[0]} />
-      <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
-      <Axis
-        name="time"
-        label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}
-      />
-      <Axis name="growthRate" />
-    </Chart>
+          ]}
+        />
+        <Tooltip shared={true} showCrosshairs={true} follow={true}></Tooltip>
+        <Interval position="time*netAssets" color={colors[0]} />
+        <Line position="time*growthRate" color={colors[1]} size={3} shape="smooth" />
+        <Axis
+          name="time"
+          label={{ rotate: -45, autoRotate: true, style: { textAlign: 'end', fontSize: 10 } }}
+        />
+        <Axis name="growthRate" />
+      </Chart>
+    </div>
   );
 };
