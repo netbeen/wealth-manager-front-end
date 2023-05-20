@@ -151,10 +151,10 @@ export default function () {
                 formattedUnitPrices[index].date,
               ),
             );
-            if (index % 10 === 0) {
+            if (index % 50 === 0) {
               setTimeout(() => {
                 resolve(result);
-              }, 50);
+              }, 25);
             } else {
               resolve(result);
             }
