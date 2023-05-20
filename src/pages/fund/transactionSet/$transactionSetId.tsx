@@ -13,6 +13,7 @@ import {
   TransactionSetStatus,
   TransactionSetType,
 } from '@/services/transactionSet';
+import { formatToCurrency } from '@/utils';
 import { useRequest } from 'ahooks';
 import { NavBar, ProgressCircle } from 'antd-mobile';
 import { AddOutline } from 'antd-mobile-icons';
@@ -276,13 +277,7 @@ export default function () {
             overviewData.totalAnnualizedRateOfReturn > 0 ? COLOR.Profitable : COLOR.LossMaking
           }
           data={[
-            [
-              '总市值',
-              Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(overviewData.positionValue),
-            ],
+            ['总市值', formatToCurrency(overviewData.positionValue)],
             [
               '更新日期',
               (transactionSetActive
@@ -290,27 +285,9 @@ export default function () {
                 : lastOfArray(transactions)
               ).date.format('YYYY-MM-DD'),
             ],
-            [
-              '收益额',
-              Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(overviewData.totalReturn),
-            ],
-            [
-              '收益率',
-              Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(overviewData.totalRateOfReturn * 100) + '%',
-            ],
-            [
-              '年化收益率',
-              Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(overviewData.totalAnnualizedRateOfReturn * 100) + '%',
-            ],
+            ['收益额', formatToCurrency(overviewData.totalReturn)],
+            ['收益率', formatToCurrency(overviewData.totalRateOfReturn * 100) + '%'],
+            ['年化收益率', formatToCurrency(overviewData.totalAnnualizedRateOfReturn * 100) + '%'],
           ]}
         />
       </div>

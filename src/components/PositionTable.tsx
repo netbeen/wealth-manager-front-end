@@ -9,6 +9,7 @@ import {
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { TransactionSetType } from '@/services/transactionSet';
+import { formatToCurrency } from '@/utils';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
 import { ArtColumn } from 'ali-react-table';
@@ -79,12 +80,7 @@ export const PositionTable: React.FC<{
             align: 'right',
             render: (value: any, record: any) => (
               <div>
-                {record.positionValue !== null
-                  ? Intl.NumberFormat('en-US', {
-                      maximumFractionDigits: 2,
-                      minimumFractionDigits: 2,
-                    }).format(record.positionValue)
-                  : ''}
+                {record.positionValue !== null ? formatToCurrency(record.positionValue) : ''}
               </div>
             ),
           }
@@ -101,14 +97,7 @@ export const PositionTable: React.FC<{
             render: (value: any, record: any) => (
               <div>
                 <div>{record.startDate !== null ? record.startDate.format('YYYY-MM-DD') : ''}</div>
-                <div>
-                  {record.totalReturn !== null
-                    ? Intl.NumberFormat('en-US', {
-                        maximumFractionDigits: 2,
-                        minimumFractionDigits: 2,
-                      }).format(record.totalReturn)
-                    : ''}
-                </div>
+                <div>{record.totalReturn !== null ? formatToCurrency(record.totalReturn) : ''}</div>
               </div>
             ),
           },
