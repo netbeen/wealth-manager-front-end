@@ -188,7 +188,8 @@ const calcGrowthRate: (inputData: NetAssetsDataType[]) => NetAssetsDataType[] = 
   }));
 
 export default () => {
-  let chartIns = null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  let chartIns: any = null;
   return (
     <div>
       <div
@@ -206,7 +207,7 @@ export default () => {
         autoFit
         height={400}
         data={calcGrowthRate(netAssetsData)}
-        onGetG2Instance={(chart) => {
+        onGetG2Instance={(chart: any) => {
           chartIns = chart;
         }}
       >
