@@ -171,7 +171,7 @@ export default function () {
 
   const cols = {
     percentage: {
-      formatter: (val: any) => formatToPercentage(val),
+      formatter: (val: number) => formatToPercentage(val),
     },
   };
 

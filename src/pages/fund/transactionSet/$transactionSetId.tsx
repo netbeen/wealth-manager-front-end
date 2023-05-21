@@ -124,43 +124,49 @@ export default function () {
         type: 'unitPrice',
         price: unitPriceItem.price,
       }));
-      const rateOfReturnChartDataResult: any[] = [];
-      const annualizedRateOfReturnChartDataResult: any[] = [];
+      const rateOfReturnChartDataResult: Array<{
+        date: string;
+        type: string;
+        rate: number;
+      }> = [];
+      const annualizedRateOfReturnChartDataResult: Array<{
+        date: string;
+        type: string;
+        rate: number;
+      }> = [];
       for (let index = 0; index < formattedUnitPrices.length; index += 1) {
         setCalcProgress(index / formattedUnitPrices.length);
-        const { unitCost, totalRateOfReturn, totalAnnualizedRateOfReturn } = await new Promise(
-          (resolve) => {
-            const result = calcReturn(
-              sliceBetween(
-                formattedUnitPrices,
-                formattedUnitPrices[0].date,
-                formattedUnitPrices[index].date,
-              ),
-              sliceBetween(
-                inputDividends,
-                formattedUnitPrices[0].date,
-                formattedUnitPrices[index].date,
-              ),
-              sliceBetween(
-                inputSplits,
-                formattedUnitPrices[0].date,
-                formattedUnitPrices[index].date,
-              ),
-              sliceBetween(
-                inputTransactions,
-                formattedUnitPrices[0].date,
-                formattedUnitPrices[index].date,
-              ),
-            );
-            if (index % 50 === 0) {
-              setTimeout(() => {
-                resolve(result);
-              }, 25);
-            } else {
+        const { unitCost, totalRateOfReturn, totalAnnualizedRateOfReturn } = await new Promise<{
+          unitCost: number;
+          totalRateOfReturn: number;
+          totalAnnualizedRateOfReturn: number;
+        }>((resolve) => {
+          const result = calcReturn(
+            sliceBetween(
+              formattedUnitPrices,
+              formattedUnitPrices[0].date,
+              formattedUnitPrices[index].date,
+            ),
+            sliceBetween(
+              inputDividends,
+              formattedUnitPrices[0].date,
+              formattedUnitPrices[index].date,
+            ),
+            sliceBetween(inputSplits, formattedUnitPrices[0].date, formattedUnitPrices[index].date),
+            sliceBetween(
+              inputTransactions,
+              formattedUnitPrices[0].date,
+              formattedUnitPrices[index].date,
+            ),
+          );
+          if (index % 50 === 0) {
+            setTimeout(() => {
               resolve(result);
-            }
-          },
-        );
+            }, 25);
+          } else {
+            resolve(result);
+          }
+        });
         priceChartDataResult.push({
           date: formattedUnitPrices[index].date.format('YYYY-MM-DD'),
           type: 'unitCost',
