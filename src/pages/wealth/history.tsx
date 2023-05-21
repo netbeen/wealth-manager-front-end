@@ -4,6 +4,7 @@ import { usePermission } from '@/hooks/usePermission';
 import layoutStyles from '@/layouts/index.less';
 import { getAllWealthCategory } from '@/services/wealthCategory';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
+import { formatToCurrency } from '@/utils';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { ArtColumn, ArtColumnAlign } from 'ali-react-table';
@@ -78,11 +79,7 @@ export default function () {
           name: '净资产',
           align: 'right' as ArtColumnAlign,
           width: 100,
-          render: (value: any) =>
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(value),
+          render: (value) => formatToCurrency(value),
         },
         ...Array.from(existCategoryIdentifiers)
           .filter((categoryIdentifier) =>
@@ -104,10 +101,7 @@ export default function () {
                 if (isNaN(value)) {
                   return '--';
                 }
-                return Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 2,
-                  minimumFractionDigits: 2,
-                }).format(value);
+                return formatToCurrency(value);
               },
             };
           }),

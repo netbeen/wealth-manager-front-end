@@ -2,6 +2,7 @@ import { COLOR } from '@/globalConst';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
+import { formatToCurrency } from '@/utils';
 import { useRequest } from 'ahooks';
 import { Button, DatePicker, Form, Input, NavBar, Picker, Toast } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
@@ -83,22 +84,14 @@ export default function () {
       return (
         <div style={{ color: COLOR.Profitable }}>
           环比增加
-          {Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          }).format(current - previous)}{' '}
-          ↑
+          {formatToCurrency(current - previous)} ↑
         </div>
       );
     } else {
       return (
         <div style={{ color: COLOR.LossMaking }}>
           环比减少
-          {Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          }).format(previous - current)}{' '}
-          ↓
+          {formatToCurrency(previous - current)} ↓
         </div>
       );
     }

@@ -3,11 +3,12 @@ import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
 import { fetchBasicInfoUnitPriceSplitDividendByIdentifier } from '@/services/fund';
 import {
-  batchFetchTransaction,
-  TransactionType,
   TRANSACTION_DIRECTION,
+  TransactionType,
+  batchFetchTransaction,
 } from '@/services/transaction';
 import { fetchAllTransactionSets } from '@/services/transactionSet';
+import { formatToCurrency } from '@/utils';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { Tabs } from 'antd-mobile';
@@ -132,12 +133,7 @@ export default function () {
                   >
                     {record.direction === TRANSACTION_DIRECTION.BUY ? '买入' : '卖出'}
                   </div>
-                  <div>
-                    {Intl.NumberFormat('en-US', {
-                      maximumFractionDigits: 2,
-                      minimumFractionDigits: 2,
-                    }).format(record.transactionValue)}
-                  </div>
+                  <div>{formatToCurrency(record.transactionValue)}</div>
                 </div>
               ),
             },

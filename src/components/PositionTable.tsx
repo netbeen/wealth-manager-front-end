@@ -9,7 +9,7 @@ import {
 } from '@/services/fund';
 import { batchFetchTransaction, TransactionType } from '@/services/transaction';
 import { TransactionSetType } from '@/services/transactionSet';
-import { formatToCurrency } from '@/utils';
+import { formatToCurrency, formatToPercentage } from '@/utils';
 import { history } from '@@/core/history';
 import { useAsyncEffect } from 'ahooks';
 import { ArtColumn } from 'ali-react-table';
@@ -119,12 +119,8 @@ export const PositionTable: React.FC<{
               }}
             >
               {record.totalRateOfReturn !== null
-                ? Intl.NumberFormat('en-US', {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2,
-                  }).format(record.totalRateOfReturn * 100)
+                ? formatToPercentage(record.totalRateOfReturn)
                 : ''}
-              %
             </div>
             <div
               style={{
@@ -132,12 +128,8 @@ export const PositionTable: React.FC<{
               }}
             >
               {record.totalAnnualizedRateOfReturn !== null
-                ? Intl.NumberFormat('en-US', {
-                    maximumFractionDigits: 2,
-                    minimumFractionDigits: 2,
-                  }).format(record.totalAnnualizedRateOfReturn * 100)
+                ? formatToPercentage(record.totalAnnualizedRateOfReturn)
                 : ''}
-              %
             </div>
           </div>
         ),

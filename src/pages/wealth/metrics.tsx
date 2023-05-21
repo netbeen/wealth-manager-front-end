@@ -3,6 +3,7 @@ import { wealthSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
 import { getAllWealthCategory } from '@/services/wealthCategory';
 import { getAllHistoryRecord } from '@/services/wealthHistory';
+import { formatToCurrency, formatToPercentage } from '@/utils';
 import { history } from '@@/core/history';
 import { useRequest } from 'ahooks';
 import { Loading, Tabs } from 'antd-mobile';
@@ -110,20 +111,17 @@ export default function () {
         }
         assetsCategoryDistributionChartData.push({
           date: historyItem.date.format('YYYY-MM-DD'),
-          value: Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 2,
-            minimumFractionDigits: 2,
-          }).format(
+          value: formatToCurrency(
             totalAssets === 0 ? 0 : (historyItem.detail[categoryIdentifier] * 100) / totalAssets,
           ),
           category: categoryIdentifier,
         });
         if (index === allHistory.length - 1) {
           assetsCategoryDistributionPieChartData.push({
-            percentage: Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 4,
-              minimumFractionDigits: 4,
-            }).format(totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] / totalAssets),
+            percentage: formatToCurrency(
+              totalAssets === 0 ? 0 : historyItem.detail[categoryIdentifier] / totalAssets,
+              4,
+            ),
             value: historyItem.detail[categoryIdentifier],
             category: categoryIdentifier,
           });
@@ -172,35 +170,11 @@ export default function () {
       <Overview
         backgroundColor={'#1677ff'}
         data={[
-          [
-            '净资产',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(netAssets),
-          ],
+          ['净资产', formatToCurrency(netAssets)],
           ['更新日期', assetChartData[assetChartData.length - 1].date],
-          [
-            '总资产',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(totalAssets),
-          ],
-          [
-            '年复合增长率',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(compoundAnnualGrowthRate * 100) + '%',
-          ],
-          [
-            '资产负债率',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(((totalAssets - netAssets) / totalAssets) * 100) + '%',
-          ],
+          ['总资产', formatToCurrency(totalAssets)],
+          ['年复合增长率', formatToPercentage(compoundAnnualGrowthRate)],
+          ['资产负债率', formatToPercentage((totalAssets - netAssets) / totalAssets)],
         ]}
       />
     );
@@ -262,12 +236,7 @@ export default function () {
           },
           value: {
             type: 'linear',
-            formatter: (v: string) => {
-              return Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(Number(v));
-            },
+            formatter: (v: string) => formatToCurrency(Number(v)),
           },
           type: {
             formatter: (v: string) => {

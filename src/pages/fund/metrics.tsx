@@ -2,14 +2,15 @@ import { Overview } from '@/components/Overview';
 import { COLOR, fundSecondaryTabData } from '@/globalConst';
 import layoutStyles from '@/layouts/index.less';
 import {
-  fetchBasicInfoUnitPriceSplitDividendByIdentifier,
   FundBasicInfoType,
   FundDividendType,
   FundPriceType,
   FundSpitType,
+  fetchBasicInfoUnitPriceSplitDividendByIdentifier,
 } from '@/services/fund';
-import { batchFetchTransaction, TransactionType } from '@/services/transaction';
-import { fetchTransactionSetsByStatus, TransactionSetStatus } from '@/services/transactionSet';
+import { TransactionType, batchFetchTransaction } from '@/services/transaction';
+import { TransactionSetStatus, fetchTransactionSetsByStatus } from '@/services/transactionSet';
+import { formatToCurrency, formatToPercentage } from '@/utils';
 import { history } from '@@/core/history';
 import { useAsyncEffect, useRequest } from 'ahooks';
 import { Loading, Tabs } from 'antd-mobile';
@@ -154,28 +155,12 @@ export default function () {
       <Overview
         backgroundColor={overviewData.totalReturn > 0 ? COLOR.Profitable : COLOR.LossMaking}
         data={[
-          [
-            '总市值',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(overviewData.totalValue),
-          ],
+          ['总市值', formatToCurrency(overviewData.totalValue)],
           ['持仓品种', transactionSets.length.toString()],
-          [
-            '持仓收益',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-            }).format(overviewData.totalReturn),
-          ],
+          ['持仓收益', formatToCurrency(overviewData.totalReturn)],
           [
             '持仓收益率',
-            Intl.NumberFormat('en-US', {
-              maximumFractionDigits: 2,
-              minimumFractionDigits: 2,
-              style: 'percent',
-            }).format(
+            formatToPercentage(
               overviewData.totalReturn / (overviewData.totalValue - overviewData.totalReturn),
             ),
           ],
@@ -186,14 +171,7 @@ export default function () {
 
   const cols = {
     percentage: {
-      formatter: (val: any) => {
-        val =
-          Intl.NumberFormat('en-US', {
-            maximumFractionDigits: 1,
-            minimumFractionDigits: 1,
-          }).format(val * 100) + '%';
-        return val;
-      },
+      formatter: (val: any) => formatToPercentage(val),
     },
   };
 
@@ -215,12 +193,7 @@ export default function () {
           },
           value: {
             type: 'linear',
-            formatter: (v: string) => {
-              return Intl.NumberFormat('en-US', {
-                maximumFractionDigits: 2,
-                minimumFractionDigits: 2,
-              }).format(Number(v));
-            },
+            formatter: (v: string) => formatToCurrency(Number(v)),
           },
           type: {
             formatter: (v: string) => {
@@ -264,12 +237,7 @@ export default function () {
             {
               // label 太长自动截断
               layout: { type: 'limit-in-plot', cfg: { action: 'ellipsis' } },
-              content: (data) => {
-                return `${data.name}: ${Intl.NumberFormat('en-US', {
-                  maximumFractionDigits: 1,
-                  minimumFractionDigits: 1,
-                }).format(data.percentage * 100)}%`;
-              },
+              content: (data) => `${data.name}: ${formatToPercentage(data.percentage)}`,
             },
           ]}
         />

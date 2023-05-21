@@ -13,8 +13,10 @@ export const roundWithPrecision: (inputNumber: number, precision: number) => num
   return Math.round(inputNumber * 10 ** precision) / 10 ** precision;
 };
 
-export const formatToCurrency = (value: number) =>
+export const formatToCurrency = (value: number, fractionDigits = 2) =>
   Intl.NumberFormat('en-US', {
-    maximumFractionDigits: 2,
-    minimumFractionDigits: 2,
+    maximumFractionDigits: fractionDigits,
+    minimumFractionDigits: fractionDigits,
   }).format(value);
+
+export const formatToPercentage = (value: number) => `${formatToCurrency(value * 100)}%`;
