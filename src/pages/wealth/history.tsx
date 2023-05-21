@@ -44,7 +44,7 @@ export default function () {
         columns: [],
       };
     }
-    const existCategoryIdentifiers = new Set();
+    const existCategoryIdentifiers = new Set<string>();
     const tableData: Array<{ [key: string]: number | string }> = [];
     allHistory.forEach((historyItem) => {
       const currentRowData: { [key: string]: number | string } = {
@@ -72,7 +72,7 @@ export default function () {
           name: '记录日期',
           align: 'left' as ArtColumnAlign,
           width: 100,
-          render: (value: any) => value,
+          render: (value: string) => value,
         },
         {
           code: 'sum',
@@ -97,7 +97,7 @@ export default function () {
               name: targetCategory.name ?? '',
               align: 'right' as ArtColumnAlign,
               width: 100,
-              render: (value: any) => {
+              render: (value: number) => {
                 if (isNaN(value)) {
                   return '--';
                 }
