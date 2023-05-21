@@ -121,7 +121,7 @@ export default function () {
               ),
               width: 100,
               align: 'right',
-              render: (value: any, record: any) => (
+              render: (_value, record: any) => (
                 <div>
                   <div
                     style={{
