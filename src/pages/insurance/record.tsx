@@ -1,15 +1,15 @@
 import { API_PREFIX } from '@/globalConst';
 import {
-  fetchById,
-  InsuranceType,
-  insuranceTypeName,
   INSURANCE_PAYMENT_PLAN,
   INSURANCE_TYPE,
+  InsuranceType,
+  fetchById,
+  insuranceTypeName,
   sendTestEmail,
 } from '@/services/insurance';
-import { getAuthorizationHeaders } from '@/utils';
+import { getAuthorizationHeaders, toastSuccess } from '@/utils';
 import { useAsyncEffect } from 'ahooks';
-import { Button, DatePicker, Form, Input, NavBar, Selector, Toast } from 'antd-mobile';
+import { Button, DatePicker, Form, Input, NavBar, Selector } from 'antd-mobile';
 import axios from 'axios';
 import dayjs, { Dayjs } from 'dayjs';
 import { Fragment, useState } from 'react';
@@ -80,10 +80,7 @@ export default function () {
             )
           ).data;
           if (result.data._id) {
-            Toast.show({
-              icon: 'success',
-              content: '添加成功',
-            });
+            toastSuccess('添加成功');
             setSubmitLoading(false);
           }
         }}

@@ -1,5 +1,6 @@
 import { useLoginStatusChecker } from '@/hooks/useLoginStatusChecker';
-import { TabBar, Toast } from 'antd-mobile';
+import { toastFail } from '@/utils';
+import { TabBar } from 'antd-mobile';
 import {
   CheckShieldOutline,
   PayCircleOutline,
@@ -8,16 +9,13 @@ import {
 } from 'antd-mobile-icons';
 import axios from 'axios';
 import { Fragment } from 'react';
-import { history, Outlet, useLocation } from 'umi';
+import { Outlet, history, useLocation } from 'umi';
 import styles from './index.less';
 
 axios.interceptors.response.use(
   (response) => {
     if (response?.data?.code === 401) {
-      Toast.show({
-        icon: 'fail',
-        content: '登录超时，你需要重新登录',
-      });
+      toastFail('登录超时，你需要重新登录');
       history.push('/login');
     }
     return response;

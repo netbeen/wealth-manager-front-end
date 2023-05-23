@@ -1,5 +1,6 @@
 import { register } from '@/services/user';
-import { Button, Form, Input, NavBar, Toast } from 'antd-mobile';
+import { toastFail, toastSuccess } from '@/utils';
+import { Button, Form, Input, NavBar } from 'antd-mobile';
 import { Fragment } from 'react';
 import sha1 from 'sha1';
 import { history } from 'umi';
@@ -19,18 +20,12 @@ export default function () {
       <Form
         onFinish={async (values) => {
           if (values.inviteCode !== MOCK_INVITE_CODE) {
-            Toast.show({
-              icon: 'fail',
-              content: '表单字段格式错误，或者邀请码无效，请检查各输入项',
-            });
+            toastFail('表单字段格式错误，或者邀请码无效，请检查各输入项');
             return;
           }
           const result = await register(values.username, sha1(values.password));
           if (result._id) {
-            Toast.show({
-              icon: 'success',
-              content: '注册成功！即将前往登录页面~',
-            });
+            toastSuccess('注册成功！即将前往登录页面~');
             history.push('/login');
           }
         }}

@@ -1,8 +1,9 @@
 import { fetchBasicInfo, fetchUnitPriceByIdentifier } from '@/services/fund';
 import { TRANSACTION_DIRECTION, insertTransaction } from '@/services/transaction';
+import { formatToCurrency, toastFail, toastSuccess } from '@/utils';
 import useUrlState from '@ahooksjs/use-url-state';
 import { useDebounce, useRequest } from 'ahooks';
-import { Button, DatePicker, Form, Input, NavBar, Selector, Toast } from 'antd-mobile';
+import { Button, DatePicker, Form, Input, NavBar, Selector } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
 import MobileDetect from 'mobile-detect';
 import { Fragment, useMemo, useState } from 'react';
@@ -10,9 +11,10 @@ import { history } from 'umi';
 
 export default function () {
   const [query] = useUrlState();
-  const [datePickerVisible, setDatePickerVisible] = useState(false);
+  const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
   const [fundIdentifier, setFundIdentifier] = useState<string>(query.targetFund ?? '');
   const [date, setDate] = useState<Dayjs>(dayjs().hour(0).minute(0).second(0));
+  const [form] = Form.useForm();
 
   const mobilePhoneModel = useMemo(() => new MobileDetect(window.navigator.userAgent).mobile(), []);
 
@@ -75,41 +77,47 @@ export default function () {
         基金交易记录
       </NavBar>
       <Form
+        form={form}
         initialValues={{
           direction: [TRANSACTION_DIRECTION.BUY],
           date: date.toDate(),
           fundIdentifier: fundIdentifier,
+          totalValue: NaN,
+        }}
+        onValuesChange={(changedValues, { volume, commission }) => {
+          if (changedValues.direction?.length === 0) {
+            // Reset the direction selector
+            form.setFieldValue('direction', [TRANSACTION_DIRECTION.BUY]);
+          } else if (
+            (changedValues.volume || changedValues.commission || changedValues.date) &&
+            unitPrice
+          ) {
+            // Calc the total value
+            form.setFieldValue(
+              'totalValue',
+              formatToCurrency(Number(volume) * unitPrice + Number(commission)),
+            );
+          }
         }}
         onFinish={async (values) => {
-          if (
-            typeof Number(values.commission) !== 'number' ||
-            typeof Number(values.volume) !== 'number' ||
-            typeof date?.format() !== 'string' ||
-            ![TRANSACTION_DIRECTION.BUY, TRANSACTION_DIRECTION.SELL].includes(
-              values.direction[0],
-            ) ||
-            !/^\d{6}$/.test(values.fundIdentifier) ||
-            typeof unitPrice !== 'number'
-          ) {
-            Toast.show({
-              icon: 'fail',
-              content: '表单字段格式错误，请检查各输入项',
-            });
+          if (typeof unitPrice !== 'number') {
+            toastFail('当前选择的交易日无数据，请重新选择');
             return;
           }
-          const result = await insertTransaction(
-            values.fundIdentifier,
-            Number(values.volume),
-            Number(values.commission),
-            date,
-            values.direction[0],
-          );
-          if (result._id) {
-            Toast.show({
-              icon: 'success',
-              content: '添加成功',
-            });
-            history.push('/fund/position');
+          try {
+            const result = await insertTransaction(
+              values.fundIdentifier,
+              Number(values.volume),
+              Number(values.commission),
+              date,
+              values.direction[0],
+            );
+            if (result._id) {
+              toastSuccess('添加成功');
+              history.push('/fund/position');
+            }
+          } catch (e) {
+            toastFail((e as Error).message);
           }
         }}
         footer={
@@ -188,6 +196,9 @@ export default function () {
         </Form.Item>
         <Form.Item name="commission" label="手续费" rules={[{ required: true }]}>
           <Input placeholder="请输入手续费" />
+        </Form.Item>
+        <Form.Item name="totalValue" label="总金额" disabled>
+          <Input />
         </Form.Item>
       </Form>
     </Fragment>

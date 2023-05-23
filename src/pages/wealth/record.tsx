@@ -2,9 +2,9 @@ import { COLOR } from '@/globalConst';
 import { TRANSACTION_DIRECTION } from '@/services/transaction';
 import { getAllWealthCategory, WealthCategoryType } from '@/services/wealthCategory';
 import { getLatestHistoryRecord, insertWealthHistoryRecord } from '@/services/wealthHistory';
-import { formatToCurrency } from '@/utils';
+import { formatToCurrency, toastFail, toastSuccess } from '@/utils';
 import { useRequest } from 'ahooks';
-import { Button, DatePicker, Form, Input, NavBar, Picker, Toast } from 'antd-mobile';
+import { Button, DatePicker, Form, Input, NavBar, Picker } from 'antd-mobile';
 import dayjs, { Dayjs } from 'dayjs';
 import MobileDetect from 'mobile-detect';
 import { Fragment, useEffect, useMemo, useState } from 'react';
@@ -153,10 +153,7 @@ export default function () {
           for (const displayCategoryItem of displayCategory) {
             const numberValue = Number(values[displayCategoryItem._id]);
             if (isNaN(numberValue)) {
-              Toast.show({
-                icon: 'fail',
-                content: '表单字段格式错误，请检查各输入项',
-              });
+              toastFail('表单字段格式错误，请检查各输入项');
               return;
             }
             recordDetail[displayCategoryItem._id] = numberValue;
@@ -164,10 +161,7 @@ export default function () {
           setSubmitLoading(true);
           const result = await insertWealthHistoryRecord(date, recordDetail);
           if (result._id) {
-            Toast.show({
-              icon: 'success',
-              content: '添加成功',
-            });
+            toastSuccess('添加成功');
             setSubmitLoading(false);
             history.push('/wealth/history');
           }

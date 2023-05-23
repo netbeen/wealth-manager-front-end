@@ -1,8 +1,9 @@
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
 import { fetchAvailableOrganizations } from '@/services/organization';
 import { login } from '@/services/user';
+import { toastFail } from '@/utils';
 import { useRequest } from 'ahooks';
-import { Button, Form, Input, Toast } from 'antd-mobile';
+import { Button, Form, Input } from 'antd-mobile';
 import cookies from 'js-cookie';
 import { Fragment, useCallback } from 'react';
 import sha1 from 'sha1';
@@ -27,10 +28,7 @@ export default function () {
       await caches.delete('wm-runtime-v2');
       history.push('/');
     } catch (e) {
-      Toast.show({
-        icon: 'fail',
-        content: '用户名或密码错误',
-      });
+      toastFail('用户名或密码错误');
       return;
     }
   }, []);

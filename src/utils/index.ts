@@ -1,4 +1,5 @@
 import { ORGANIZATION_COOKIE_NAME, TOKEN_COOKIE_NAME } from '@/globalConst';
+import { Toast } from 'antd-mobile';
 import cookies from 'js-cookie';
 
 export const getAuthorizationHeaders = () => ({
@@ -20,3 +21,17 @@ export const formatToCurrency = (value: number, fractionDigits = 2) =>
   }).format(value);
 
 export const formatToPercentage = (value: number) => `${formatToCurrency(value * 100)}%`;
+
+export const toastFail = (content: string) => {
+  Toast.show({
+    icon: 'fail',
+    content,
+  });
+};
+
+export const toastSuccess = (content: string) => {
+  Toast.show({
+    icon: 'success',
+    content,
+  });
+};
