@@ -155,6 +155,10 @@ const netAssetsData: NetAssetsDataType[] = [
     time: '2023Q1',
     netAssets: 250,
   },
+  {
+    time: '2023Q2',
+    netAssets: 272,
+  },
 ];
 
 const scale = {
