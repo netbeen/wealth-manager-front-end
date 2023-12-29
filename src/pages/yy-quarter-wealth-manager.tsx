@@ -163,6 +163,10 @@ const netAssetsData: NetAssetsDataType[] = [
     time: '2023Q3',
     netAssets: 274, // 2,200,395.68 + 540,077.56 = 2,740,473.24
   },
+  {
+    time: '2023Q4',
+    netAssets: 304, // 2,444,694.64 + 599,691.99 = 3,044,386.63
+  },
 ];
 
 const scale = {
